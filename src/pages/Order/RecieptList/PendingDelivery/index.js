@@ -86,7 +86,7 @@ const proccessData = (pdata)=>{
 };
 
 
-class ReceiptPending extends Component {
+class ReceiptDeliveryPending extends Component {
 
 
   render() {
@@ -95,7 +95,7 @@ class ReceiptPending extends Component {
       <Query
       query={RECEIPT_QUERY}
       fetchPolicy={"network-only"}
-      variables = {{taskType:"TASK_RECEIPT",status: ["PENDING"] }}
+      variables = {{taskType:"TASK_RECEIPT",status: ["PENDING_DELIVERY"] }}
  
 
     >{({ loading, error, data, refetch }) => {
@@ -109,7 +109,7 @@ class ReceiptPending extends Component {
       if (data != null){
 
       return (
-        <ReceiptTable tableName="Pending Receipts" tableDesc="All the list of pending receipts" orderList={proccessData(data.allTasks.nodes)}></ReceiptTable>
+        <ReceiptTable tableName="Pending delivery Receipts" tableDesc="All the list of pending delivery receipts" orderList={proccessData(data.allTasks.nodes)}></ReceiptTable>
       );
       }
     }}
@@ -118,4 +118,4 @@ class ReceiptPending extends Component {
   }
 }
 
-export default withRouter(ReceiptPending);
+export default withRouter(ReceiptDeliveryPending);

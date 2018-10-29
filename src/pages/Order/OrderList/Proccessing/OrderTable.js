@@ -71,8 +71,18 @@ class OrderTable extends Component {
       >{cell}</Link>);
     };
     function button1Formatter(cell, row){
-      return (<Link style={{width:"75%"}} className='btn btn-primary btn-sm btn-fill btn-linkedin' to={`/order/order-list/view/${row.nodeId}`}
-      >{cell}</Link>);
+      let c = '';
+      if (cell === 'PENDING_SERVING'){
+        c = "btn-warning";
+      }
+      else if (cell === 'SERVING'){
+        c = "btn-info";
+      }
+      else if (cell === 'FINISHED_SERVING'){
+        c= "btn-primary";
+      }
+      return (<a style={{width:"75%"}} className={`btn btn-sm btn-fill  ${c}`}
+      >{cell}</a>);
     };
 
     function pickUpFormatter (cell,row){
@@ -193,16 +203,25 @@ class OrderTable extends Component {
                   <TableHeaderColumn
                     dataField='amount'
                     width="25%"
+                    hidden
                     >
                     Amount
                   </TableHeaderColumn>
                   <TableHeaderColumn
+                    dataField='currentStaff'
+                    width="25%"
+                    
+                    >
+                    Performer
+                  </TableHeaderColumn>
+                  <TableHeaderColumn
                     dataField='status'
-                    width="15%"
+                    width="25%"
                     dataFormat={button1Formatter}
                     >
                     Status
                   </TableHeaderColumn>
+                  
                  
                 </BootstrapTable>
               </div>

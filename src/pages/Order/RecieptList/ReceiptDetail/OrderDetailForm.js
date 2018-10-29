@@ -67,7 +67,7 @@ class OrderDetailForm extends Component {
               
               <legend>
               <div style={{justifyContent: "space-between"}}>
-                <span>Receipt's Information - {receipt.id} <span className="badge badge-warning">{receipt.status}</span> </span>
+                <span>Receipt's Information - {receipt.id} - {receipt.customerOrderByOrderId.id} <span className="badge badge-warning">{receipt.status}</span> </span>
                 
               </div>
               </legend>

@@ -22,7 +22,6 @@ import { ApolloProvider } from 'react-apollo';
 import Dashboard from '../Dashboard';
 import Components from '../Components';
 import UserProfile from '../UserProfile';
-import MapsPage from '../MapsPage';
 import Forms from '../Forms';
 import Charts from '../Charts';
 import Calendar from '../Calendar';
@@ -42,7 +41,7 @@ import Orders from '../Order';
 
 const client = new ApolloClient({ uri: 'http://localhost:5000/graphql' ,
 headers:{
-  authorization: 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYXV0aF9hdXRoZW50aWNhdGVkIiwidXNlcl9pZCI6NiwidXNlcl90eXBlIjoic3RhZmZfdHlwZSIsImlhdCI6MTU0MDQ5MDYwMywiZXhwIjoxNTQwNTc3MDAzLCJhdWQiOiJwb3N0Z3JhcGhpbGUiLCJpc3MiOiJwb3N0Z3JhcGhpbGUifQ.3OOmCYFq4B5ThZxN_ya3tNM0ytawJeTCgyNvN5FN8AU'
+  authorization: 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYXV0aF9hdXRoZW50aWNhdGVkIiwidXNlcl9pZCI6NiwidXNlcl90eXBlIjoic3RhZmZfdHlwZSIsImlhdCI6MTU0MDU3NzQwNywiZXhwIjoxNTQwNjYzODA3LCJhdWQiOiJwb3N0Z3JhcGhpbGUiLCJpc3MiOiJwb3N0Z3JhcGhpbGUifQ.ylQ1Vda0Y7NI4g5y0jOcmwxmekpWXyquma-LCDIEk24'
 },
 cache: new InMemoryCache(),
 
@@ -77,7 +76,7 @@ const Main = ({
                 <Route  path="/profile" component={UserProfile} />
                 <Route  path="/forms" component={Forms} />
                 <Route  path="/tables" component={Tables} />
-                <Route  path="/maps" component={MapsPage} />
+    
                 <Route  path="/charts" component={Charts} />
                 <Route  path="/calendar" component={Calendar} />
                 <Route  path="/userProfile" component={UserProfile} />

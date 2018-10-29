@@ -17,8 +17,8 @@ class Nav extends Component {
             <p>Dashboard</p>
           </Link>
         </li>
-        <li className={this.isPathActive('/charts') ? 'active' : null}>
-          <Link to="/charts">
+        <li className={this.isPathActive('/order/create-order') ? 'active' : null}>
+          <Link to="/order/create-order">
             <i className="pe-7s-plus"></i>
             <p>Create new Order</p>
           </Link>
@@ -41,11 +41,15 @@ class Nav extends Component {
                 <li className={this.isPathActive('/order/order-list/processing') ? 'active' : null}>
                   <Link to="/order/order-list/processing">Processing</Link>
                 </li>
-                <li className={this.isPathActive('/order/order-list/washer-list') ? 'active' : null}>
+                <li className={this.isPathActive('/order/order-list/processed') ? 'active' : null}>
                   <Link to="/order/order-list/processed">Processed</Link>
                 </li>
-                <li className={this.isPathActive('/order/order-list/dryer-list') ? 'active' : null}>
+                <li className={this.isPathActive('/order/order-list/finish') ? 'active' : null}>
                   <Link to="/order/order-list/finish">Finish</Link>
+
+                </li>
+                <li className={this.isPathActive('/order/order-list/declined') ? 'active' : null}>
+                  <Link to="/order/order-list/declined">Declined</Link>
                 </li>
               </ul>
             </div>
@@ -69,8 +73,11 @@ class Nav extends Component {
                 <li className={this.isPathActive('/order/reciept-list/processing') ? 'active' : null}>
                   <Link to="/order/reciept-list/processing">Recieved</Link>
                 </li>
-                <li className={this.isPathActive('/order/reciept-list/processing') ? 'active' : null}>
-                  <Link to="/order/reciept-list/processing">Pending delivery</Link>
+                <li className={this.isPathActive('/order/reciept-list/delivery') ? 'active' : null}>
+                  <Link to="/order/reciept-list/delivery">Pending delivery</Link>
+                </li>
+                <li className={this.isPathActive('/order/reciept-list/deliveried') ? 'active' : null}>
+                  <Link to="/order/reciept-list/deliveried">Deliveried</Link>
                 </li>
               </ul>
             </div>

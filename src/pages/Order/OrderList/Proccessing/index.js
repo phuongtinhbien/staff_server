@@ -7,10 +7,16 @@ import {gql} from 'apollo-boost';
 import { Query, Mutation } from 'react-apollo';
 const ORDER_QUERY = gql`
 query getCustomerOrder($taskType: String!, $status: [String!]) {
-  allTasks(filter: {taskType: {equalTo: $taskType}, currentStatus: {in: $status}}) {
+  allTasks(filter: {taskType: {equalTo: $taskType}, currentStatus: {in: $status},previousTask: {
+    equalTo:"N"
+  }}) {
     nodes {
       id
       currentStatus
+      staffByCurrentStaff{
+        id
+        fullName
+      }
       customerOrderByCustomerOrder {
         nodeId
         id
@@ -56,7 +62,8 @@ const proccessData = (pdata)=>{
         pickUpDate: data.pickUpDate,
         pickUpTime: data.timeScheduleByDeliveryTimeId.timeStart + " - " +data.timeScheduleByDeliveryTimeId.timeEnd,
         amount: "_",
-        status: pdata[i].currentStatus
+        status: pdata[i].currentStatus,
+        currentStaff: pdata[i].staffByCurrentStaff.fullName
       }
       result.push(row);
   }
@@ -74,7 +81,7 @@ class OrderProcessing extends Component {
       <Query
       query={ORDER_QUERY}
       fetchPolicy={"network-only"}
-      variables = {{taskType:"TASK_CUSTOMER_ORDER",status: ["APPROVED", "PENDING_SERVING","SERVING", "FINISHED_SERVING"] }}
+      variables = {{taskType:"TASK_CUSTOMER_ORDER",status: ["APPROVED", "PENDING_SERVING","SERVING"] }}
  
     >{({ loading, error, data, refetch, }) => {
       if (loading) return null;

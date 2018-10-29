@@ -2,7 +2,19 @@ import React, { Component } from 'react';
 import { Link, withRouter } from 'react-router-dom';
 import { BootstrapTable, TableHeaderColumn,ClearSearchButton} from 'react-bootstrap-table';
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
-import generateData from './generateData';
+import { Query, Mutation } from 'react-apollo';
+import gql  from "graphql-tag";
+
+
+const CURR_USER = gql `query{
+  currentUser{
+    id
+    userType
+    lastName
+
+  }
+}`;
+
 
 class OrderTable extends Component {
 
@@ -41,13 +53,54 @@ class OrderTable extends Component {
     }
 
     createCustomInsertButton = (openModal) => {
+      let currUser;
       return (
-        <button type="button" className="btn btn-primary btn-fill btn-wd" onClick={ openModal }>
-        <span className="btn-label">
-          <i className="pe-7s-plus"></i> &nbsp;
-          Approve
-        </span> 
-      </button>
+        <Query query={CURR_USER}>
+        {({loading, error,data, refetch}) => {
+          if (loading) return null;
+          if (data){
+              currUser =  data.currentUser.id;
+              return null;
+          }
+          return null;
+        }
+        }
+
+        {/* <Mutation
+                  mutation={UPDATE_ORDER_MUT}
+                  update={(cache, { data: { updatestatuscustomerorder } }) => {
+                    const { customerOrder } = cache.readQuery({ query: ORDER_DETAIL });
+                    
+                    cache.writeQuery({
+                      query: ORDER_DETAIL,
+                      variables:{nodeId:match.params.nodeId },
+                      data: { customerOrder: customerOrder.concat(updatestatuscustomerorder) }
+
+                    });
+                  }}
+                >
+                  {updatestatuscustomerorder => (
+                    <div className="col-md-12 text-center">
+                      <button
+                        type="submit"
+                        className="btn btn-fill btn-info"
+                        disabled={!(data.customerOrder.status ==="PENDING")}
+                        className={!(data.customerOrder.status ==="PENDING")? "btn btn-fill btn-info hidden": "btn btn-fill btn-info"}
+                        onClick={e => {
+                          e.preventDefault();
+                          this.setState({approve: true, decline: false});
+                          updatestatuscustomerorder({variables:{coId: data.customerOrder.id, pStatus:"APPROVED", pUser: currUser}});
+                        }}
+                      >
+                      <i className="pe-7s-plus"></i> &nbsp;
+                        Approve
+                      </button>
+                      </div>
+                  )}
+          </Mutation> */}
+
+        </Query>
+        
         
       );
     }
@@ -65,14 +118,16 @@ class OrderTable extends Component {
     const tableName = this.state.tableName;
     const tableDesc = this.state.tableDesc;
     console.log(orderList);
-    
+    function amountFormat(cell, row){
+      return cell;
+    }
     function buttonFormatter(cell, row){
       return (<Link style={{width:"75%"}}  className='btn btn-primary btn-sm btn-fill btn-linkedin' to={`/order/order-list/view/${row.nodeId}`}
       >{cell}</Link>);
     };
     function button1Formatter(cell, row){
       return (<Link style={{width:"75%"}} className='btn btn-primary btn-sm btn-fill btn-linkedin' to={`/order/order-list/view/${row.nodeId}`}
-      >Generate Bill</Link>);
+      >Approve</Link>);
     };
 
     function pickUpFormatter (cell,row){
@@ -104,17 +159,13 @@ class OrderTable extends Component {
       nextPage: 'Next',
       firstPage: 'First',
       lastPage: 'Last',
-      
       hideSizePerPage: true,
       clearSearch: true,
       afterDeleteRow: onAfterDeleteRow,
-      deleteBtn: this.createCustomDeleteButton,
-      insertBtn: this.createCustomInsertButton,
       clearSearchBtn: this.createCustomClearButton,
     };
 
     return (
-
       <div className="container-fluid">
         <div className="row">
           <div className="col-md-12">
@@ -130,7 +181,6 @@ class OrderTable extends Component {
                   striped
                  
                   search={ true } multiColumnSearch={ true }
-                  
                   pagination={true}
                   options={options}>
 
@@ -193,16 +243,12 @@ class OrderTable extends Component {
                   <TableHeaderColumn
                     dataField='amount'
                     width="25%"
+                    dataFormat={amountFormat}
                     >
                     Amount
                   </TableHeaderColumn>
-                  <TableHeaderColumn
-                    dataField=''
-                    width="20%"
-                    dataFormat={button1Formatter}
-                    >
-                    Action
-                  </TableHeaderColumn>
+                 
+                 
                 </BootstrapTable>
               </div>
             </div>

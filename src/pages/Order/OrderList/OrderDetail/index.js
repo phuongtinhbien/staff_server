@@ -296,6 +296,7 @@ class OrderPending extends Component {
           </Query>
             <Query     
       query={ORDER_DETAIL}
+      fetchPolicy={"network-only"}
       variables = {{nodeId:match.params.nodeId }}
 
     >{({ loading, error, data, refetch }) => {
@@ -308,6 +309,22 @@ class OrderPending extends Component {
         console.log(data)
       return (
         <div className="content">
+        <div className="text-right">
+        <button
+                        type="submit"
+                        className="btn btn-fill btn-info"
+                         disabled={!(data.customerOrder.status ==="PENDING")}
+                        className={!(data.customerOrder.status ==="PENDING")? "btn btn-fill btn-info hidden": "btn btn-fill btn-info"}
+                        // onClick={e => {
+                        //   e.preventDefault();
+                        //   this.setState({approve: true, decline: false});
+                        //   updatestatuscustomerorder({variables:{coId: data.customerOrder.id, pStatus:"APPROVED", pUser: currUser}});
+                        // }}
+                      >
+                        Edit
+                      </button>
+        </div>
+                
           <OrderDetailForm customerOrder={data.customerOrder}></OrderDetailForm>
           <div className="row">
            
@@ -338,6 +355,34 @@ class OrderPending extends Component {
                         }}
                       >
                         Approve
+                      </button>
+                      <button
+                        type="submit"
+                        className="btn btn-fill btn-info"
+                        disabled={!(data.customerOrder.status ==="PENDING_SERVING")}
+                        className={(data.customerOrder.status ==="PENDING_SERVING")? "btn btn-fill btn-info ": "btn btn-fill btn-info hidden"}
+                        onClick={e => {
+                          e.preventDefault();
+                          this.setState({approve: true, decline: false});
+                          updatestatuscustomerorder({variables:{coId: data.customerOrder.id, pStatus:"SERVING", pUser: currUser}});
+                        }}
+                      >
+                        Start Serving
+                      </button>
+                      &nbsp;
+                      &nbsp;
+                      <button
+                        type="submit"
+                        className="btn btn-fill btn-info"
+                        disabled={!(data.customerOrder.status ==="SERVING")}
+                        className={(data.customerOrder.status ==="SERVING")? "btn btn-fill btn-info ": "btn btn-fill btn-info hidden"}
+                        onClick={e => {
+                          e.preventDefault();
+                          this.setState({approve: true, decline: false});
+                          updatestatuscustomerorder({variables:{coId: data.customerOrder.id, pStatus:"FINISHED_SERVING", pUser: currUser}});
+                        }}
+                      >
+                        Finished
                       </button>
                       &nbsp;
                       &nbsp;

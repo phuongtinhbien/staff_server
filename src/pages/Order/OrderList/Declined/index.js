@@ -1,13 +1,12 @@
 import React, { Component } from 'react';
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
-import ReceiptTable from '../ReceiptTable';
+import OrderTable from './OrderTable';
 import { Link, withRouter } from 'react-router-dom';
-import {graphql,compose } from 'react-apollo';
+import {graphql } from 'react-apollo';
+import {gql} from 'apollo-boost';
 import { Query, Mutation } from 'react-apollo';
-import gql  from "graphql-tag";
-import Error from '../../../Error';
 
-const RECEIPT_QUERY = gql`
+const ORDER_QUERY = gql`
 query getCustomerOrder($taskType: String!, $status: [String!]) {
   allTasks(filter: {taskType: {equalTo: $taskType}, currentStatus: {in: $status},previousTask: {
     equalTo:"N"
@@ -15,11 +14,13 @@ query getCustomerOrder($taskType: String!, $status: [String!]) {
     nodes {
       id
       currentStatus
-      receiptByReceipt {
+      customerOrderByCustomerOrder {
         nodeId
         id
-        customerOrderByOrderId {
-        id
+        branchByBranchId {
+          id
+          branchName
+        }
         customerByCustomerId {
           id
           fullName
@@ -39,19 +40,16 @@ query getCustomerOrder($taskType: String!, $status: [String!]) {
       }
     }
   }
-  }
 }`;
-
 const AMOUNT_QUERY = gql`query calAmount ($customerid : BigFloat!, $customerorder: BigFloat!){
-  getamountoforderbycustomerid(customerid: $customerid,
-  customerorder: $customerorder)
-}`;
-
+    getamountoforderbycustomerid(customerid: $customerid,
+    customerorder: $customerorder)
+  }`;
 const calAmount = (customerId, customerOrder)=>{
     return(
       <Query
       query={AMOUNT_QUERY}
-      variables = {{taskType:"TASK_RECEIPT",status: ["PENDING"] }}>
+      variables = {{customerid: customerId, customerorder:customerOrder  }}>
         {({ loading, error, data, refetch }) => {
           if (loading) return  null;
           if (data != null){
@@ -69,47 +67,51 @@ const proccessData = (pdata)=>{
   
   for (let i = 0;i<pdata.length;i++){
       let row =null;
-      let data = pdata[i].receiptByReceipt;
+      let data = pdata[i].customerOrderByCustomerOrder;
+      
       row = {
         sn: i+1,
         nodeId: data.nodeId,
-        customerName: data.customerOrderByOrderId.customerByCustomerId.fullName,
-        deliveryDate: data.customerOrderByOrderId.deliveryDate,
-        deliveryTime: data.customerOrderByOrderId.timeScheduleByDeliveryTimeId.timeStart + " - " +data.customerOrderByOrderId.timeScheduleByDeliveryTimeId.timeEnd,
-        pickUpDate: data.customerOrderByOrderId.pickUpDate,
-        pickUpTime: data.customerOrderByOrderId.timeScheduleByDeliveryTimeId.timeStart + " - " +data.customerOrderByOrderId.timeScheduleByDeliveryTimeId.timeEnd,
-      
+        customerName: data.customerByCustomerId.fullName,
+        branch: data.branchByBranchId.branchName.replace("CHI NHANH ",""),
+        deliveryDate: data.deliveryDate,
+        deliveryTime: data.timeScheduleByDeliveryTimeId.timeStart + " - " +data.timeScheduleByDeliveryTimeId.timeEnd,
+        pickUpDate: data.pickUpDate,
+        pickUpTime: data.timeScheduleByDeliveryTimeId.timeStart + " - " +data.timeScheduleByDeliveryTimeId.timeEnd,
+        amount: calAmount(data.customerByCustomerId.id,data.id ),
+        status: pdata[i].currentStatus
       }
       result.push(row);
+      console.log(row);
   }
   return result;
 };
 
 
-class ReceiptPending extends Component {
+class OrderDeclined extends Component {
+
 
 
   render() {
     let {match,data} = this.props;
     return (
       <Query
-      query={RECEIPT_QUERY}
+      query={ORDER_QUERY}
       fetchPolicy={"network-only"}
-      variables = {{taskType:"TASK_RECEIPT",status: ["PENDING"] }}
+      variables = {{taskType:"TASK_CUSTOMER_ORDER",status: ["DECLINED"] }}
  
-
-    >{({ loading, error, data, refetch }) => {
+    >{({ loading, error, data, refetch, }) => {
       if (loading) return null;
       if (refetch) {
         console.log(refetch);
       }
       if (error){
-       return (<Error errorContent= {error.message}></Error>);
       }
       if (data != null){
-
       return (
-        <ReceiptTable tableName="Pending Receipts" tableDesc="All the list of pending receipts" orderList={proccessData(data.allTasks.nodes)}></ReceiptTable>
+        <OrderTable tableName="Declined Orders" 
+        tableDesc="All the list of delcined orders" 
+        orderList={proccessData(data.allTasks.nodes)}></OrderTable>
       );
       }
     }}
@@ -117,5 +119,13 @@ class ReceiptPending extends Component {
     );
   }
 }
+// const queryOptions = {
+//   options: props => ({
+//     variables: {
+//       status: "APPROVED",
+//     },
+//   }),
+//  }
 
-export default withRouter(ReceiptPending);
+//  OrderProcessing =  graphql(ORDER_QUERY,queryOptions)(OrderProcessing);
+export default withRouter(OrderDeclined);
