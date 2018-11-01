@@ -5,13 +5,14 @@ import { Navbar, Nav, NavItem, NavDropdown, MenuItem, FormGroup, FormControl } f
 
 const Header = ({
   showMobileMenu,
-  toggleMobileNavVisibility
+  toggleMobileNavVisibility,
+  history
 }) => (
     <Navbar fluid={true}>
 
       <Navbar.Collapse>
 
-        <Nav>
+        {/* <Nav>
           <NavItem><i className="fa fa-dashboard"></i></NavItem>
           <NavDropdown title={<i className="fa fa-globe" />} id="basic-nav-dropdown">
             <MenuItem>Action</MenuItem>
@@ -20,7 +21,7 @@ const Header = ({
             <MenuItem divider />
             <MenuItem>Separated link</MenuItem>
           </NavDropdown>
-        </Nav>
+        </Nav> */}
         <div className="separator"></div>
         <Navbar.Form pullLeft>
         </Navbar.Form>
@@ -33,7 +34,7 @@ const Header = ({
             <MenuItem divider />
             <MenuItem>Separated link</MenuItem>
           </NavDropdown>
-          <NavItem>Log out</NavItem>
+          <NavItem onClick={e=>{e.preventDefault(); localStorage.clear(); history.push("/")}}>Log out</NavItem>
         </Nav>
       </Navbar.Collapse>
     </Navbar>

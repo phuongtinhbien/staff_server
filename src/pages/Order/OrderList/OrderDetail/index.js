@@ -8,37 +8,6 @@ import gql  from "graphql-tag";
 import OrderDetailForm from './OrderDetailForm';
 import Error from '../../../Error';
 
-const ORDER_QUERY = gql`
-query getCustomerOrder ($status: String!){
-  allCustomerOrders (condition:{
-    status: $status
-  }){
-    nodes{
-      nodeId,
-      id
-      branchByBranchId{
-        id
-        branchName
-      },
-      customerByCustomerId{
-        id
-        fullName
-      },
-      deliveryDate,
-     	timeScheduleByDeliveryTimeId{
-         id
-        timeStart,
-        timeEnd
-      },
-      pickUpDate,
-      timeScheduleByPickUpTimeId{
-        id
-         timeStart,
-        timeEnd
-      }
-    }
-  }
-}`;
 const ORDER_DETAIL = gql`query getCustomerOrderByNodeId ($nodeId: ID!){  customerOrder(nodeId: $nodeId){
   nodeId 
   id 
@@ -255,14 +224,7 @@ const UPDATE_ORDER_MUT = gql`mutation updateCustomerOrder( $coId: BigFloat!,  $p
   }
 }`;
 
-const CURR_USER = gql `query{
-  currentUser{
-    id
-    userType
-    lastName
 
-  }
-}`;
 
 
 
@@ -275,25 +237,13 @@ class OrderPending extends Component {
 
   render() {
     let {match,data} = this.props;
-    let currUser;
+    let currUser="64";
+    const CURRENT_USER = JSON.parse(localStorage.getItem("luandryStaffPage.curr_staff_desc"));
     console.log(this.props);
     return (
       <div className="container-fluid">
       <div className="card">
         <div className="header"></div>
-
-          <Query query={CURR_USER}>
-          {({loading, error,data, refetch}) => {
-            if (loading) return null;
-            if (data){
-                currUser =  data.currentUser.id;
-                return null;
-            }
-            return null;
-          }
-          }
-
-          </Query>
             <Query     
       query={ORDER_DETAIL}
       fetchPolicy={"network-only"}
@@ -351,7 +301,7 @@ class OrderPending extends Component {
                         onClick={e => {
                           e.preventDefault();
                           this.setState({approve: true, decline: false});
-                          updatestatuscustomerorder({variables:{coId: data.customerOrder.id, pStatus:"APPROVED", pUser: currUser}});
+                          updatestatuscustomerorder({variables:{coId: data.customerOrder.id, pStatus:"APPROVED", pUser: CURRENT_USER.id}});
                         }}
                       >
                         Approve
@@ -364,7 +314,7 @@ class OrderPending extends Component {
                         onClick={e => {
                           e.preventDefault();
                           this.setState({approve: true, decline: false});
-                          updatestatuscustomerorder({variables:{coId: data.customerOrder.id, pStatus:"SERVING", pUser: currUser}});
+                          updatestatuscustomerorder({variables:{coId: data.customerOrder.id, pStatus:"SERVING", pUser: CURRENT_USER.id}});
                         }}
                       >
                         Start Serving
@@ -379,7 +329,7 @@ class OrderPending extends Component {
                         onClick={e => {
                           e.preventDefault();
                           this.setState({approve: true, decline: false});
-                          updatestatuscustomerorder({variables:{coId: data.customerOrder.id, pStatus:"FINISHED_SERVING", pUser: currUser}});
+                          updatestatuscustomerorder({variables:{coId: data.customerOrder.id, pStatus:"FINISHED_SERVING", pUser: CURRENT_USER.id}});
                         }}
                       >
                         Finished
@@ -393,7 +343,7 @@ class OrderPending extends Component {
                       onClick={e => {
                         e.preventDefault();
                         this.setState({approve: false, decline: true});
-                        updatestatuscustomerorder({variables:{coId: data.customerOrder.id, pStatus:"DECLINED", pUser: currUser}});
+                        updatestatuscustomerorder({variables:{coId: data.customerOrder.id, pStatus:"DECLINED", pUser: CURRENT_USER.id}});
                       }}
                     >
                       Decline

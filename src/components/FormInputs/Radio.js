@@ -18,6 +18,7 @@ class Radio extends Component {
       disabled
     } = this.props;
     return (
+      <div>
       <label className={cx("radio", {
         checked: input.checked,
         disabled: disabled
@@ -29,6 +30,12 @@ class Radio extends Component {
         <input {...input} type="radio" data-toggle="radio" disabled={disabled} />
         {label}
       </label>
+       { touched && error &&
+        <label className="error" htmlFor={input.name}>{error}</label>
+      }
+  
+     
+      </div>
     );
   }
 }

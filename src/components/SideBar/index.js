@@ -5,6 +5,31 @@ import { Collapse } from 'react-bootstrap';
 import UserInfo from './UserInfo';
 import Nav from './Nav';
 import backgroundImage from 'assets/images/sidebar-5.jpg';
+import { Query, Mutation } from 'react-apollo';
+import gql  from "graphql-tag";
+import ApolloClient from 'apollo-boost';
+
+// const client = new ApolloClient({ uri: 'http://localhost:5000/graphql' ,
+// headers:{
+//   authorization: "BEARER "+localStorage.getItem("luandryStaffPage.staff_key")
+// },
+
+// });
+const defaultUserInfo = {
+  name: 'Demo User',
+  image: 'https://cdn.iconscout.com/icon/free/png-256/avatar-372-456324.png',
+  id: null,
+  branch: null,
+  staffType: null,
+  email: null,
+  username: null,
+  gender: null,
+  address: null,
+  phone: null,
+  status: null
+
+};
+
 
 class SideBar extends Component {
 
@@ -29,14 +54,15 @@ class SideBar extends Component {
         </div>
 
         <div className="sidebar-wrapper">
-          <UserInfo />
+       
+       <UserInfo staffInfo={localStorage.getItem("luandryStaffPage.curr_staff_desc")?JSON.parse(localStorage.getItem("luandryStaffPage.curr_staff_desc")):defaultUserInfo} />
           <div className="line"></div>
           <Nav />
         </div>
         <div
           className="sidebar-background"
           style={{
-            backgroundImage: enableBackgroundImage ? 'url(' + backgroundImage + ')' : null
+            backgroundImage: 'url(' + backgroundImage + ')'
           }}>
         </div>
       </div>

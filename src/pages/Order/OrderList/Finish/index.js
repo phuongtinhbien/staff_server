@@ -7,9 +7,10 @@ import {gql} from 'apollo-boost';
 import { Query, Mutation } from 'react-apollo';
 
 const ORDER_QUERY = gql`
-query getCustomerOrder($taskType: String!, $status: [String!]) {
+query getCustomerOrder($taskType: String!, $status: [String!], $branch: BigFloat!) {
   allTasks(filter: {taskType: {equalTo: $taskType}, currentStatus: {in: $status},previousTask: {
-    equalTo:"N"
+    equalTo:"N"}, branchId:{
+    equalTo: $branch
   }}) {
     nodes {
       id
@@ -73,11 +74,12 @@ class OrderProcessing extends Component {
 
   render() {
     let {match,data} = this.props;
+    const CURRENT_USER = JSON.parse(localStorage.getItem("luandryStaffPage.curr_staff_desc"));
     return (
       <Query
       query={ORDER_QUERY}
       fetchPolicy={"network-only"}
-      variables = {{taskType:"TASK_CUSTOMER_ORDER",status: ["FINISHED"] }}
+      variables = {{taskType:"TASK_CUSTOMER_ORDER",status: ["FINISHED"], branch: CURRENT_USER.branch.id }}
  
     >{({ loading, error, data, refetch, }) => {
       if (loading) return null;

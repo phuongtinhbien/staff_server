@@ -5,13 +5,15 @@ import { HashRouter } from 'react-router-dom';
 import './assets/styles/base.scss';
 import 'sweetalert/dist/sweetalert.css';
 import Main from './pages/Main';
+
+import Login from './pages/Login';
 import configureStore from './config/configureStore';
 import { Provider } from 'react-redux';
 
 const store = configureStore();
 const rootElement = document.getElementById('root');
 
-const renderApp = Component => {
+const renderApp = (Component) => {
   ReactDOM.render(
     <Provider store={store}>
       <HashRouter>
@@ -22,7 +24,12 @@ const renderApp = Component => {
   );
 };
 
-renderApp(Main);
+// if (localStorage.getItem("luandryStaffPage.staff_key")){
+  renderApp(Main);
+// }
+// else{
+//   renderApp(Login);
+// }
 
 if (module.hot) {
   module.hot.accept('./pages/Main', () => {

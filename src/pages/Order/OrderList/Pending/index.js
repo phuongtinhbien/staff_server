@@ -8,9 +8,10 @@ import gql  from "graphql-tag";
 import Error from '../../../Error';
 
 const ORDER_QUERY = gql`
-query getCustomerOrder ($status: String!){
+query getCustomerOrder ($status: String!, $branch: BigFloat!){
   allCustomerOrders (condition:{
-    status: $status
+    status: $status,
+    branchId:  $branch
   }){
     nodes{
       nodeId,
@@ -83,16 +84,20 @@ const proccessData = (data)=>{
 };
 
 
+
+
 class OrderPending extends Component {
 
 
   render() {
     let {match,data} = this.props;
+    const CURRENT_USER = JSON.parse(localStorage.getItem("luandryStaffPage.curr_staff_desc"));
+    console.log(CURRENT_USER)
     return (
       <Query
       query={ORDER_QUERY}
       fetchPolicy={"network-only"}
-      variables = {{status: "PENDING" }}
+      variables = {{status: "PENDING", branch: CURRENT_USER.branch.id}}
 
     >{({ loading, error, data, refetch }) => {
       if (loading) return null;

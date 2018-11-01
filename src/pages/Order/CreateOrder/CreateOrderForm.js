@@ -1,12 +1,15 @@
 
 import React, { Component } from 'react';
 import moment from 'moment';
-import { Field, reduxForm } from 'redux-form';
+import { Field, reduxForm, FieldArray } from 'redux-form';
 import { SingleDatePicker, DateRangePicker } from 'react-dates';
 import { Link } from 'react-router-dom';
 import Tags from 'components/Tags';
+import { Query, Mutation } from 'react-apollo';
+import gql  from "graphql-tag";
 import renderField from 'components/FormInputs/renderField';
-
+import Error from '../../Error';
+import ItemCloth from './ItemCloth';
 
 
 
@@ -24,6 +27,22 @@ const resultDetail = (data) =>{
   );
 
 }
+
+const SERVICE_TYPE_QUERY = gql`query getServiceType ($branch: BigFloat!){
+  allServiceTypeBranches(condition:{
+    branchId: $branch
+  }){
+    nodes{
+      id
+      serviceTypeByServiceTypeId{
+        id
+        serviceTypeName
+      }
+    }
+  }
+}`;
+
+
 
 
 const proccessData = (data)=>{
@@ -46,6 +65,39 @@ const proccessData = (data)=>{
   return result;
 };
 
+const optionValue = (val,lab )=>{
+  return {value: val,label: lab};
+}
+
+const processOption =  (data, type)=>{
+let res=[];
+if (data!= null){
+  for (let i = 0; i<data.length;i++){
+      if (type ==="material"){
+        res.push(optionValue(data[i].id, data[i].materialName));
+      }
+      else if(type === "label"){
+        res.push(optionValue(data[i].id, data[i].labelName));
+      }
+      else if(type === "color"){
+        res.push(optionValue(data[i].id, data[i].colorName));
+      }
+      else if(type === "product"){
+        res.push(optionValue(data[i].id, data[i].productName));
+      }
+      else if(type === "service"){
+        res.push(optionValue(data[i].serviceTypeByServiceTypeId.id, data[i].serviceTypeByServiceTypeId.serviceTypeName));
+      }
+      else if (type === "unit"){
+        res.push(optionValue(data[i].id, data[i].unitName));
+      }
+      
+  }
+}
+return res;
+
+}
+
 
 
 class CreateOrder extends Component {
@@ -61,14 +113,15 @@ class CreateOrder extends Component {
   };
   render () {
     let { date, date1 } = this.state;
-    let {timeSchedule, branchList} = this.props;
+    let {timeSchedule, branch, optionListDetail,  submitting,
+      handleSubmit,} = this.props;
     function approveFunction(customerOrder){
       alert(customerOrder.toString());
     };
     console.log(this.props)
       return(
 
-          <form className="form-horizontal" >
+          <form className="form-horizontal" onSubmit={handleSubmit} >
           <fieldset>
               
               <legend>
@@ -125,24 +178,21 @@ class CreateOrder extends Component {
                   <label className="control-label col-md-4 mt-4">Branch</label>
                   <div className=" control-label col-md-8" style={{textAlign:"left"}}>
                   <Field
-                    name="branch"
-                    type="select"
-                    options={branchList}
+                    name="branchId"
+                    type="text"
+                    disabled = "true"
+                    inputClassName=" hidden"
+                    value={branch.id}
                     placeholder="Enter customer's address"
                     component={renderField}
                     />
+                    <span>{branch.branchName}</span>
                   </div>
                 </div>
                 <div className="col-sm-6 ">
                   <label className="control-label col-md-4 mt-4">Branch's Address</label>
                   <div className=" control-label col-md-8" style={{textAlign:"left"}}>
-                  <Field
-                    name="branchAddress"
-                    type="text"
-                    disabled = "true"
-                    placeholder="Branch Address"
-                    component={renderField}
-                    />
+                    <span>{branch.address}</span>
                   </div>
                 </div>
               </div>
@@ -244,19 +294,47 @@ class CreateOrder extends Component {
                     <div className=" control-label col-md-8" style={{textAlign:"left"}}><b></b></div>
                 </div>
               </div>
+              <div className="row">
+              <div className="col-sm-12 text-center">
+              <br/>
+              <button
+              type="submit"
+                className={"btn btn-fill btn-info"}
+                disabled={submitting}
+                >
+                Place an order
+            </button>
+              </div>
+              </div>
             
             </fieldset>
             <br></br><br></br>
             <fieldset>
               <legend>Add Clothes</legend>
-              <div className="row">
-                <div className="col-sm-6">
-                
-                </div>
-                <div className="col-sm-6">
-                
-                </div>
-              </div>
+              <Query query={SERVICE_TYPE_QUERY}
+              variables={{branch:branch.id}}>
+                {({loading, error,data, refetch}) => {
+                  if (loading) return null;
+                  if (error){
+                    return (<Error errorContent= {error.message}></Error>);
+                  }
+                  
+                  if (data){
+                    return(
+                      <FieldArray name="customerOrderDetail"
+                      material={processOption(optionListDetail.material.nodes,"material")}
+                    color={processOption(optionListDetail.color.nodes, "color")}
+                    label={processOption(optionListDetail.label.nodes, "label")}
+                    product={processOption(optionListDetail.product.nodes,"product")}
+                    service={processOption(data.allServiceTypeBranches.nodes,"service")}
+                    unit={processOption(optionListDetail.unit.nodes,"unit")}
+                        component={ItemCloth}></FieldArray>
+                     
+                    );
+                    
+                  }
+                }}
+                </Query>
               
             </fieldset>
           
@@ -265,4 +343,8 @@ class CreateOrder extends Component {
   }
 }
 export default reduxForm({
-  form: 'CreateOrder'})(CreateOrder);
+  form: 'CreateOrder',
+  initialValues:(props)=>({
+    branchId: props.branch.id
+  })
+})(CreateOrder);

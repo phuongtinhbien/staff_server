@@ -8,9 +8,10 @@ import gql  from "graphql-tag";
 import Error from '../../../Error';
 
 const RECEIPT_QUERY = gql`
-query getCustomerOrder($taskType: String!, $status: [String!]) {
+query getCustomerOrder($taskType: String!, $status: [String!], $branch: BigFloat!) {
   allTasks(filter: {taskType: {equalTo: $taskType}, currentStatus: {in: $status},previousTask: {
-    equalTo:"N"
+    equalTo:"N"}, branchId:{
+    equalTo: $branch
   }}) {
     nodes {
       id
@@ -42,27 +43,6 @@ query getCustomerOrder($taskType: String!, $status: [String!]) {
   }
 }`;
 
-const AMOUNT_QUERY = gql`query calAmount ($customerid : BigFloat!, $customerorder: BigFloat!){
-  getamountoforderbycustomerid(customerid: $customerid,
-  customerorder: $customerorder)
-}`;
-
-const calAmount = (customerId, customerOrder)=>{
-    return(
-      <Query
-      query={AMOUNT_QUERY}
-      variables = {{taskType:"TASK_RECEIPT",status: ["PENDING"] }}>
-        {({ loading, error, data, refetch }) => {
-          if (loading) return  null;
-          if (data != null){
-            return (<p>{data.getamountoforderbycustomerid}</p>);
-           
-          }
-        }
-        }
-        </Query>
-    );
-}
 
 const proccessData = (pdata)=>{
   let result = [];
@@ -91,11 +71,12 @@ class ReceiptPending extends Component {
 
   render() {
     let {match,data} = this.props;
+    const CURRENT_USER = JSON.parse(localStorage.getItem("luandryStaffPage.curr_staff_desc"));
     return (
       <Query
       query={RECEIPT_QUERY}
       fetchPolicy={"network-only"}
-      variables = {{taskType:"TASK_RECEIPT",status: ["PENDING"] }}
+      variables = {{taskType:"TASK_RECEIPT",status: ["PENDING"],branch: CURRENT_USER.branch.id }}
  
 
     >{({ loading, error, data, refetch }) => {

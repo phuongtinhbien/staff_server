@@ -2,14 +2,16 @@ import React, {Component} from 'react';
 import Select from 'react-select';
 
 
-const CustomSelect = ({input, options, name, id}) => (
+const CustomSelect = ({input, options,placeholder, name, id,helpText, meta: { touched, error, warning },}) => (
+
+    <div>
     <Select 
          {...input}
          id={id} 
          name={name} 
          options={options}
          value={input.value}
-        
+          placeholder ={placeholder}
          clearable={false}
          onChange={(value) => input.onChange(value)}
          onBlur={() => input.onBlur()}
@@ -31,6 +33,14 @@ const CustomSelect = ({input, options, name, id}) => (
           })}
          
     />
+    { touched && error &&
+        <label className="error" htmlFor={input.name}>{error}</label>
+      }
+  
+      { helpText &&
+        <span className="help-block">{helpText}</span>
+      }
+    </div>
 )
 
 export default CustomSelect;

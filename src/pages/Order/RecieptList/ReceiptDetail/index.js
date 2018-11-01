@@ -209,25 +209,12 @@ class ReceiptPending extends Component {
   render() {
     let {match,data} = this.props;
     let currUser;
+    const CURRENT_USER = JSON.parse(localStorage.getItem("luandryStaffPage.curr_staff_desc"));
     console.log(this.props);
     return (
       <div className="container-fluid">
       <div className="card">
         <div className="header"></div>
-          <Query query={CURR_USER}>
-          {({loading, error,data, refetch}) => {
-            if (loading) return null;
-            if (data){
-                console.log(data);
-                currUser =  data.currentUser.id;
-                return null;
-            }
-            return null;
-          
-          }
-          }
-
-          </Query>
           <Query     
             query={RECEIPT_DETAIL}
             variables = {{nodeId:match.params.nodeId }}
@@ -268,7 +255,7 @@ class ReceiptPending extends Component {
                         onClick={e => {
                           e.preventDefault();
                           this.setState({approve: true, decline: false});
-                          updatestatuscustomerorder({variables:{rId: data.receipt.id, pStatus:"RECEIVED", pUser: currUser}});
+                          updatestatuscustomerorder({variables:{rId: data.receipt.id, pStatus:"RECEIVED", pUser: CURRENT_USER.id}});
                         }}
                       >
                         Received
@@ -282,7 +269,7 @@ class ReceiptPending extends Component {
                         onClick={e => {
                           e.preventDefault();
                           this.setState({approve: true, decline: false});
-                          updatestatuscustomerorder({variables:{rId: data.receipt.id, pStatus:"DELIVERIED", pUser: currUser}});
+                          updatestatuscustomerorder({variables:{rId: data.receipt.id, pStatus:"DELIVERIED", pUser: CURRENT_USER.id}});
                         }}
                       >
                         Deliveried

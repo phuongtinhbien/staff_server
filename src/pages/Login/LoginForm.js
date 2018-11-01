@@ -49,8 +49,9 @@ const LoginForm = ({
           type="checkbox"
           component={renderField}
           label="Remember me" />
-
+      <div className="text-right">
         <button type="submit" className="btn btn-fill btn-info" disabled={submitting}>Login</button>
+        </div>
       </form>
     </div>
   </div>

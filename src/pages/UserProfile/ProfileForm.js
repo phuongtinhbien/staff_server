@@ -1,29 +1,29 @@
 import React from 'react';
+import { Field, reduxForm } from 'redux-form';
+import { SingleDatePicker, DateRangePicker } from 'react-dates';
+import gql  from "graphql-tag";
+import renderField from 'components/FormInputs/renderField';
 
+const CURRENT_USER = localStorage.getItem("luandryStaffPage.curr_staff_desc");
 const ProfileForm = () => (
   <div className="card">
     <div className="header">
-      <h4 className="title">Edit Profile</h4>
+      <h4 className="title">Edit Profile <span className="badge badge-warning">...</span></h4>
     </div>
     <div className="content">
       <form>
         <div className="row">
-          <div className="col-md-5">
+          <div className="col-md-6">
             <div className="form-group">
-              <label>Company (disabled)</label>
-              <input type="text" className="form-control" disabled="" placeholder="Company" defaultValue="Creative Code Inc." />
+              <label>Store (disabled)</label>
+              <Field type="text" className="form-control" name="store" disabled="true" placeholder="store" defaultValue="Creative Code Inc." 
+              component={renderField}/>
             </div>
           </div>
-          <div className="col-md-3">
+          <div className="col-md-6">
             <div className="form-group">
-              <label>Username</label>
-              <input type="text" className="form-control" placeholder="Username" defaultValue="michael23" />
-            </div>
-          </div>
-          <div className="col-md-4">
-            <div className="form-group">
-              <label htmlFor="exampleInputEmail1">Email address</label>
-              <input type="email" className="form-control" placeholder="Email" />
+              <label>Branch</label>
+              <Field type="text" className="form-control" name="branch" disabled="true" placeholder="Username" defaultValue="michael23" component={renderField}/>
             </div>
           </div>
         </div>
@@ -31,14 +31,14 @@ const ProfileForm = () => (
         <div className="row">
           <div className="col-md-6">
             <div className="form-group">
-              <label>First Name</label>
-              <input type="text" className="form-control" placeholder="Company" defaultValue="Mike" />
+              <label>Full Name</label>
+              <Field type="text" className="form-control" name="fullName" placeholder="Company" defaultValue="Mike" component={renderField}/>
             </div>
           </div>
           <div className="col-md-6">
             <div className="form-group">
-              <label>Last Name</label>
-              <input type="text" className="form-control" placeholder="Last Name" defaultValue="Andrew" />
+              <label>Email</label>
+              <Field type="text" className="form-control" name="email" disabled="true" placeholder="Last Name" defaultValue="Andrew" component={renderField} />
             </div>
           </div>
         </div>
@@ -51,42 +51,19 @@ const ProfileForm = () => (
             </div>
           </div>
         </div>
-
-        <div className="row">
-          <div className="col-md-4">
-            <div className="form-group">
-              <label>City</label>
-              <input type="text" className="form-control" placeholder="City" defaultValue="Mike" />
-            </div>
-          </div>
-          <div className="col-md-4">
-            <div className="form-group">
-              <label>Country</label>
-              <input type="text" className="form-control" placeholder="Country" defaultValue="Andrew" />
-            </div>
-          </div>
-          <div className="col-md-4">
-            <div className="form-group">
-              <label>Postal Code</label>
-              <input type="number" className="form-control" placeholder="ZIP Code" />
-            </div>
-          </div>
-        </div>
-
-        <div className="row">
-          <div className="col-md-12">
-            <div className="form-group">
-              <label>About Me</label>
-              <textarea rows="5" className="form-control" placeholder="Here can be your description" defaultValue="Lamborghini Mercy, Your chick she so thirsty, I'm in that two seat Lambo." />
-            </div>
-          </div>
-        </div>
-
         <button type="submit" className="btn btn-info btn-fill pull-right">Update Profile</button>
         <div className="clearfix"></div>
       </form>
     </div>
   </div>
 );
+export default reduxForm({
+  form: 'ProfileForm',
+  initialValues:{
+    store: "Creative Code Inc.",
+    branch: "",
+    fullName: CURRENT_USER.name,
+    email: CURRENT_USER.email
 
-export default ProfileForm;
+  }
+})(ProfileForm);
