@@ -3,7 +3,7 @@ import { Link, withRouter } from 'react-router-dom';
 import { Collapse } from 'react-bootstrap';
 
 
-class Nav extends Component {
+class ShipperNav extends Component {
 
   state = {};
 
@@ -17,13 +17,13 @@ class Nav extends Component {
             <p>Dashboard</p>
           </Link>
         </li>
-        <li className={this.isPathActive('/order/create-order') ? 'active' : null}>
+        {/* <li className={this.isPathActive('/order/create-order') ? 'active' : null}>
           <Link to="/order/create-order">
             <i className="pe-7s-plus"></i>
             <p>Create new Order</p>
           </Link>
-        </li>
-        <li className={this.state.componentMenuOpen ? 'active' : null}>
+        </li> */}
+        {/* <li className={this.state.componentMenuOpen ? 'active' : null}>
           <a onClick={() => this.setState({ componentMenuOpen: !this.state.componentMenuOpen })}
             data-toggle="collapse">
             <i className="pe-7s-plugin"></i>
@@ -54,7 +54,7 @@ class Nav extends Component {
               </ul>
             </div>
           </Collapse>
-        </li>
+        </li> */}
         <li className={this.state.tableMenuOpen ? 'active' : null}>
           <a onClick={() => this.setState({ tableMenuOpen: !this.state.tableMenuOpen })}
             data-toggle="collapse">
@@ -98,4 +98,4 @@ class Nav extends Component {
   }
 }
 
-export default withRouter(Nav);
+export default withRouter(ShipperNav);

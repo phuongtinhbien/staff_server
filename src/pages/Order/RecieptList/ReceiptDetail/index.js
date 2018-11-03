@@ -4,8 +4,9 @@ import { Link, withRouter } from 'react-router-dom';
 import {graphql,compose } from 'react-apollo';
 import { Query, Mutation } from 'react-apollo';
 import gql  from "graphql-tag";
-import OrderDetailForm from './OrderDetailForm';
+import ReceiptForm from './OrderDetailForm';
 import Error from '../../../Error';
+import moment from 'moment';
 
 const RECEIPT_DETAIL = gql`query getCustomerReceiptByNodeId($nodeId: ID!) {
   receipt(nodeId: $nodeId) {
@@ -13,7 +14,6 @@ const RECEIPT_DETAIL = gql`query getCustomerReceiptByNodeId($nodeId: ID!) {
     pickUpTime
     deliveryDate
     deliveryTime
-    deliveryPlace
     pickUpDate
     status
     staffByStaffPickUp{
@@ -74,6 +74,10 @@ const RECEIPT_DETAIL = gql`query getCustomerReceiptByNodeId($nodeId: ID!) {
         recievedAmount
         status
         amount
+        productByProductId{
+            id
+            productName
+          }
         colorByColorId{
           id
           colorName
@@ -99,16 +103,217 @@ const RECEIPT_DETAIL = gql`query getCustomerReceiptByNodeId($nodeId: ID!) {
   }
 }`;
 
-
-
-const CURR_USER = gql `query{
-  currentUser{
-    id
-    userType
-    lastName
-
+const ASSIGN_PICKUP = gql`
+mutation updateReceipt ($id: BigFloat!, $pickUp: BigFloat!, $updateDate:Datetime!, $updateBy: BigFloat! ){
+ updateReceiptById(input:{
+  id: $id,
+  receiptPatch:{
+    staffPickUp: $pickUp,
+    updateDate: $updateDate,
+    updateBy: $updateBy,
+    
   }
+}){
+  receipt{
+    id
+    pickUpTime
+    deliveryDate
+    deliveryTime
+    pickUpDate
+    status
+    staffByStaffPickUp{
+      id
+      fullName
+    }
+    staffByStaffDelivery{
+      id
+      fullName
+    }
+    customerOrderByOrderId {
+      nodeId
+      id
+      status
+      pickUpPlace
+      deliveryPlace
+      customerByCustomerId {
+        id
+        nodeId
+        fullName
+        email
+        phone
+        address
+      }
+      branchByBranchId {
+        nodeId
+        id
+        branchName
+        address
+      }
+      deliveryDate
+      timeScheduleByDeliveryTimeId {
+        nodeId
+        id
+        timeStart
+        timeEnd
+      }
+      pickUpDate
+      timeScheduleByPickUpTimeId {
+        nodeId
+        id
+        timeStart
+        timeEnd
+      }
+      pickUpPlace
+      deliveryPlace
+      promotionByPromotionId {
+        nodeId
+        id
+        promotionName
+        promotionCode
+      }
+    }
+    receiptDetailsByReceiptId{
+      nodes{
+        id
+        nodeId
+        recievedAmount
+        status
+        amount
+        productByProductId{
+            id
+            productName
+          }
+        colorByColorId{
+          id
+          colorName
+        }
+        labelByLabelId{	
+          id
+          labelName
+        }
+        unitByUnitId{
+          id
+          unitName
+        }
+        materialByMaterialId{
+          id
+          materialName
+        }
+        serviceTypeByServiceTypeId{
+          id
+          serviceTypeName
+        }  
+      }
+    }
+  }
+}
 }`;
+
+const ASSIGN_DELIVERY = gql`mutation updateReceipt ($id: BigFloat!, $shipper: BigFloat!, $updateDate:Datetime!, $updateBy: BigFloat! ){
+  updateReceiptById(input:{
+   id: $id,
+   receiptPatch:{
+     staffDelivery: $shipper,
+     updateDate: $updateDate,
+     updateBy: $updateBy,
+     
+   }
+ }){
+   receipt{
+     id
+     pickUpTime
+     deliveryDate
+     deliveryTime
+     pickUpDate
+     status
+     staffByStaffPickUp{
+       id
+       fullName
+     }
+     staffByStaffDelivery{
+       id
+       fullName
+     }
+     customerOrderByOrderId {
+       nodeId
+       id
+       status
+       pickUpPlace
+       deliveryPlace
+       customerByCustomerId {
+         id
+         nodeId
+         fullName
+         email
+         phone
+         address
+       }
+       branchByBranchId {
+         nodeId
+         id
+         branchName
+         address
+       }
+       deliveryDate
+       timeScheduleByDeliveryTimeId {
+         nodeId
+         id
+         timeStart
+         timeEnd
+       }
+       pickUpDate
+       timeScheduleByPickUpTimeId {
+         nodeId
+         id
+         timeStart
+         timeEnd
+       }
+       pickUpPlace
+       deliveryPlace
+       promotionByPromotionId {
+         nodeId
+         id
+         promotionName
+         promotionCode
+       }
+     }
+     receiptDetailsByReceiptId{
+       nodes{
+         id
+         nodeId
+         recievedAmount
+         status
+         amount
+         productByProductId{
+             id
+             productName
+           }
+         colorByColorId{
+           id
+           colorName
+         }
+         labelByLabelId{	
+           id
+           labelName
+         }
+         unitByUnitId{
+           id
+           unitName
+         }
+         materialByMaterialId{
+           id
+           materialName
+         }
+         serviceTypeByServiceTypeId{
+           id
+           serviceTypeName
+         }  
+       }
+     }
+   }
+ }
+ }`;
+
 
 const UPDATE_RECEIPT_MUT= gql`mutation updatestatusreceipt($rId: BigFloat!, $pStatus: String!, $pUser: BigFloat) {
   updatestatusreceipt(input: {rId: $rId, pStatus: $pStatus, pUser: $pUser}) {
@@ -178,6 +383,10 @@ const UPDATE_RECEIPT_MUT= gql`mutation updatestatusreceipt($rId: BigFloat!, $pSt
           recievedAmount
           status
           amount
+          productByProductId{
+            id
+            productName
+          }
           colorByColorId {
             id
             colorName
@@ -208,13 +417,12 @@ class ReceiptPending extends Component {
 
   render() {
     let {match,data} = this.props;
-    let currUser;
     const CURRENT_USER = JSON.parse(localStorage.getItem("luandryStaffPage.curr_staff_desc"));
     console.log(this.props);
     return (
       <div className="container-fluid">
       <div className="card">
-        <div className="header"></div>
+        <div className="header"> </div>
           <Query     
             query={RECEIPT_DETAIL}
             variables = {{nodeId:match.params.nodeId }}
@@ -229,10 +437,75 @@ class ReceiptPending extends Component {
               console.log(data)
             return (
               <div className="content">
-                 <OrderDetailForm receipt={data.receipt}></OrderDetailForm> 
+                 <ReceiptForm receipt={data.receipt}></ReceiptForm> 
                 <div className="row">
                 <div className="col-sm-4"></div>
                 <div className="col-sm-4 justify-content-center">
+                <div className="col-md-12 text-center">
+                <Mutation
+                  mutation={ASSIGN_PICKUP}
+                  update={(cache, { data: { receipt } }) => {
+                    const { receipt1 } = cache.readQuery({ query: RECEIPT_DETAIL });
+                    cache.writeQuery({
+                      query: RECEIPT_DETAIL,
+                      variables:{nodeId:match.params.nodeId },
+                      data: { receipt: receipt.concat(receipt1) }
+
+                    });
+                  }}
+                >
+                  {assignPickUp=>(
+                    <button
+                      type="submit"
+                      className="btn btn-fill btn-info"
+                      disabled={!((data.receipt.status ==="PENDING") && !(data.receipt.staffByStaffPickUp))}
+                      className={((data.receipt.status ==="PENDING") && !(data.receipt.staffByStaffPickUp))? "btn btn-fill btn-info ": "btn btn-fill btn-info hidden"}
+                      onClick={e => {
+                        e.preventDefault();
+                        this.setState({approve: true, decline: false});
+                        assignPickUp({variables:{id: data.receipt.id, pickUp: CURRENT_USER.id, updateDate: moment(), updateBy: CURRENT_USER.id }});
+                      }}
+                    >
+                      Pick up
+                    </button>
+                  )}
+
+                </Mutation>
+                &nbsp;
+                <Mutation
+                  mutation={ASSIGN_DELIVERY}
+                  update={(cache, { data: { receipt } }) => {
+                    const { receipt1 } = cache.readQuery({ query: RECEIPT_DETAIL });
+                    cache.writeQuery({
+                      query: RECEIPT_DETAIL,
+                      variables:{nodeId:match.params.nodeId },
+                      data: { receipt: receipt.concat(receipt1) }
+
+                    });
+                  }}
+                >
+                  {assignPickUp=>(
+                    <button
+                      type="submit"
+                      className="btn btn-fill btn-info"
+                      disabled={!((data.receipt.status ==="PENDING_DELIVERY") && !(data.receipt.staffByStaffDelivery))}
+                      className={((data.receipt.status ==="PENDING_DELIVERY") && !(data.receipt.staffByStaffDelivery))? "btn btn-fill btn-info ": "btn btn-fill btn-info hidden"}
+                      onClick={e => {
+                        e.preventDefault();
+                        this.setState({approve: true, decline: false});
+                        assignPickUp({variables:{id: data.receipt.id, shipper: CURRENT_USER.id, updateDate: moment(), updateBy: CURRENT_USER.id }});
+                      }}
+                    >
+                      Delivery
+                    </button>
+                  )}
+
+                </Mutation>
+                  
+                 
+                </div>
+               
+<br/>                  
                 <Mutation
                   mutation={UPDATE_RECEIPT_MUT}
                   update={(cache, { data: { updatestatusreceipt } }) => {
@@ -246,12 +519,23 @@ class ReceiptPending extends Component {
                   }}
                 >
                   {updatestatuscustomerorder => (
+
                     <div className="col-md-12 text-center">
+                      <Link
+                          to={"/order/reciept-list/edit/"+match.params.nodeId}
+                        
+                          disabled={!((data.receipt.status ==="PENDING") && (data.receipt.staffByStaffPickUp))}
+                          className={(data.receipt.status ==="PENDING") && (data.receipt.staffByStaffPickUp)? "btn btn-fill btn-warning ": "btn btn-fill btn-warning hidden"}
+                          
+                        >
+                          Update Receipt
+                  </Link>
+                  &nbsp;
                       <button
                         type="submit"
                         className="btn btn-fill btn-info"
-                        disabled={!(data.receipt.status ==="PENDING")}
-                        className={!(data.receipt.status ==="PENDING")? "btn btn-fill btn-info hidden": "btn btn-fill btn-info"}
+                        disabled={!((data.receipt.status ==="PENDING") && (data.receipt.staffByStaffPickUp))}
+                        className={(data.receipt.status ==="PENDING") && (data.receipt.staffByStaffPickUp)? "btn btn-fill btn-info ": "btn btn-fill btn-info hidden"}
                         onClick={e => {
                           e.preventDefault();
                           this.setState({approve: true, decline: false});
@@ -260,12 +544,13 @@ class ReceiptPending extends Component {
                       >
                         Received
                       </button>
+                      
                       &nbsp;
                       <button
                         type="submit"
                         className="btn btn-fill btn-info"
-                        disabled={!(data.receipt.status ==="PENDING_DELIVERY")}
-                        className={(data.receipt.status ==="PENDING_DELIVERY")? "btn btn-fill btn-info ": "hidden btn btn-fill btn-info"}
+                        disabled={!((data.receipt.status ==="PENDING_DELIVERY") && (data.receipt.staffByStaffDelivery))}
+                        className={((data.receipt.status ==="PENDING_DELIVERY") && (data.receipt.staffByStaffDelivery))? "btn btn-fill btn-info ": "hidden btn btn-fill btn-info"}
                         onClick={e => {
                           e.preventDefault();
                           this.setState({approve: true, decline: false});
@@ -275,9 +560,7 @@ class ReceiptPending extends Component {
                         Deliveried
                       </button>
                     &nbsp;
-                    <button className="btn btn-fill btn-danger" >
-                    Cancel
-                    </button>
+                    
                     </div>
                   
                   )}

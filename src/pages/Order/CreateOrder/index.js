@@ -5,6 +5,9 @@ import { Query, Mutation } from 'react-apollo';
 import gql  from "graphql-tag";
 import CreateOrderForm from './CreateOrderForm';
 import Error from '../../Error';
+import { formValueSelector } from 'redux-form'; 
+import { connect } from 'react-redux';
+import { onError } from 'apollo-link-error';
 
 
 
@@ -72,6 +75,20 @@ const OPTION_LIST = gql `query optionList {
 }
 `;
 
+const CREATE_ORDER = gql `mutation createCusOrder ($cus: CustomerInput!, $o: CustomerOrderInput,
+  $d: [OrderDetailInput!]){
+    createCusOrderAndDetail(input:{
+      cus: $cus,
+      o: $o,
+      d: $d
+    }){
+      customerOrder{
+        nodeId
+        id
+      }
+    }
+  }`;
+
 
 
 
@@ -93,9 +110,61 @@ const processTime =  (data)=>{
 }
 
 
-const handleCreateOrder = (values)=>{
+const handleCreateOrder = ( createCusOrderAndDetail,values, errorCreate, success)=>{
+  errorCreate= null;
+  success = null;
+  const CURRENT_USER = JSON.parse(localStorage.getItem("luandryStaffPage.curr_staff_desc"));
+  let CustomerInput ={
+    fullName: values.fullName,
+    email: values.email,
+    phone: values.phoneNumber,
+    createBy: CURRENT_USER.id,
+    updateBy: CURRENT_USER.id
+  }
+  let CustomerOrderInput = {
+    branchId: CURRENT_USER.branch.id,
+    deliveryTimeId: values.deliveryTime.value,
+    pickUpTimeId: values.pickUpTime.value,
+    pickUpPlace: values.pickUpPlace,
+    deliveryPlace: values.deliveryPlace,
+    createBy: CURRENT_USER.id,
+    updateBy: CURRENT_USER.id,
+    pickUpDate: values.pickUpDate,
+    deliveryDate: values.deliveryDate
+
+  }
+
+  let OrderDetailInputs =[];
+  for (let i=0;i<values.customerOrderDetail.length;i++){
+    let orderDetail = values.customerOrderDetail[i];
+    let order = {
+      serviceTypeId: orderDetail.serviceTypeId.value,
+      productId: orderDetail.productId.value,
+      unitId: orderDetail.unitId,
+      amount: orderDetail.amount,
+      labelId: orderDetail.labelId? orderDetail.labelId.value:null,
+      materialId: orderDetail.materialId? orderDetail.materialId.value:null,
+      colorId: orderDetail.colorId? orderDetail.colorId.value:null,
+      note: orderDetail.note,
+      createBy: CURRENT_USER.id,
+      updateBy: CURRENT_USER.id
+    }
+    OrderDetailInputs.push(order);
+  }
+
+  console.log(OrderDetailInputs)
+  createCusOrderAndDetail({variables:{cus:CustomerInput, o:CustomerOrderInput,d:OrderDetailInputs }});
+
+  alert(JSON.stringify({cus:CustomerInput, o:CustomerOrderInput,d:OrderDetailInputs }));
 
 }
+
+const handleOnCompleted = (data,history)=>{
+  
+  console.log(data);
+  history.push("/order/order-list/view/"+data.createCusOrderAndDetail.customerOrder.nodeId);
+}
+const selector = formValueSelector('CreateOrder')
 
 
 
@@ -104,19 +173,25 @@ class CreateOrder extends Component {
   state= {
     approve: false,
     decline: false,
+    errorCreate: null,
+    success: null
   }
 
   render() {
-    let {match,data} = this.props;
+    let {match,data,history} = this.props;
+    let {errorCreate,success} = this.state;
   const CURRENT_USER = JSON.parse(localStorage.getItem("luandryStaffPage.curr_staff_desc"));
     let timeSchedule;
-    console.log(this.props);
+    // console.log(this.props);
+    console.log(this.props)
     return (
       <div className="container-fluid">
       <div className="card">
         <div className="header"></div>
         <div className="content">
         <div className="text-right">
+       {errorCreate &&  <label className="btn btn-wd btn-fill  btn-danger" >{errorCreate}</label>}
+       {success &&  <label className="btn btn-wd btn-fill  btn-success" >{success}</label>}
         </div>
         <Query query={OPTION_LIST} >
                 {({loading, error,data, refetch}) => {
@@ -128,31 +203,36 @@ class CreateOrder extends Component {
                     console.log(data);
                     timeSchedule =  data.allTimeSchedules.nodes;
                     return  (
-                      // <Mutation
-                      //           mutation={AUTH_MUT}
-                      //           onCompleted={data=> {handleOnCompleted(data,history);
-                      //             // this.setState({isLogined: true})
-                      //           }}
-                      //           update={(cache, { data: { authenticate } }) => {
-                      //             const { jwt } = cache.readQuery({ query: AUTH_MUT });
-                      //           }}
-
-                      //         >
-                      //         {
-                      //           (authenticate) =>(
-                      //           <div>
-                      //             <LoginForm  onSubmit={values => {authenticate({variables:values});
-                      //           }} />
+                       <Mutation
+                                mutation={CREATE_ORDER}
+                                onCompleted={data=> {handleOnCompleted(data,history);
+                                  this.setState({success: "Create successfully"})
+                                }}
+                                onError={error => {
+                                 console.log(error)
+                                  this.setState({
+                                      errorCreate: "Can't create new order"
+                                  });
+                              }}
+                              >
+                              {
+                                (createCusOrderAndDetail) =>(
+                                <div>
+                                 <CreateOrderForm branch={CURRENT_USER.branch}
+                                    
+                                    timeSchedule={processTime(timeSchedule)} 
+                                    onSubmit={values=>handleCreateOrder(createCusOrderAndDetail,values, errorCreate, success)}
+                                    optionListDetail= {{material:data.allMaterials, color: data.allColors, label:data.allLabels, product:data.allProducts, unit:data.allUnits}}
+                                    ></CreateOrderForm>
+                                
                                   
-                      //           </div>
-                      //           )
-                      //         }
+                                </div>
+                                )
+                              }
                       
-                      // </Mutation>
-                    <CreateOrderForm branch={CURRENT_USER.branch}
-                    timeSchedule={processTime(timeSchedule)} 
-                    optionListDetail= {{material:data.allMaterials, color: data.allColors, label:data.allLabels, product:data.allProducts, unit:data.allUnits}}
-                    ></CreateOrderForm>);
+                      </Mutation>
+                    );
+                    
                   }
                 }
                 }
@@ -167,4 +247,15 @@ class CreateOrder extends Component {
     );
   }
 }
+
+CreateOrder = connect(
+  state => ({
+    firstValue: selector(state, 'fullName'),
+    secondValue: selector(state, 'email'),
+    secondValue: selector(state, 'phone'),
+    pickUpDate: selector(state, 'pickUpDate'),
+    deliveryDate: selector(state,'deliveryDate')
+
+  })
+)(CreateOrder)
 export default withRouter(CreateOrder);

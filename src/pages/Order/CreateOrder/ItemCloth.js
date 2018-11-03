@@ -1,6 +1,5 @@
 import React from 'react'
 import { Field, FieldArray, reduxForm } from 'redux-form'
-import validate from './validate';
 import renderField from 'components/FormInputs/renderField';
 
 const renderItemOrderDetail = ({ fields, color, label, material, product,service, unit,  meta: { error, submitFailed } }) =>(
@@ -11,11 +10,11 @@ const renderItemOrderDetail = ({ fields, color, label, material, product,service
         onClick={() => fields.push({})}
         >
         Add to bag
-    </button>
+    </button> &nbsp;
       {submitFailed &&
         error &&
         <span>
-          {error}
+          <label className="error" >{error}</label>
         </span>}
           <table className="table table-hover table-striped">
             <thead>
@@ -28,7 +27,8 @@ const renderItemOrderDetail = ({ fields, color, label, material, product,service
               </tr>
             </thead>
             <tbody>
-            {fields.map((orderDetail, index) => (
+            { 
+              fields.map((orderDetail, index) => (
                 <tr key={index}>
                   <td>{index + 1}</td>
                   <td>

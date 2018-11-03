@@ -1,8 +1,6 @@
 import React, { Component } from 'react';
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
-import OrderTable from '../OrderTable';
 import { Link, withRouter } from 'react-router-dom';
-import {graphql,compose } from 'react-apollo';
 import { Query, Mutation } from 'react-apollo';
 import gql  from "graphql-tag";
 import OrderDetailForm from './OrderDetailForm';
@@ -237,7 +235,6 @@ class OrderPending extends Component {
 
   render() {
     let {match,data} = this.props;
-    let currUser="64";
     const CURRENT_USER = JSON.parse(localStorage.getItem("luandryStaffPage.curr_staff_desc"));
     console.log(this.props);
     return (
@@ -293,6 +290,19 @@ class OrderPending extends Component {
                 >
                   {updatestatuscustomerorder => (
                     <div className="col-md-12 text-center">
+                    <button
+                        type="submit"
+                        className="btn btn-fill btn-info"
+                        disabled={!(data.customerOrder.status ==="DRAFT")}
+                        className={!(data.customerOrder.status ==="DRAFT")? "btn btn-fill btn-info hidden": "btn btn-fill btn-info"}
+                        onClick={e => {
+                          e.preventDefault();
+                          this.setState({approve: true, decline: false});
+                          updatestatuscustomerorder({variables:{coId: data.customerOrder.id, pStatus:"PENDING", pUser: CURRENT_USER.id}});
+                        }}
+                      >
+                        Order
+                      </button>
                       <button
                         type="submit"
                         className="btn btn-fill btn-info"

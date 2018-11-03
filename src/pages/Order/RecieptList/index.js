@@ -4,7 +4,8 @@ import ReceiptPending from './Pending';
 import ReceiptDetail from './ReceiptDetail';
 import ReceiptReceived from './Received';
 import ReceiptPendingDelivery from './PendingDelivery';
-import ReceiptDeliveried from './Deliveried'
+import ReceiptDeliveried from './Deliveried';
+import ReceiptUpdate from './UpdateReceipt';
 
 const Reciepts = ({match}) => (
 
@@ -14,6 +15,7 @@ const Reciepts = ({match}) => (
         <Route path={`${match.url}/delivery`} component={ReceiptPendingDelivery} />
         <Route path={`${match.url}/deliveried`} component={ReceiptDeliveried} />
         <Route  path={`${match.url}/view/:nodeId`} component={ReceiptDetail} />
+        <Route  path={`${match.url}/edit/:nodeId`} component={ReceiptUpdate} />
     </div>
 );
 

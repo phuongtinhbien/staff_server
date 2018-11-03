@@ -68,6 +68,7 @@ const Login = ({ history }) => {
                   {
                     (authenticate) =>(
                     <div>
+                      {/* <label className="error"> {this.state.errorContent}</label> */}
                       <LoginForm  onSubmit={values => {authenticate({variables:values});
                      }} />
                       

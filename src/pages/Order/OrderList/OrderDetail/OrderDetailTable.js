@@ -54,13 +54,37 @@ class OrderDetailTable extends Component {
 
     function currencyFormatter (cell, row){
         let amountMoney = 654645;
+        amountMoney = row.amount*row.unitPrice;
         return (
             <p>
-           cell
+           {amountMoney}
             </p>
         );
     }
 
+    const footerData = [
+      [
+        {
+          label: 'Total',
+          columnIndex: 3
+        },
+        {
+          label: 'Total value',
+          columnIndex: 7,
+          align: 'right',
+        
+          formatter: (tableData) => {
+            let label = 0;
+            for (let i = 0, tableDataLen = tableData.length; i < tableDataLen; i++) {
+              label += tableData[i].unitPrice*tableData[i].amount;
+            }
+            return (
+              <strong>{ label }</strong>
+            );
+          }
+        }
+      ]
+    ];
 
 
     const options = {
@@ -82,6 +106,8 @@ class OrderDetailTable extends Component {
                   data={orderDetailList}
                   bordered={false}
                   striped
+                  footer={true}
+                  footerData={ footerData }
                   search={ true } multiColumnSearch={ true }
                   pagination={true}
                   options={options}>

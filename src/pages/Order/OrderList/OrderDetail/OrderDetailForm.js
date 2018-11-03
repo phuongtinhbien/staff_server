@@ -38,7 +38,7 @@ const proccessData = (data)=>{
         amount:data[i].amount,
         unit: data[i].unitByUnitId != null ? data[i].unitByUnitId.unitName: "_",
         unitPrice:data[i].unitPriceByUnitPrice!= null?  data[i].unitPriceByUnitPrice.price :"_",
-        details: resultDetail(data)
+        details: resultDetail(data[i])
       }
       result.push(row);
   }
@@ -59,9 +59,7 @@ class OrderDetailForm extends Component {
   render () {
     
     let {customerOrder} = this.props;
-    function approveFunction(customerOrder){
-      alert(customerOrder.toString());
-    };
+  
       return(
 
           <form className="form-horizontal" >

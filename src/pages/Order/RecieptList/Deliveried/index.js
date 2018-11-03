@@ -78,7 +78,7 @@ const proccessData = (pdata)=>{
         deliveryDate: data.customerOrderByOrderId.deliveryDate,
         deliveryTime: data.customerOrderByOrderId.timeScheduleByDeliveryTimeId.timeStart + " - " +data.customerOrderByOrderId.timeScheduleByDeliveryTimeId.timeEnd,
         pickUpDate: data.customerOrderByOrderId.pickUpDate,
-        pickUpTime: data.customerOrderByOrderId.timeScheduleByDeliveryTimeId.timeStart + " - " +data.customerOrderByOrderId.timeScheduleByDeliveryTimeId.timeEnd,
+        pickUpTime: data.customerOrderByOrderId.timeScheduleByPickUpTimeId.timeStart + " - " +data.customerOrderByOrderId.timeScheduleByPickUpTimeId.timeEnd,
       
       }
       result.push(row);

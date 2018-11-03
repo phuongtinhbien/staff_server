@@ -48,7 +48,7 @@ const proccessData = (data)=>{
 
 
 
-class OrderDetailForm extends Component {
+class ReceiptForm extends Component {
   state = {
     date: moment(),
     startDate: moment(),
@@ -162,11 +162,11 @@ class OrderDetailForm extends Component {
               <div className="row">
                 <div className="col-sm-6">
                     <label className="control-label col-md-4 mt-4" >Pick up place </label>
-                    <div className=" control-label col-md-8" style={{textAlign:"left"}}><b>{receipt.pickUpPlace !=null ?receipt.pickUpPlace: "_" }</b></div>
+                    <div className=" control-label col-md-8" style={{textAlign:"left"}}><b>{receipt.customerOrderByOrderId.pickUpPlace !=null ?receipt.customerOrderByOrderId.pickUpPlace: "_" }</b></div>
                 </div>
                 <div className="col-sm-6">
                     <label className="control-label col-md-4 mt-4" >Delivery place </label>
-                    <div className=" control-label col-md-8" style={{textAlign:"left"}}><b>{receipt.pickUpPlace !=null ?receipt.deliveryPlace: "_" }</b></div>
+                    <div className=" control-label col-md-8" style={{textAlign:"left"}}><b>{receipt.customerOrderByOrderId.deliveryPlace !=null ?receipt.customerOrderByOrderId.deliveryPlace: "_" }</b></div>
                 </div>
               </div>
               <div className="row">
@@ -196,4 +196,4 @@ class OrderDetailForm extends Component {
   }
 }
 export default reduxForm({
-  form: 'OrderDetailForm'})(OrderDetailForm);
+  form: 'ReceiptForm'})(ReceiptForm);

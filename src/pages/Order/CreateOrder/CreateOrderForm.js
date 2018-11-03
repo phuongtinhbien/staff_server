@@ -3,30 +3,111 @@ import React, { Component } from 'react';
 import moment from 'moment';
 import { Field, reduxForm, FieldArray } from 'redux-form';
 import { SingleDatePicker, DateRangePicker } from 'react-dates';
-import { Link } from 'react-router-dom';
-import Tags from 'components/Tags';
+import { connect } from 'react-redux';
 import { Query, Mutation } from 'react-apollo';
 import gql  from "graphql-tag";
 import renderField from 'components/FormInputs/renderField';
 import Error from '../../Error';
 import ItemCloth from './ItemCloth';
+import _ from 'lodash';
+import { formValueSelector } from 'redux-form'; 
+
+const validate = values => {
+  const errors = {};
+  if (!values.email) {
+    errors.email = 'Email is required';
+  } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(values.email)) {
+    errors.email = 'Invalid email address'
+  }
+  if (!values.fullName) {
+    errors.fullName = 'Full name is required';
+  } else if (values.fullName.length < 6) {
+    errors.fullName = 'Must be 6 characters or more';
+  }
+  if (!values.phoneNumber) {
+    errors.phoneNumber = 'Phone number is required';
+  } else if (values.phoneNumber.length < 10) {
+    errors.phoneNumber = 'Must be 10 characters or more';
+  }
+  // if (!values.address) {
+  //   errors.address = 'Address is required';
+  // }
+
+  if (!values.pickUpDate){
+    errors.pickUpDate = 'Pick up date is required';
+  }
+  if (!values.deliveryDate){
+    errors.deliveryDate = 'Delivery date is required';
+  }
+  else if ( !(values.pickUpDate && (values.deliveryDate>= values.pickUpDate ))){
+     errors.deliveryDate = " Choose delivery date again!!!"
+  }
+  
+  if (!values.pickUpTime){
+    errors.pickUpTime = 'Pick up time is required';
+  }
+  if (!values.deliveryTime){
+    errors.deliveryTime = 'Delivery time is required';
+  }
+  else if (values.pickUpDate && values.deliveryDate && values.pickUpDate == values.deliveryDate && !(values.pickUpTime && (values.deliveryTime.value > values.pickUpTime.value ))){
+    errors.deliveryTime = " Choose delivery time again!!!"
+  }
+
+
+  if (!values.pickUpPlace) {
+    errors.pickUpPlace = 'Pick up place is required';
+  } else if (values.pickUpPlace.length < 30) {
+    errors.pickUpPlace = 'Must be 30 characters or more';
+  }
+  if (!values.deliveryPlace) {
+    errors.deliveryPlace = 'Delivery place is required';
+  } else if (values.deliveryPlace.length < 30) {
+    errors.deliveryPlace = 'Must be 30 characters or more';
+  }
+
+  if (!values.customerOrderDetail || !values.customerOrderDetail.length) {
+    errors.customerOrderDetail = { _error: 'At least one item must be entered'}
+  }
+  else {
+    const customerOrderDetailArrayErrors = []
+    values.customerOrderDetail.forEach((item, itemIndex) => {
+      const itemErrors = {}
+      if (!item || !item.serviceTypeId) {
+        itemErrors.serviceTypeId = 'Required'
+        customerOrderDetailArrayErrors[itemIndex] = itemErrors
+      }
+      if (!item || !item.productId) {
+        itemErrors.productId = 'Required'
+        customerOrderDetailArrayErrors[itemIndex] = itemErrors
+      }
+      if (!item || !item.productId) {
+        itemErrors.productId = 'Required'
+        customerOrderDetailArrayErrors[itemIndex] = itemErrors
+      }
+      if (!item || !item.unitId) {
+        itemErrors.unitId = 'Required'
+        customerOrderDetailArrayErrors[itemIndex] = itemErrors
+      }
+      if (!item || !item.amount) {
+        itemErrors.amount = 'Required'
+        customerOrderDetailArrayErrors[itemIndex] = itemErrors
+      }
+      else if (item.amount && _.isNaN(item.amount)) {
+        itemErrors.amount = 'Please enter a number';
+        customerOrderDetailArrayErrors[itemIndex] = itemErrors
+      }
+
+    })
+    if (customerOrderDetailArrayErrors.length) {
+      errors.customerOrderDetail = customerOrderDetailArrayErrors
+    }
+  }
+
+  return errors;
+};
 
 
 
-const resultDetail = (data) =>{
-  return (
-    <p>
-      <span style={{fontSize:"12px"}}> - Material : {data.materialByMaterialId!= null?data.materialByMaterialId.materialName: "Undefine"} </span>
-      <br></br>
-      <span style={{fontSize:"12px"}}> - Label : {data.labelByLabelId!= null?data.labelByLabelId.labelName: "Undefine"} </span>
-      <br></br>
-      <span style={{fontSize:"12px"}}> - Color : {data.colorByColorId!= null?data.colorByColorId.colorName: "Undefine"} </span>
-      <br></br>
-      <span style={{fontSize:"12px"}}> - Note : {data.note!= null?data.note: "_"} </span>
-    </p>
-  );
-
-}
 
 const SERVICE_TYPE_QUERY = gql`query getServiceType ($branch: BigFloat!){
   allServiceTypeBranches(condition:{
@@ -45,25 +126,6 @@ const SERVICE_TYPE_QUERY = gql`query getServiceType ($branch: BigFloat!){
 
 
 
-const proccessData = (data)=>{
-  let result = [];
-  
-  for (let i = 0;i<data.length;i++){
-      let row =null;
-      row = {
-        sn: i+1,
-        nodeId: data[i].nodeId,
-        productName: data[i].productByProductId != null ? data[i].productByProductId .productName: "undefine",
-        serviceName: data[i].serviceTypeByServiceTypeId != null ? data[i].serviceTypeByServiceTypeId.serviceTypeName:"_",
-        amount:data[i].amount,
-        unit: data[i].unitByUnitId != null ? data[i].unitByUnitId.unitName: "_",
-        unitPrice:data[i].unitPriceByUnitPrice!= null?  data[i].unitPriceByUnitPrice.price :"_",
-        details: resultDetail(data)
-      }
-      result.push(row);
-  }
-  return result;
-};
 
 const optionValue = (val,lab )=>{
   return {value: val,label: lab};
@@ -100,6 +162,8 @@ return res;
 
 
 
+
+
 class CreateOrder extends Component {
   state = {
     date: moment(),
@@ -118,7 +182,7 @@ class CreateOrder extends Component {
     function approveFunction(customerOrder){
       alert(customerOrder.toString());
     };
-    console.log(this.props)
+
       return(
 
           <form className="form-horizontal" onSubmit={handleSubmit} >
@@ -145,7 +209,7 @@ class CreateOrder extends Component {
                   <label className="control-label col-md-4">Phone number</label>
                   <div className=" control-label col-md-8" style={{textAlign:"left"}}>
                   <Field
-                    name="phoneNumer"
+                    name="phoneNumber"
                     type="text"
                     placeholder="Enter customer's phone"
                     component={renderField}
@@ -162,14 +226,21 @@ class CreateOrder extends Component {
                     component={renderField}
                     />
                   </div>
-                  <label className="control-label col-md-4">Address</label>
+                  <label className="control-label col-md-4"></label>
                   <div className=" control-label col-md-8" style={{textAlign:"left"}}>
-                  <Field
+                  {/* <Field
                     name="address"
                     type="text"
                     placeholder="Enter customer's address"
                     component={renderField}
-                    />
+                    /> */}
+                    <button
+                      type="button"
+                        className={"btn btn-fill btn-sm btn-info"}
+                        disabled={submitting}
+                        >
+                        Search
+                    </button>
                   </div>
                 </div>
               </div>
@@ -202,18 +273,11 @@ class CreateOrder extends Component {
                     <label className="control-label col-md-4 mt-4">Pick up date </label>
                     <div className="col-md-8 mt-4">
                     <Field
-                        name="pickUpdate"
-                        type="text"
-                        inputClassName="hidden"
-                        value = {this.state.date}
-                        component={renderField}
-                        />
-                    <SingleDatePicker
+                        name="pickUpDate"
+                        type="date"
                         date={date}
-                        id= "pickUpdate"
-                        onDateChange={date => this.setState({date})}
-                        focused={this.state.focused}
-                        onFocusChange={({ focused }) => this.setState({ focused })}
+                
+                        component={renderField}
                         />
                     </div>
                     <br></br><br></br>
@@ -222,6 +286,7 @@ class CreateOrder extends Component {
                         <Field
                         name="pickUpTime"
                         type="select"
+                        
                         options={timeSchedule}
                         component={renderField}
                         />
@@ -232,19 +297,11 @@ class CreateOrder extends Component {
                     <div className="col-md-8 mt-4">
                     <Field
                         name="deliveryDate"
-                        type="text"
-                        inputClassName="hidden"
-                        value = {this.state.date1}
+                        type="date"
+                        date={date}
                         component={renderField}
                         />
-                    <SingleDatePicker
-                        date={date1}
-                        id="deliveryDate"
-                        displayFormat={""}
-                        onDateChange={date1 => this.setState({date1})}
-                        focused={this.state.focused1}
-                        onFocusChange={({ focused}) => this.setState({ focused1:focused  })}
-                        />
+
                     </div>
                     <br></br><br></br>
                   <label className="control-label col-md-4 mt-6">Delivery time </label>
@@ -342,9 +399,9 @@ class CreateOrder extends Component {
       );
   }
 }
+
 export default reduxForm({
   form: 'CreateOrder',
-  initialValues:(props)=>({
-    branchId: props.branch.id
-  })
+  validate,
+    
 })(CreateOrder);

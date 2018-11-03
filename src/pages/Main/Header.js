@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { toggleMobileNavVisibility } from '../../reducers/Layout';
 import { Navbar, Nav, NavItem, NavDropdown, MenuItem, FormGroup, FormControl } from 'react-bootstrap';
-
+const CURRENT_USER = JSON.parse(localStorage.getItem("luandryStaffPage.curr_staff_desc"));
 const Header = ({
   showMobileMenu,
   toggleMobileNavVisibility,
@@ -26,14 +26,8 @@ const Header = ({
         <Navbar.Form pullLeft>
         </Navbar.Form>
         <Nav pullRight>
-          <NavItem>Account</NavItem>
-          <NavDropdown title="Dropdown" id="right-nav-bar">
-            <MenuItem>Action</MenuItem>
-            <MenuItem>Another action</MenuItem>
-            <MenuItem>Something else here</MenuItem>
-            <MenuItem divider />
-            <MenuItem>Separated link</MenuItem>
-          </NavDropdown>
+          <NavItem><span className="btn btn-sm btn-fill btn-warning">{CURRENT_USER.branch.branchName+" - "+CURRENT_USER.branch.id}</span></NavItem>
+          <NavItem><span className="btn btn-sm btn-fill btn-success">{CURRENT_USER.staffType.staffType}</span></NavItem>
           <NavItem onClick={e=>{e.preventDefault(); localStorage.clear(); history.push("/")}}>Log out</NavItem>
         </Nav>
       </Navbar.Collapse>

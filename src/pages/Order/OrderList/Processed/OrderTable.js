@@ -128,9 +128,9 @@ class OrderTable extends Component {
                   data={orderList}
                   bordered={false}
                   striped
-                  insertRow={ true }
+                
                   search={ true } multiColumnSearch={ true }
-                  deleteRow={ true } selectRow={ selectRowProp }
+                 selectRow={ selectRowProp }
                   pagination={true}
                   options={options}>
 

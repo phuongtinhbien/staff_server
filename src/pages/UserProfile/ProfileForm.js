@@ -62,8 +62,7 @@ export default reduxForm({
   initialValues:{
     store: "Creative Code Inc.",
     branch: "",
-    fullName: CURRENT_USER.name,
-    email: CURRENT_USER.email
+
 
   }
 })(ProfileForm);

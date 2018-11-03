@@ -4,17 +4,8 @@ import { connect } from 'react-redux';
 import { Collapse } from 'react-bootstrap';
 import UserInfo from './UserInfo';
 import Nav from './Nav';
-import backgroundImage from 'assets/images/sidebar-5.jpg';
-import { Query, Mutation } from 'react-apollo';
-import gql  from "graphql-tag";
-import ApolloClient from 'apollo-boost';
-
-// const client = new ApolloClient({ uri: 'http://localhost:5000/graphql' ,
-// headers:{
-//   authorization: "BEARER "+localStorage.getItem("luandryStaffPage.staff_key")
-// },
-
-// });
+import ShipperNav from'./ShiperNav';
+import StaffNav from './StaffNav';
 const defaultUserInfo = {
   name: 'Demo User',
   image: 'https://cdn.iconscout.com/icon/free/png-256/avatar-372-456324.png',
@@ -42,7 +33,7 @@ class SideBar extends Component {
       enableBackgroundImage,
       backgroundImage
     } = this.props;
-
+    const CURRENT_USER = JSON.parse(localStorage.getItem("luandryStaffPage.curr_staff_desc"));
     return (
       <div className="sidebar" data-color={backgroundColor} data-image={backgroundImage}>
 
@@ -57,7 +48,9 @@ class SideBar extends Component {
        
        <UserInfo staffInfo={localStorage.getItem("luandryStaffPage.curr_staff_desc")?JSON.parse(localStorage.getItem("luandryStaffPage.curr_staff_desc")):defaultUserInfo} />
           <div className="line"></div>
-          <Nav />
+          {CURRENT_USER.staffType.staffCode=== "STAFF_01"?<Nav />:null}
+          {CURRENT_USER.staffType.staffCode === "STAFF_O2"?<StaffNav />:null}
+          {CURRENT_USER.staffType.staffCode === "STAFF_03"?<ShipperNav />: null}
         </div>
         <div
           className="sidebar-background"

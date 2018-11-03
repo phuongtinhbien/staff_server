@@ -78,7 +78,7 @@ const proccessData = (pdata)=>{
         deliveryDate: data.deliveryDate,
         deliveryTime: data.timeScheduleByDeliveryTimeId.timeStart + " - " +data.timeScheduleByDeliveryTimeId.timeEnd,
         pickUpDate: data.pickUpDate,
-        pickUpTime: data.timeScheduleByDeliveryTimeId.timeStart + " - " +data.timeScheduleByDeliveryTimeId.timeEnd,
+        pickUpTime: data.timeScheduleByPickUpTimeId.timeStart + " - " +data.timeScheduleByPickUpTimeId.timeEnd,
         amount: calAmount(data.customerByCustomerId.id,data.id ),
         status: pdata[i].currentStatus
       }

@@ -33,7 +33,7 @@ class UserInfo extends Component {
           <div className="username">
             {staffInfo.name}
           </div>
-          <div className="title">{staffInfo.staffType}</div>
+          <div className="title">{staffInfo.staffType.staffType}</div>
         </div>
         <span
           onClick={() => this.setState({ isShowingUserMenu: !this.state.isShowingUserMenu })}
