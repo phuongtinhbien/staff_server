@@ -15,6 +15,7 @@ const ORDER_DETAIL = gql`query getCustomerOrderByNodeId ($nodeId: ID!){  custome
   receiptsByOrderId{
     nodes{
       id
+      nodeId
       staffByStaffPickUp{
         id
         fullName
@@ -125,6 +126,7 @@ const UPDATE_ORDER_MUT = gql`mutation updateCustomerOrder( $coId: BigFloat!,  $p
   receiptsByOrderId{
     nodes{
       id
+      nodeId
       staffByStaffPickUp{
         id
         fullName
@@ -257,19 +259,6 @@ class OrderPending extends Component {
       return (
         <div className="content">
         <div className="text-right">
-        <button
-                        type="submit"
-                        className="btn btn-fill btn-info"
-                         disabled={!(data.customerOrder.status ==="PENDING")}
-                        className={!(data.customerOrder.status ==="PENDING")? "btn btn-fill btn-info hidden": "btn btn-fill btn-info"}
-                        // onClick={e => {
-                        //   e.preventDefault();
-                        //   this.setState({approve: true, decline: false});
-                        //   updatestatuscustomerorder({variables:{coId: data.customerOrder.id, pStatus:"APPROVED", pUser: currUser}});
-                        // }}
-                      >
-                        Edit
-                      </button>
         </div>
                 
           <OrderDetailForm customerOrder={data.customerOrder}></OrderDetailForm>
@@ -289,6 +278,8 @@ class OrderPending extends Component {
                   }}
                 >
                   {updatestatuscustomerorder => (
+                    <frameElement>
+                    {!(CURRENT_USER.staffType.staffCode ==='STAFF_03') &&
                     <div className="col-md-12 text-center">
                     <button
                         type="submit"
@@ -366,6 +357,8 @@ class OrderPending extends Component {
                     Cancel
                     </button>
                     </div>
+                    }
+                    </frameElement>
                   
                   )}
                 </Mutation>

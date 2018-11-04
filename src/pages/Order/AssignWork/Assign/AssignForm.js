@@ -4,7 +4,6 @@ import moment from 'moment';
 import { Field, reduxForm } from 'redux-form';
 import { Link } from 'react-router-dom';
 import Tags from 'components/Tags';
-import OrderDetailTable from './OrderDetailTable';
 
 
 
@@ -36,9 +35,10 @@ const proccessData = (data)=>{
         productName: data[i].productByProductId != null ? data[i].productByProductId .productName: "undefine",
         serviceName: data[i].serviceTypeByServiceTypeId != null ? data[i].serviceTypeByServiceTypeId.serviceTypeName:"_",
         amount:data[i].amount,
+        receivedAmount: data[i].recievedAmount,
         unit: data[i].unitByUnitId != null ? data[i].unitByUnitId.unitName: "_",
         unitPrice:data[i].unitPriceByUnitPrice!= null?  data[i].unitPriceByUnitPrice.price :"_",
-        details: resultDetail(data[i])
+        details: resultDetail(data)
       }
       result.push(row);
   }
@@ -47,7 +47,7 @@ const proccessData = (data)=>{
 
 
 
-class OrderDetailForm extends Component {
+class AssignForm extends Component {
   state = {
     date: moment(),
     startDate: moment(),
@@ -58,8 +58,7 @@ class OrderDetailForm extends Component {
   };
   render () {
     
-    let {customerOrder} = this.props;
-  
+    let {receipt} = this.props;
       return(
 
           <form className="form-horizontal" >
@@ -67,36 +66,36 @@ class OrderDetailForm extends Component {
               
               <legend>
               <div style={{justifyContent: "space-between"}}>
-                <span>Order's Information - {customerOrder.id} <span className="badge badge-warning">{customerOrder.status}</span> &nbsp;&nbsp;&nbsp;</span>
-                {customerOrder.receiptsByOrderId.nodes[0] && <Link className="btn btn-warning btn-sm" to={"/order/reciept-list/view/"+customerOrder.receiptsByOrderId.nodes[0].nodeId}>Watch Receipt</Link>}
+                <span>Receipt's Information - {receipt.id} - {receipt.customerOrderByOrderId.id} <span className="badge badge-warning">{receipt.status}</span> </span>
+                
               </div>
               </legend>
               
               <div className="row">
                 <div className="col-sm-6 ">
                   <label className="control-label col-md-4">Full name</label>
-                  <div className=" control-label col-md-8" style={{textAlign:"left"}}><b>{customerOrder.customerByCustomerId.fullName}</b></div>
+                  <div className=" control-label col-md-8" style={{textAlign:"left"}}><b>{receipt.customerOrderByOrderId.customerByCustomerId.fullName}</b></div>
                   <label className="control-label col-md-4">Phone number</label>
-                  <div className=" control-label col-md-8" style={{textAlign:"left"}}>{customerOrder.customerByCustomerId.phone}</div>
+                  <div className=" control-label col-md-8" style={{textAlign:"left"}}>{receipt.customerOrderByOrderId.customerByCustomerId.phone}</div>
                 </div>
                 <div className="col-sm-6 ">
                   <label className="control-label col-md-4">Email</label>
-                  <div className=" control-label col-md-8" style={{textAlign:"left"}}>{customerOrder.customerByCustomerId.email}</div>
+                  <div className=" control-label col-md-8" style={{textAlign:"left"}}>{receipt.customerOrderByOrderId.customerByCustomerId.email}</div>
                   <label className="control-label col-md-4">Address</label>
-                  <div className=" control-label col-md-8" style={{textAlign:"left"}}>{customerOrder.customerByCustomerId.address}</div>
+                  <div className=" control-label col-md-8" style={{textAlign:"left"}}>{receipt.customerOrderByOrderId.customerByCustomerId.address}</div>
                 </div>
               </div>
               <div className="row">
                 <div className="col-sm-6 ">
                   <label className="control-label col-md-4 mt-4">Branch</label>
                   <div className=" control-label col-md-8" style={{textAlign:"left"}}>
-                    <span className="btn btn-primary btn-sm btn-fill btn-linkedin">{customerOrder.branchByBranchId.branchName}</span>
+                    <span className="btn btn-primary btn-sm btn-fill btn-linkedin">{receipt.customerOrderByOrderId.branchByBranchId.branchName}</span>
                   </div>
                 </div>
                 <div className="col-sm-6 ">
                   <label className="control-label col-md-4 mt-4">Branch's Address</label>
                   <div className=" control-label col-md-8" style={{textAlign:"left"}}>
-                    <span >{customerOrder.branchByBranchId.address}</span>
+                    <span >{receipt.customerOrderByOrderId.branchByBranchId.address}</span>
                   </div>
                 </div>
               </div>
@@ -109,10 +108,11 @@ class OrderDetailForm extends Component {
                         tags={ [
                           {
                             id: 1,
-                            text: customerOrder.pickUpDate
+                            text: receipt.pickUpDate?receipt.pickUpDate:receipt.customerOrderByOrderId.pickUpDate
                           }
                         ]}
                         disabled={true}
+
                         theme="azure"
                         fill />
                     </div>
@@ -122,7 +122,7 @@ class OrderDetailForm extends Component {
                         tags={ [
                           {
                             id: 1,
-                            text: customerOrder.timeScheduleByPickUpTimeId.timeStart +" - "+customerOrder.timeScheduleByPickUpTimeId.timeEnd
+                            text: receipt.pickUpTime?receipt.pickUpTime:receipt.customerOrderByOrderId.timeScheduleByPickUpTimeId.timeStart +" - "+receipt.customerOrderByOrderId.timeScheduleByPickUpTimeId.timeEnd
                           }
                         ]}
                         disabled={true}
@@ -137,7 +137,7 @@ class OrderDetailForm extends Component {
                         tags={[
                           {
                             id: 1,
-                            text: customerOrder.deliveryDate
+                            text: receipt.deliveryDate?receipt.deliveryDate: receipt.customerOrderByOrderId.deliveryDate
                           }
                         ]}
                         disabled={true}
@@ -150,7 +150,7 @@ class OrderDetailForm extends Component {
                       tags={ [
                         {
                           id: 1,
-                          text: customerOrder.timeScheduleByDeliveryTimeId.timeStart +" - "+customerOrder.timeScheduleByDeliveryTimeId.timeEnd
+                          text: receipt.deliveryTime?receipt.deliveryTime:receipt.customerOrderByOrderId.timeScheduleByDeliveryTimeId.timeStart +" - "+receipt.customerOrderByOrderId.timeScheduleByDeliveryTimeId.timeEnd
                         }
                       ]}
                       disabled={true}
@@ -162,30 +162,30 @@ class OrderDetailForm extends Component {
               <div className="row">
                 <div className="col-sm-6">
                     <label className="control-label col-md-4 mt-4" >Pick up place </label>
-                    <div className=" control-label col-md-8" style={{textAlign:"left"}}><b>{customerOrder.pickUpPlace !=null ?customerOrder.pickUpPlace: "_" }</b></div>
+                    <div className=" control-label col-md-8" style={{textAlign:"left"}}><b>{receipt.customerOrderByOrderId.pickUpPlace !=null ?receipt.customerOrderByOrderId.pickUpPlace: "_" }</b></div>
                 </div>
                 <div className="col-sm-6">
                     <label className="control-label col-md-4 mt-4" >Delivery place </label>
-                    <div className=" control-label col-md-8" style={{textAlign:"left"}}><b>{customerOrder.pickUpPlace !=null ?customerOrder.deliveryPlace: "_" }</b></div>
+                    <div className=" control-label col-md-8" style={{textAlign:"left"}}><b>{receipt.customerOrderByOrderId.deliveryPlace !=null ?receipt.customerOrderByOrderId.deliveryPlace: "_" }</b></div>
                 </div>
               </div>
               <div className="row">
                 <div className="col-sm-6">
                     <label className="control-label col-md-4 mt-4" > Pick up Staff</label>
-                    <div className=" control-label col-md-8" style={{textAlign:"left"}}><b>{(customerOrder.receiptsByOrderId.nodes[0] !=null && customerOrder.receiptsByOrderId.nodes[0].staffByStaffPickUp !=null) ?customerOrder.receiptsByOrderId.nodes[0].staffByStaffPickUp.fullName: "_" }</b></div>
+                    <div className=" control-label col-md-8" style={{textAlign:"left"}}><b>{(receipt.staffByStaffPickUp) ?receipt.staffByStaffPickUp.fullName: "_" }</b></div>
                 </div>
                 <div className="col-sm-6">
                     <label className="control-label col-md-4 mt-4" >Delivery Staff </label>
-                    <div className=" control-label col-md-8" style={{textAlign:"left"}}><b>{(customerOrder.receiptsByOrderId.nodes[0] !=null && customerOrder.receiptsByOrderId.nodes[0].staffByStaffDelivery !=null) ?customerOrder.receiptsByOrderId.nodes[0].staffByStaffDelivery.fullName: "_" }</b></div>
+                    <div className=" control-label col-md-8" style={{textAlign:"left"}}><b>{(receipt.staffByStaffDelivery) ?receipt.staffByStaffDelivery.fullName: "_" }</b></div>
                 </div>
               </div>
             
             </fieldset>
             <br></br><br></br>
             <fieldset>
-              <legend>Order Detail</legend>
+              <legend>Receipt Detail</legend>
               <div className="col-sm-12">
-                <OrderDetailTable orderDetailList={proccessData(customerOrder.orderDetailsByOrderId.nodes)}></OrderDetailTable>
+               
               </div>
             </fieldset>
           
@@ -196,4 +196,4 @@ class OrderDetailForm extends Component {
   }
 }
 export default reduxForm({
-  form: 'OrderDetailForm'})(OrderDetailForm);
+  form: 'AssignForm'})(AssignForm);

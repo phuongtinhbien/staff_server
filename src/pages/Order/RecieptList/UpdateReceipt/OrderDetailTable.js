@@ -54,37 +54,13 @@ class OrderDetailTable extends Component {
 
     function currencyFormatter (cell, row){
         let amountMoney = 654645;
-        amountMoney = row.amount*row.unitPrice;
         return (
             <p>
-           {amountMoney.toLocaleString('vi-VI', { style: 'currency', currency: 'VND' })}
+           cell
             </p>
         );
     }
 
-    const footerData = [
-      [
-        {
-          label: 'Total',
-          columnIndex: 3
-        },
-        {
-          label: 'Total value',
-          columnIndex: 7,
-          align: 'right',
-        
-          formatter: (tableData) => {
-            let label = 0;
-            for (let i = 0, tableDataLen = tableData.length; i < tableDataLen; i++) {
-              label += tableData[i].unitPrice*tableData[i].amount;
-            }
-            return (
-              <strong>{ label.toLocaleString('vi-VI', { style: 'currency', currency: 'VND' }) }</strong>
-            );
-          }
-        }
-      ]
-    ];
 
 
     const options = {
@@ -106,8 +82,6 @@ class OrderDetailTable extends Component {
                   data={orderDetailList}
                   bordered={false}
                   striped
-                  footer={true}
-                  footerData={ footerData }
                   search={ true } multiColumnSearch={ true }
                   pagination={true}
                   options={options}>
@@ -151,18 +125,10 @@ class OrderDetailTable extends Component {
                     Unit
                   </TableHeaderColumn>
                   <TableHeaderColumn
-                    dataField='unitPrice'
+                    dataField='receivedAmount'
                     width="25%"
                     dataSort>
-                    Unit price
-                  </TableHeaderColumn>
-
-                  <TableHeaderColumn
-                    dataField='total'
-                    width="25%"
-                    dataFormat={currencyFormatter}
-                    dataSort>
-                    Total
+                    Received Amount
                   </TableHeaderColumn>
                  
                   <TableHeaderColumn

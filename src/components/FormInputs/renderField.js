@@ -4,6 +4,7 @@ import Checkbox from './Checkbox';
 import Radio from './Radio';
 import CustomSelect from './Select';
 import DateInput from './DateInput';
+import TimeInput from './Time';
 
 const renderField = (props) => (
   <div>
@@ -17,6 +18,7 @@ const renderField = (props) => (
     { props.type === 'radio' && <Radio {...props} /> }
     { props.type === 'select' && <CustomSelect {...props} /> }
     { props.type === 'date' && <DateInput {...props} /> }
+    { props.type === 'time' && <TimeInput {...props} /> }
   </div>
 );
 

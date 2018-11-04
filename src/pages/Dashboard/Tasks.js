@@ -1,89 +1,39 @@
 import React, { Component } from 'react';
-import cx from 'classnames';
-import uncheckImage from 'assets/images/checkbox-uncheck.svg';
-import checkImage from 'assets/images/checkbox-check.svg';
-
+import {
+  Link
+} from "react-router-dom";
 class Tasks extends Component {
   state = {
-    todos: [
-      {
-        id: 1,
-        content: 'Sign contract for "What are conference organizers afraid of?"',
-        completed: true
-      },
-      {
-        id: 2,
-        content: 'Lines From Great Russian Literature? Or E-mails From My Boss?',
-        completed: true
-      },
-      {
-        id: 3,
-        content: 'Flooded: One year later, assessing what was lost and what was found when a ravaging rain swept through metro Detroit	',
-        completed: true
-      },
-      {
-        id: 4,
-        content: 'Create 4 Invisible User Experiences you Never Knew About',
-        completed: false
-      },
-      {
-        id: 5,
-        content: 'Read "Following makes Medium better"	',
-        status: "",
-        completed: false
-      },
-      {
-        id: 6,
-        content: 'Lines From Great Russian Literature? Or E-mails From My Boss?',
-        completed: false
-      }
-    ]
+      todos:this.props.resultSearch
   };
-
-  toggleComplete = todoId => {
-    this.setState({
-      todos: this.state.todos.map(todo => {
-        if (todo.id === todoId) todo.completed = !todo.completed;
-        return todo;
-      })
-    });
-  }
-
-  deleteTodo = todoId => {
-    this.setState({
-      todos: this.state.todos.filter(todo => todo.id !== todoId)
-    });
-  }
-
   render() {
+    console.log(this.props)
+    let {resultSearch} = this.props;
     return (
       <div className="card ">
         <div className="header">
-          <h4 className="title">Result</h4>
-          <p className="category">Result of customer's order search</p>
+          <h4 className="title">Kết quả</h4>
+          <p className="category">Kết quả tìm kiếm đơn hàng</p>
         </div>
         <div className="content">
           <form>
-          {this.state.todos.map(todo => (
-            <div className={cx("todo-item", {completed: todo.completed})} key={todo.id}>
+          {resultSearch?resultSearch.map(todo => (
+            <div className={"todo-item"} key={todo.id}>
               <div className="todo-item-wrapper">
-              <label className={cx("checkbox", {
-                  checked: todo.completed
-                })}
-                >
-                  <span className="icons">
-                    <img className="first-icon" src={uncheckImage} width={17} />
-                    <img className="second-icon" src={checkImage} width={17} />
-                  </span>
-                  <input type="checkbox" data-toggle="checkbox" checked={todo.completed} onChange={() => this.toggleComplete(todo.id)} />
-                </label>
-                <div className="todo-content">{todo.content}</div>
-                <a onClick={() => this.deleteTodo(todo.id)}>
-                  &times;
-                </a>
+                <div className="todo-content">
+                <Link to={"/order/order-list/view/"+ todo.nodeId} className="btn btn-fill btn-sm btn-success">{todo.customerByCustomerId.fullName} </Link>
+                &nbsp;
+                <i>{todo.status}</i>
+                <br></br>
+                <strong>Email:&nbsp;</strong> {todo.customerByCustomerId.email}
+                <br></br>
+                <strong>Phone:&nbsp;</strong>  {todo.customerByCustomerId.phone}
+                
+                </div>
+               
               </div>
             </div>
-          ))}
+          )):<p className="error">Không có kết quả</p> }
           </form>
 
 
@@ -91,7 +41,7 @@ class Tasks extends Component {
         <div className="footer">
           <hr />
           <div className="stats">
-            <i className="fa fa-history"></i> Updated 3 minutes ago
+            <i className="fa fa-history"> Tổng cộng: &nbsp;{resultSearch?resultSearch.length: "_"} &nbsp; kết quả</i>
               </div>
         </div>
       </div>

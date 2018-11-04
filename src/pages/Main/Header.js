@@ -26,9 +26,9 @@ const Header = ({
         <Navbar.Form pullLeft>
         </Navbar.Form>
         <Nav pullRight>
-          <NavItem><span className="btn btn-sm btn-fill btn-warning">{CURRENT_USER.branch.branchName+" - "+CURRENT_USER.branch.id}</span></NavItem>
-          <NavItem><span className="btn btn-sm btn-fill btn-success">{CURRENT_USER.staffType.staffType}</span></NavItem>
-          <NavItem onClick={e=>{e.preventDefault(); localStorage.clear(); history.push("/")}}>Log out</NavItem>
+          <NavItem><strong>{CURRENT_USER.branch.branchName+" - "+CURRENT_USER.branch.id}</strong></NavItem>
+          <NavItem><strong>{CURRENT_USER.staffType.staffType}</strong></NavItem>
+          <NavItem onClick={e=>{e.preventDefault(); localStorage.clear(); history.push("/")}}><i className="pe-7s-back-2"></i> &nbsp;Đăng xuất</NavItem>
         </Nav>
       </Navbar.Collapse>
     </Navbar>

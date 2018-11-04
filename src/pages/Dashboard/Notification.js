@@ -3,34 +3,52 @@ import cx from 'classnames';
 import uncheckImage from 'assets/images/checkbox-uncheck.svg';
 import checkImage from 'assets/images/checkbox-check.svg';
 import qrScan from "./qr-scan.png";
+import { Field, reduxForm } from 'redux-form';
+import renderField from 'components/FormInputs/renderField';
+import QrScan from './QrScan';
 
 
 class SearchOrder extends Component {
-
- 
-
-
+  state = {
+    startScan: false
+  }
+  
   render() {
+    let {handleSubmit} = this.props;
+    let {startScan} = this.state;
     return (
       <div className="card ">
         <div className="header">
-          <h4 className="title">Search Customer's Order</h4>
-          <p className="category">Type the code of order, customer's name, scan QR-Code </p>
+          <h4 className="title">Tra cứu đơn hàng</h4>
+          <p className="category">Nhập mã đơn hàng, tên khách hàng hoặc quét mã QR-Code</p>
         </div>
         <div className="content">
-          <div className="text-center" style={{margin:"20px"}} ><img src={qrScan} style={{justifyItems:"right", width:"80px"}}></img></div>
-          <form className="form-horizontal">
+          <div className="text-center" style={{margin:"20px"}} >
+          <img src={qrScan} style={{justifyItems:"right", width:"80px"}} onClick={e=>{this.setState({startScan: !startScan})}}></img>
+          {startScan &&<QrScan/>}
+          </div>
+          <form className="form-horizontal" onSubmit={handleSubmit}>
             
             <div className="form-group">
-              <label className="col-md-3 control-label">Customer's name</label>
+              <label className="col-md-3 control-label">Tên khách hàng</label>
               <div className="col-md-9">
-                <input type="text" className={"form-control"} name="customerName" placeholder="customer's name"></input>
+                <Field type="text" 
+                className={"form-control"} 
+                name="customerName" placeholder="customer's name"
+                component={renderField}
+                ></Field>
               </div>
             </div>
             <div className="form-group">
-              <label className="col-md-3 control-label">Order's Code</label>
+              <label className="col-md-3 control-label">Mã đơn hàng</label>
               <div className="col-md-9">
-                <input type="text" className={"form-control"} name="orderCode" placeholder="Order's Code"></input>
+                <Field type="text" 
+                className={"form-control"} 
+                name="orderCode" 
+                placeholder="Order's Code"
+                helpText ="Tìm kiếm nếu không thông tin nhập"
+                component={renderField}
+                ></Field>
               </div>
             </div>
             <div className="text-center">
@@ -38,7 +56,7 @@ class SearchOrder extends Component {
                 type="submit"
                 className="btn btn-fill btn-info"
               >
-                Search
+                Tìm kiếm
               </button>
             </div>
             
@@ -50,4 +68,6 @@ class SearchOrder extends Component {
   }
 }
 
-export default SearchOrder;
+export default reduxForm({
+  form: 'SearchOrder'
+})(SearchOrder)

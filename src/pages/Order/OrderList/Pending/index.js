@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 import OrderTable from '../OrderTable';
 import { Link, withRouter } from 'react-router-dom';
-import {graphql,compose } from 'react-apollo';
 import { Query, Mutation } from 'react-apollo';
 import gql  from "graphql-tag";
 import Error from '../../../Error';

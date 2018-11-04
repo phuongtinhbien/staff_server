@@ -4,19 +4,74 @@ import SalesChart from './SalesChart';
 import UserBehaviorChart from './UserBehaviorChart';
 import Tasks from './Tasks';
 import Notification from './Notification';
+import gql from 'graphql-tag';
+import { Query, Mutation } from 'react-apollo';
+
+
+
+const SEARCH_ORDER = gql `mutation searchCustomerOrder($customerName: String, $customerOrder: BigFloat, $branch: BigFloat!) {
+  searchcustomerorders(input: {customerName: $customerName, customerOrder: $customerOrder, branch: $branch}) {
+    customerOrders {
+      nodeId
+      id
+      status
+      customerByCustomerId {
+        nodeId
+        id
+        fullName
+        email
+        phone
+      }
+    }
+  }
+}
+`;
+
+let result;
+const CURRENT_USER = JSON.parse(localStorage.getItem("luandryStaffPage.curr_staff_desc"));
+
+const handleSubmit =(searchcustomerorders, values) =>{
+  searchcustomerorders({variables:{customerName: values.customerName, customerOrder: values.orderCode, branch: CURRENT_USER.branch.id}})
+}
+
+const handleOnCompleted = (data)=>{
+  
+  console.log(data);
+  result = data.searchcustomerorders.customerOrders;
+  console.log(result);
+
+}
+
 
 const Dashboard = () => (
   <div className="content">
     <div className="container-fluid">
-      <div className="row">
-      <div className="col-md-6">
-        <Notification />
-      </div>
-        <div className="col-md-6">
-          <Tasks />
-        </div>
-      </div>
-
+      
+      <Mutation
+              mutation={SEARCH_ORDER}
+              onCompleted={data=> {handleOnCompleted(data );}}
+              
+            >
+            {
+              (searchcustomerorders,{data,error}) =>(
+                <div className="row">
+                <div className="col-md-6">
+                {/* <label className="error"> {this.state.errorContent}</label> */}
+                <Notification  onSubmit={values => {handleSubmit(searchcustomerorders, values)}} />
+                </div>
+                <div className="col-md-6">
+                {data ?
+                <Tasks resultSearch={data.searchcustomerorders.customerOrders}   />
+              :
+                <Tasks   />
+             }
+              </div>
+             
+              </div>
+              )
+            }
+          
+          </Mutation>
     </div>
   </div>
 );

@@ -14,13 +14,19 @@ class Nav extends Component {
         <li className={location.pathname === '/' ? 'active' : null}>
           <Link to="/">
             <i className="pe-7s-graph"></i>
-            <p>Dashboard</p>
+            <p>Tồng quan</p>
           </Link>
         </li>
         <li className={this.isPathActive('/order/create-order') ? 'active' : null}>
           <Link to="/order/create-order">
             <i className="pe-7s-plus"></i>
-            <p>Create new Order</p>
+            <p>Tạo đơn hàng mới</p>
+          </Link>
+        </li>
+        <li className={this.isPathActive('/order/assign-work') ? 'active' : null}>
+          <Link to="/order/assign-work">
+            <i className="pe-7s-date"></i>
+            <p>Phân công đơn hàng</p>
           </Link>
         </li>
         <li className={this.state.componentMenuOpen ? 'active' : null}>
@@ -28,7 +34,7 @@ class Nav extends Component {
             data-toggle="collapse">
             <i className="pe-7s-plugin"></i>
             <p>
-              Customer's Order
+              Đơn hàng khách hàng
             <b className="caret"></b>
             </p>
           </a>
@@ -36,20 +42,20 @@ class Nav extends Component {
             <div>
               <ul className="nav">
               <li className={this.isPathActive('/order/order-list/pending') ? 'active' : null}>
-                  <Link to="/order/order-list/pending">Pending</Link>
+                  <Link to="/order/order-list/pending">Đang chờ</Link>
                 </li>
                 <li className={this.isPathActive('/order/order-list/processing') ? 'active' : null}>
-                  <Link to="/order/order-list/processing">Processing</Link>
+                  <Link to="/order/order-list/processing">Đang xử lí</Link>
                 </li>
                 <li className={this.isPathActive('/order/order-list/processed') ? 'active' : null}>
-                  <Link to="/order/order-list/processed">Processed</Link>
+                  <Link to="/order/order-list/processed">Đã hoàn tất</Link>
                 </li>
                 <li className={this.isPathActive('/order/order-list/finish') ? 'active' : null}>
-                  <Link to="/order/order-list/finish">Finish</Link>
+                  <Link to="/order/order-list/finish">Đơn hàng xong</Link>
 
                 </li>
                 <li className={this.isPathActive('/order/order-list/declined') ? 'active' : null}>
-                  <Link to="/order/order-list/declined">Declined</Link>
+                  <Link to="/order/order-list/declined">Bị hủy</Link>
                 </li>
               </ul>
             </div>
