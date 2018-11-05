@@ -137,7 +137,7 @@ const PrivateMain = ({mobileNavVisibility,
   <frameElement>
     {localStorage.getItem("luandryStaffPage.staff_key") && !localStorage.getItem("luandryStaffPage.curr_staff_id")
     && !localStorage.getItem("luandryStaffPage.curr_staff_desc")?<Query query={CURR_USER}
-    fetchPolicy={"network-only"}>
+  >
           {({loading, error,data, refetch,stopPolling, networkStatus}) => {
             if (loading) return null;
             if (error) {
@@ -153,7 +153,7 @@ const PrivateMain = ({mobileNavVisibility,
                 localStorage.setItem("luandryStaffPage.curr_staff_id",data.currentUser.id);
                 return(
                   <Query query={CURR_USER_INFO}
-                  fetchPolicy={"network-only"}
+                  
                   variables={{id:data.currentUser.id }}>
                   {({loading, error,data, refetch,stopPolling}) => {
                     if (loading) return null;

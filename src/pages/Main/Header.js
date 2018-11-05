@@ -2,12 +2,14 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { toggleMobileNavVisibility } from '../../reducers/Layout';
 import { Navbar, Nav, NavItem, NavDropdown, MenuItem, FormGroup, FormControl } from 'react-bootstrap';
-const CURRENT_USER = JSON.parse(localStorage.getItem("luandryStaffPage.curr_staff_desc"));
+
 const Header = ({
   showMobileMenu,
   toggleMobileNavVisibility,
-  history
+  history,
+  CURRENT_USER = JSON.parse(localStorage.getItem("luandryStaffPage.curr_staff_desc"))
 }) => (
+
     <Navbar fluid={true}>
 
       <Navbar.Collapse>

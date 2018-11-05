@@ -20,13 +20,15 @@ const validate = values => {
 const LoginForm = ({
   submitting,
   handleSubmit,
-  submitForm
+  submitForm,
+  errorContent
 }) => (
   <div className="card">
     <div className="header">
       <h4>Login</h4>
     </div>
     <div className="content">
+    <label className="error">{errorContent}</label>
       <form onSubmit={handleSubmit}>
         <div className="form-group">
           <label className="control-label">Email</label>
