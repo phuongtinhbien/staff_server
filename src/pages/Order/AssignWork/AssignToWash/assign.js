@@ -56,8 +56,17 @@ const getSortedOrderList =  (branch)=>{
 }
 
 
-function main (branch){
 
+function assignWork (orderList,washInfo){
+    let newWashInfo = initData(washInfo);
+
+   
+    
+
+}
+
+
+function main (branch, curr){
     let orderList;
     let washInfo;
     getSortedOrderList(branch).then(
@@ -67,12 +76,15 @@ function main (branch){
                 washInfo = data.data.getInfoWasher.nodes;
                 console.log(orderList);
                 console.log(washInfo);
+                assignWork (orderList,washInfo);
             }
             else if (!data.data || data.errors){
                 console.log(data.errors.toString);
             }
         }
-    );
+    ).catch(errors=>{
+        console.log(errors);
+    });
     
 }
 
