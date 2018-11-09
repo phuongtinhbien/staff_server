@@ -440,7 +440,7 @@ class ReceiptPending extends Component {
                  <ReceiptForm receipt={data.receipt}></ReceiptForm> 
                 <div className="row">
                 <div className="col-sm-4"></div>
-                <div className="col-sm-4 justify-content-center">
+                {CURRENT_USER.staffType.staffCode ==='STAFF_03' && <div className="col-sm-4 justify-content-center">
                 <div className="col-md-12 text-center">
                 <Mutation
                   mutation={ASSIGN_PICKUP}
@@ -565,8 +565,8 @@ class ReceiptPending extends Component {
                   
                   )}
                 </Mutation>
-                </div>
-                <div className="col-sm-4"></div>
+                </div>}
+              
                   
                 </div>
               </div>

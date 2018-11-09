@@ -236,7 +236,7 @@ class OrderPending extends Component {
   }
 
   render() {
-    let {match,data} = this.props;
+    let {match,data,history} = this.props;
     const CURRENT_USER = JSON.parse(localStorage.getItem("luandryStaffPage.curr_staff_desc"));
     console.log(this.props);
     return (
@@ -353,7 +353,7 @@ class OrderPending extends Component {
                       &nbsp;
                       &nbsp;
                     &nbsp;
-                    <button className="btn btn-fill btn-danger" >
+                    <button className="btn btn-fill btn-danger" onClick={e=> history.goBack()}>
                     Cancel
                     </button>
                     </div>

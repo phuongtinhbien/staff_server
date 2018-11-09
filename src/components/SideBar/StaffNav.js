@@ -23,6 +23,12 @@ class StaffNav extends Component {
             <p>Create new Order</p>
           </Link>
         </li> */}
+          <li className={this.isPathActive('/order/assign-work') ? 'active' : null}>
+          <Link to="/order/assign-work">
+            <i className="pe-7s-date"></i>
+            <p>Đơn hàng cần xử lí</p>
+          </Link>
+        </li>
         <li className={this.state.componentMenuOpen ? 'active' : null}>
           <a onClick={() => this.setState({ componentMenuOpen: !this.state.componentMenuOpen })}
             data-toggle="collapse">

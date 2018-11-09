@@ -28,10 +28,10 @@ const SEARCH_ORDER = gql `mutation searchCustomerOrder($customerName: String, $c
 `;
 
 let result;
-const CURRENT_USER = JSON.parse(localStorage.getItem("luandryStaffPage.curr_staff_desc"));
 
-const handleSubmit =(searchcustomerorders, values) =>{
-  searchcustomerorders({variables:{customerName: values.customerName, customerOrder: values.orderCode, branch: CURRENT_USER.branch.id}})
+
+const handleSubmit =(searchcustomerorders, values, branch) =>{
+  searchcustomerorders({variables:{customerName: values.customerName, customerOrder: values.orderCode, branch}})
 }
 
 const handleOnCompleted = (data)=>{
@@ -43,7 +43,7 @@ const handleOnCompleted = (data)=>{
 }
 
 
-const Dashboard = () => (
+const Dashboard = ({CURRENT_USER = JSON.parse(localStorage.getItem("luandryStaffPage.curr_staff_desc"))}) => (
   <div className="content">
     <div className="container-fluid">
       
@@ -57,7 +57,7 @@ const Dashboard = () => (
                 <div className="row">
                 <div className="col-md-6">
                 {/* <label className="error"> {this.state.errorContent}</label> */}
-                <Notification  onSubmit={values => {handleSubmit(searchcustomerorders, values)}} />
+                <Notification  onSubmit={values => {handleSubmit(searchcustomerorders, values, CURRENT_USER.branch.id)}} />
                 </div>
                 <div className="col-md-6">
                 {data ?

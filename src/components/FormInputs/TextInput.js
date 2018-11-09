@@ -10,10 +10,11 @@ const TextInput = ({
   placeholder,
   helpText,
   disabled,
+  viewMode,
   hidden
 }) => (
   <div>
-    <input
+    {!viewMode &&<input
       {...input}
       type={type}
       className={cx(inputClassName, 'form-control', {
@@ -22,7 +23,8 @@ const TextInput = ({
       placeholder={placeholder}
       disabled={disabled}
       hidden={hidden} />
-
+      }
+      {viewMode && <span>{input.value}</span>}
     { touched && error &&
       <label className="error" htmlFor={input.name}>{error}</label>
     }

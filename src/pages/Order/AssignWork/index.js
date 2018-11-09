@@ -29,6 +29,16 @@ const ASSIGN_WORK = gql`query assignWork($branch: BigFloat!) {
           timeEnd
         }
       }
+      washBagsByReceiptId{
+        totalCount
+        nodes{
+          id
+          nodeId
+          washesByWashBagId{
+            totalCount
+          }
+        }
+      }
       receiptDetailsByReceiptId {
         nodes {
           nodeId
@@ -61,6 +71,20 @@ const ASSIGN_WORK = gql`query assignWork($branch: BigFloat!) {
 }
 `;
 
+const ALL_WASH = gql `query allWash ($brId: BigFloat!){
+  washSearch(brId: $brId){
+    totalCount
+    nodes{
+      customerOrderId
+      receiptId
+      wbName
+      washerCode
+      status
+      customerName
+    }
+  }
+}`;
+
 const processPendingServing = (data)=>{
   let a = data.getprepareorderserving.nodes;
   let res =[];
@@ -71,19 +95,56 @@ const processPendingServing = (data)=>{
       deliveryDate: a[i].customerOrderByOrderId.deliveryDate,
       deliveryTimeStart: a[i].customerOrderByOrderId.timeScheduleByDeliveryTimeId.timeStart,
       deliveryTimeEnd: a[i].customerOrderByOrderId.timeScheduleByDeliveryTimeId.timeEnd,
+      washbag: a[i].washBagsByReceiptId.totalCount,
+      isAssignToWash: a[i].washBagsByReceiptId.totalCount>0 && a[i].washBagsByReceiptId.nodes[0].washesByWashBagId.totalCount >0? true: false
     })
   }
     return res;
 }
 
-const CURRENT_USER = JSON.parse(localStorage.getItem("luandryStaffPage.curr_staff_desc"));
-const AssignWork = () => (
+function removeDuplicates(arr){
+  var newarr = [];
+  var unique = {};
+   
+  arr.forEach((item, index) =>{
+      if (!unique[item.orderId]) {
+          newarr.push(item);
+          unique[item.orderId] = item;
+      }
+  });
+  return newarr ;
+}
+
+const processAllWash = (data)=>{
+
+      let res =[];
+
+      if (data){
+        for (let i=0;i<data.length;i++){
+            let row = {
+              orderId: data[i].customerOrderId,
+              receiptId: data[i].receiptId,
+              wbName: data[i].wbName,
+              washerCode: data[i].washerCode,
+              status: data[i].status,
+              customerName: data[i].customerName
+            }
+            res.push(row);
+        }
+      }
+
+      return removeDuplicates(res);
+}
+
+
+const AssignWork = ({CURRENT_USER= JSON.parse(localStorage.getItem("luandryStaffPage.curr_staff_desc"))}) => (
   <div className="container-fluid">
     <div className="row">
-      <div className="col-md-6">
+      <div className="col-md-12">
+      {CURRENT_USER.staffType.staffCode === 'STAFF_01' &&
       <Query
       query={ASSIGN_WORK}
-      fetchPolicy={"network-only"}
+      
       variables = {{branch: CURRENT_USER.branch.id }}
  
     >{({ loading, error, data, refetch, }) => {
@@ -100,17 +161,36 @@ const AssignWork = () => (
       );
       }
     }}
-    </Query>
-        
+    </Query>}
       </div>
-      <div className="col-md-6">
-      <SalesChart/>
+      <div className="col-md-12">
+      {/* <SalesChart/> */}
       </div>
      
     </div>
     <div className="row">
       <div className="col-md-12">
-        <BigTable />
+      <Query
+      query={ALL_WASH}
+      
+      variables = {{brId: CURRENT_USER.branch.id }}
+ 
+    >{({ loading, error, data, refetch, }) => {
+      if (loading) return null;
+      if (refetch) {
+        console.log(refetch);
+      }
+      if (error){
+        return (<Error errorContent= {error.message}></Error>);
+      }
+      if (data != null){
+        console.log(data)
+      return (
+        <BigTable  allWash ={processAllWash(data.washSearch.nodes)}/>
+      );
+      }
+    }}
+    </Query>
       </div>
     </div>
   </div>

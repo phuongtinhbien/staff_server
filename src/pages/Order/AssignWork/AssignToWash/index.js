@@ -8,122 +8,13 @@ import moment from 'moment';
 import AssignForm from './AssignForm';
 
 const RECEIPT_DETAIL = gql`query getCustomerReceiptByNodeId($nodeId: ID!) {
-  receipt(nodeId: $nodeId) {
-    id
-    pickUpTime
-    deliveryDate
-    deliveryTime
-    pickUpDate
-    status
-    staffByStaffPickUp{
+    receipt(nodeId: $nodeId) {
       id
-      fullName
-    }
-    staffByStaffDelivery{
-      id
-      fullName
-    }
-    customerOrderByOrderId {
       nodeId
-      id
-      status
-      pickUpPlace
-      deliveryPlace
-      customerByCustomerId {
-        id
-        nodeId
-        fullName
-        email
-        phone
-        address
-      }
-      branchByBranchId {
-        nodeId
-        id
-        branchName
-        address
-      }
-      deliveryDate
-      timeScheduleByDeliveryTimeId {
-        nodeId
-        id
-        timeStart
-        timeEnd
-      }
-      pickUpDate
-      timeScheduleByPickUpTimeId {
-        nodeId
-        id
-        timeStart
-        timeEnd
-      }
-      pickUpPlace
-      deliveryPlace
-      promotionByPromotionId {
-        nodeId
-        id
-        promotionName
-        promotionCode
-      }
-    }
-    receiptDetailsByReceiptId{
-      nodes{
-        id
-        nodeId
-        recievedAmount
-        status
-        amount
-        productByProductId{
-            id
-            productName
-          }
-        colorByColorId{
-          id
-          colorName
-          colorGroupByColorGroupId {
-            id
-            nodeId
-            colorGroupName
-          }
-        }
-        labelByLabelId{
-          id
-          labelName
-        }
-        unitByUnitId{
-          id
-          unitName
-        }
-        materialByMaterialId{
-          id
-          materialName
-        }
-        serviceTypeByServiceTypeId{
-          id
-          serviceTypeName
-        }  
-      }
-    }
-  }
-}`;
-
-const handleOnCompleted = (data,history)=>{
-  
-  if (data){
-    history.push("/order/assign-work");
-  }
- 
-}
-
-const MUT_SAVE_WASH_BAG = gql`mutation createWashBagForReceipt($reId: BigFloat!, $currUser: BigFloat!, $washCode: [BigFloat!], $wb: [WashBagDetailInput!]) {
-  createWashBagForReceipt(input: {reId: $reId, currUser: $currUser, washCode: $washCode, wb: $wb}) {
-    receipt {
-      nodeId
-      id
       washBagsByReceiptId {
         nodes {
-          nodeId
           id
+          nodeId
           washBagName
           washBagDetailsByWashBagId {
             nodes {
@@ -165,7 +56,47 @@ const MUT_SAVE_WASH_BAG = gql`mutation createWashBagForReceipt($reId: BigFloat!,
       }
     }
   }
+  `;
+
+const handleOnCompleted = (data,history)=>{
+  
+  if (data){
+    history.push("/order/assign-work");
+  }
+ 
 }
+
+const MUT_ASSIGN_WASH = gql`mutation assignToWash($reId: BigFloat!,$currUser: BigFloat, $washerId: BigFloat!){
+    assignToWash(input:{
+      reId:$reId,
+      currUser: $currUser,
+      washerId: $washerId
+    }){
+      receipt{
+        id
+        nodeId
+        washBagsByReceiptId{
+          totalCount
+          nodes{
+            id
+            nodeId
+            washesByWashBagId{
+              nodes{
+                id
+                nodeId
+                washingMachineByWashingMachineId{
+                  id
+                  nodeId
+                  washerCode
+                }
+              }
+            }
+          }
+        }
+        
+      }
+    }
+  }
 `;
 
 
@@ -183,27 +114,7 @@ const ALL_WASHER = gql `query washer ($branch: BigFloat!){
 
 const handleSubmit = (create, data,currUser)=>{
   let reId = data.receiptId;
-  console.log(reId)
-  let washBagCode =[]
-  let wb = [];
-  for (let i =0;i<data.resultSortedCloth.length;i++){
-    wb.push({
-      serviceTypeId: data.resultSortedCloth[i].serviceTypeId,
-      unitId: data.resultSortedCloth[i].unitId,
-      labelId: data.resultSortedCloth[i].labelId,
-      colorId: data.resultSortedCloth[i].colorId,
-      productId: data.resultSortedCloth[i].productId,
-      materialId: data.resultSortedCloth[i].materialId,
-      amount: data.resultSortedCloth[i].receivedAmount,
-      washBagId: data.resultSortedCloth[i].washbagCode
-    })
-    if (washBagCode.indexOf(data.resultSortedCloth[i].washbagCode)<0){
-      washBagCode.push(data.resultSortedCloth[i].washbagCode)
-    }
-    
-  }
-  console.log(JSON.stringify(washBagCode));
-  create({variables:{reId:reId,currUser:currUser, washCode:washBagCode,wb:wb }});
+  create({variables:{reId:reId,currUser:currUser, washerId: data.wash.value }});
 }
 
 
@@ -214,7 +125,9 @@ const handleSubmit = (create, data,currUser)=>{
 class ReceiptPending extends Component {
 
   state={
-    allWasher: null
+    allWasher: null,
+    errorContent: null,
+    success: null
   }
   render() {
     let {match,data,history} = this.props;
@@ -225,22 +138,26 @@ class ReceiptPending extends Component {
     return (
       <div className="container-fluid">
       <div className="card">
-        <div className="header"> </div>
-         
+        <div className="header"></div>
+         <label className="error">{this.state.errorContent}</label>
+         <label className="title">{this.state.success}</label>
     <Mutation
-                    mutation={MUT_SAVE_WASH_BAG}
+                    mutation={MUT_ASSIGN_WASH}
                     onCompleted={data=> {handleOnCompleted(data,history);
-                  
-                      // this.setState({isLogined: true})
+                      if (data)
+                        this.setState({success: "Phân công thành công", errorContent:null})
+                      else{
+                        this.setState({success: null, errorContent:"Đã phân công. Không thể phân công lại"});
+                      }
                      }}
                     update={(cache, { data: { receipt } }) => {
-                      const { jwt } = cache.readQuery({ query: MUT_SAVE_WASH_BAG });
+                      const { jwt } = cache.readQuery({ query: MUT_ASSIGN_WASH });
                     }}
                     onError={error => this.setState({errorContent:error.message})}
 
                   >
                   {
-                    (washbag) =>(
+                    (assignWash) =>(
         <Query query={ALL_WASHER}
               variables = {{branch: CURRENT_USER.branch.id}}>
               {({ loading, error, data, refetch }) => {
@@ -268,7 +185,7 @@ class ReceiptPending extends Component {
               console.log(data)
             return (
               <div className="content">
-                 <AssignForm washer={allWasher} receipt={data.receipt} onSubmit={values => handleSubmit(washbag, values,CURRENT_USER.id )}></AssignForm> 
+                 <AssignForm washer={allWasher} receipt={data.receipt} onSubmit={values => handleSubmit(assignWash, values,CURRENT_USER.id )}></AssignForm> 
                 <div className="row">
                 <div className="col-sm-4"></div>
                 <div className="col-sm-4 justify-content-center">

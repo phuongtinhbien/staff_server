@@ -1,27 +1,36 @@
-function filter(list, serviveType, colorId,ind ){
-    let res=[];
-    for (let i = ind+1;i<list.length-1;i++){
-        res.push(list[i]);
+const calColorGroup = (data)=>{
+    let result=[];
+  
+    if (data){
+      data.forEach(element => {
+       let a = {
+          id: element.colorGroupId,
+          name: element.colorGroupName,
+        };
+        if (!result.includes(a))
+        result.push(a);
+      });
     }
-    return res;
-
-}
-
-const sortByServiceAndSameColorGroup = data =>{
-    let res=[]
-    data.forEach((element, index) => {
-        res.push({
-            serviveTypeId: element.serviveTypeId,
-            colorGroupId : element.colorGroupId,
-            content: filter(data,element.serviveTypeId, element.colorGroupId )
-        })
-    });
-    return res;
-
-}
-
-const sortByServiceAndDiffColorGroup = data =>{
-
-}
-
-
+    return result;
+   
+  }
+  
+  const setWashBag = (data, ind) => {
+      for (let i =0; i<data.length;i++){
+        data[i].washbagCode = ind;
+      }
+      return data;
+  }
+  const sortByServiceAndColorGroup= (serviceArrays,data)=>{
+      let result = [];
+      let washBagind = 0;
+      serviceArrays.forEach(element => {
+          let filter = data.filter( item => item.serviceTypeId === element.id);
+          let colorGroup = calColorGroup(filter);
+          colorGroup.forEach(e =>{
+              let colorFilter = filter.filter(item => item.colorGroupId === e.id);
+              result.push(setWashBag(colorFilter, washBagind));
+          });
+      });
+      return result;
+  } 

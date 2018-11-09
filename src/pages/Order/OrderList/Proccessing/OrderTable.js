@@ -172,7 +172,7 @@ class OrderTable extends Component {
                     dataSort>
                     Customer
                   </TableHeaderColumn>
-                  <TableHeaderColumn
+                  {/* <TableHeaderColumn
                     dataField='pickUpDate'
                     width="25%"
                     hidden
@@ -199,7 +199,7 @@ class OrderTable extends Component {
                     dataFormat={deliveryFormatter}
                     dataSort>
                     Delivery time
-                  </TableHeaderColumn>
+                  </TableHeaderColumn> */}
                   <TableHeaderColumn
                     dataField='amount'
                     width="25%"

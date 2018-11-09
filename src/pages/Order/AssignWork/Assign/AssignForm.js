@@ -1,27 +1,15 @@
 
 import React, { Component } from 'react';
 import moment from 'moment';
-import { Field, reduxForm } from 'redux-form';
+import { Field, reduxForm,initialize, FieldArray } from 'redux-form';
 import { Link } from 'react-router-dom';
 import Tags from 'components/Tags';
+import SortCloth from './SortCloth';
+import _ from 'lodash';
+import { Query, Mutation } from 'react-apollo';
+import gql  from "graphql-tag";
 
-
-
-const resultDetail = (data) =>{
-
-  return (
-    <p>
-      <span style={{fontSize:"12px"}}> - Material : {data.materialByMaterialId!= null?data.materialByMaterialId.materialName: "Undefine"} </span>
-      <br></br>
-      <span style={{fontSize:"12px"}}> - Label : {data.labelByLabelId!= null?data.labelByLabelId.labelName: "Undefine"} </span>
-      <br></br>
-      <span style={{fontSize:"12px"}}> - Color : {data.colorByColorId!= null?data.colorByColorId.colorName: "Undefine"} </span>
-      <br></br>
-      <span style={{fontSize:"12px"}}> - Note : {data.note!= null?data.note: "_"} </span>
-    </p>
-  );
-
-}
+import renderField from 'components/FormInputs/renderField';
 
 
 const proccessData = (data)=>{
@@ -30,20 +18,110 @@ const proccessData = (data)=>{
   for (let i = 0;i<data.length;i++){
       let row =null;
       row = {
-        sn: i+1,
-        nodeId: data[i].nodeId,
+        productId: data[i].productByProductId != null ?data[i].productByProductId.id: null,
         productName: data[i].productByProductId != null ? data[i].productByProductId .productName: "undefine",
+        serviceTypeId: data[i].serviceTypeByServiceTypeId ?data[i].serviceTypeByServiceTypeId.id :null,
         serviceName: data[i].serviceTypeByServiceTypeId != null ? data[i].serviceTypeByServiceTypeId.serviceTypeName:"_",
-        amount:data[i].amount,
         receivedAmount: data[i].recievedAmount,
-        unit: data[i].unitByUnitId != null ? data[i].unitByUnitId.unitName: "_",
-        unitPrice:data[i].unitPriceByUnitPrice!= null?  data[i].unitPriceByUnitPrice.price :"_",
-        details: resultDetail(data)
+        unitId: data[i].unitByUnitId.id,
+        materialId: data[i].materialByMaterialId!= null?data[i].materialByMaterialId.id:null,
+        materialName: data[i].materialByMaterialId!= null?data[i].materialByMaterialId.materialName: "Undefine",
+        labelId: data[i].labelByLabelId!= null?data[i].labelByLabelId.id:null,
+        labelName: data[i].labelByLabelId!= null?data[i].labelByLabelId.labelName: "Undefine",
+        colorId: data[i].colorByColorId!= null?data[i].colorByColorId.id: null,
+        colorName: data[i].colorByColorId!= null?data[i].colorByColorId.colorName: "Undefine",
+        colorGroupId: data[i].colorByColorId!= null? data[i].colorByColorId.colorGroupByColorGroupId.id: null,
+        colorGroupName: data[i].colorByColorId!= null? data[i].colorByColorId.colorGroupByColorGroupId.colorGroupName: "undefine"
       }
       result.push(row);
   }
   return result;
 };
+
+// const optionBranch = (data) =>{
+//   let result = [];
+//   if (data == null)
+//   {
+//     return result;
+//   }
+//   for (let i=0;i<data.length;i++){
+//     result.push({
+//         value:data[i].id,
+//         label: data[i].washerCode
+//     })
+//   }
+//   return result;
+// }
+
+function removeDuplicates(arr){
+  var newarr = [];
+  var unique = {};
+   
+  arr.forEach(item =>{
+      if (!unique[item.id]) {
+          newarr.push(item);
+          unique[item.id] = item;
+      }
+  });
+  return newarr ;
+}
+
+const calService = (data)=>{
+  let result=[];
+
+  if (data){
+    data.forEach(element => {
+     let a = {
+        id: element.serviceTypeByServiceTypeId.id,
+        name: element.serviceTypeByServiceTypeId.serviceTypeName
+      };
+      result.push(a);
+    });
+  }
+  return removeDuplicates(result);
+ 
+}
+
+const calColorGroup = (data)=>{
+  let result=[];
+
+  if (data){
+    data.forEach(element => {
+     let a = {
+        id: element.colorGroupId,
+        name: element.colorGroupName,
+      };
+      result.push(a);
+    });
+  }
+  return removeDuplicates(result);
+ 
+}
+
+const setWashBag = (data, ind) => {
+    for (let i =0; i<data.length;i++){
+      data[i].washbagCode = ind;
+    }
+    return data;
+}
+const sortByServiceAndColorGroup= (serviceArrays,data)=>{
+    let result = [];
+    let washBagind = 0;
+  
+    serviceArrays.forEach(element => {
+        let filter = data.filter( item => item.serviceTypeId === element.id);
+       
+        let colorGroup = calColorGroup(filter);
+        colorGroup.forEach(e =>{
+            let colorFilter = filter.filter(item => item.colorGroupId === e.id);
+           
+            result =result.concat(setWashBag(colorFilter, washBagind++));
+        });
+    });
+    return result;
+} 
+
+
 
 
 
@@ -53,143 +131,74 @@ class AssignForm extends Component {
     startDate: moment(),
     endDate: moment(),
     dateRangeFocusedInput: null,
-    viewMode: false
+    viewMode: false, 
+    sortedCloth: null
   
   };
   render () {
     
-    let {receipt} = this.props;
+    let {receipt, washer,handleSubmit, history} = this.props;
+
+    let {sortedCloth} = this.state;
+    
+    this.props.dispatch(initialize('AssignForm',{
+      receiptId: receipt.id,
+      resultSortedCloth: sortByServiceAndColorGroup(calService(receipt.receiptDetailsByReceiptId.nodes),proccessData(receipt.receiptDetailsByReceiptId.nodes))
+    },{keepValues: true}));
+    console.log(sortedCloth)
+
       return(
 
-          <form className="form-horizontal" >
-          <fieldset>
-              
-              <legend>
-              <div style={{justifyContent: "space-between"}}>
-                <span>Receipt's Information - {receipt.id} - {receipt.customerOrderByOrderId.id} <span className="badge badge-warning">{receipt.status}</span> </span>
-                
-              </div>
-              </legend>
-              
-              <div className="row">
-                <div className="col-sm-6 ">
-                  <label className="control-label col-md-4">Full name</label>
-                  <div className=" control-label col-md-8" style={{textAlign:"left"}}><b>{receipt.customerOrderByOrderId.customerByCustomerId.fullName}</b></div>
-                  <label className="control-label col-md-4">Phone number</label>
-                  <div className=" control-label col-md-8" style={{textAlign:"left"}}>{receipt.customerOrderByOrderId.customerByCustomerId.phone}</div>
-                </div>
-                <div className="col-sm-6 ">
-                  <label className="control-label col-md-4">Email</label>
-                  <div className=" control-label col-md-8" style={{textAlign:"left"}}>{receipt.customerOrderByOrderId.customerByCustomerId.email}</div>
-                  <label className="control-label col-md-4">Address</label>
-                  <div className=" control-label col-md-8" style={{textAlign:"left"}}>{receipt.customerOrderByOrderId.customerByCustomerId.address}</div>
-                </div>
-              </div>
-              <div className="row">
-                <div className="col-sm-6 ">
-                  <label className="control-label col-md-4 mt-4">Branch</label>
-                  <div className=" control-label col-md-8" style={{textAlign:"left"}}>
-                    <span className="btn btn-primary btn-sm btn-fill btn-linkedin">{receipt.customerOrderByOrderId.branchByBranchId.branchName}</span>
-                  </div>
-                </div>
-                <div className="col-sm-6 ">
-                  <label className="control-label col-md-4 mt-4">Branch's Address</label>
-                  <div className=" control-label col-md-8" style={{textAlign:"left"}}>
-                    <span >{receipt.customerOrderByOrderId.branchByBranchId.address}</span>
-                  </div>
-                </div>
-              </div>
-              <div className="row"><br></br></div>
-              <div className="row">
-                <div className="col-sm-6">
-                    <label className="control-label col-md-4 mt-4">Pick up date </label>
-                    <div className="col-md-8 mt-4">
-                      <Tags
-                        tags={ [
-                          {
-                            id: 1,
-                            text: receipt.pickUpDate?receipt.pickUpDate:receipt.customerOrderByOrderId.pickUpDate
-                          }
-                        ]}
-                        disabled={true}
+          
 
-                        theme="azure"
-                        fill />
-                    </div>
-                    <label className="control-label col-md-4 mt-6">Pick up time </label>
-                    <div className="col-md-8 mt-6">
-                      <Tags
-                        tags={ [
-                          {
-                            id: 1,
-                            text: receipt.pickUpTime?receipt.pickUpTime:receipt.customerOrderByOrderId.timeScheduleByPickUpTimeId.timeStart +" - "+receipt.customerOrderByOrderId.timeScheduleByPickUpTimeId.timeEnd
-                          }
-                        ]}
-                        disabled={true}
-                        theme="azure"
-                        fill />
-                    </div>
-                </div>
-                <div className="col-sm-6">
-                  <label className="control-label col-md-4 mt-4">Delivery date </label>
-                    <div className="col-md-8 mt-4">
-                      <Tags
-                        tags={[
-                          {
-                            id: 1,
-                            text: receipt.deliveryDate?receipt.deliveryDate: receipt.customerOrderByOrderId.deliveryDate
-                          }
-                        ]}
-                        disabled={true}
-                        theme="azure"
-                        fill />
-                    </div>
-                  <label className="control-label col-md-4 mt-6">Delivery time </label>
-                  <div className="col-md-8 mt-6">
-                    <Tags
-                      tags={ [
-                        {
-                          id: 1,
-                          text: receipt.deliveryTime?receipt.deliveryTime:receipt.customerOrderByOrderId.timeScheduleByDeliveryTimeId.timeStart +" - "+receipt.customerOrderByOrderId.timeScheduleByDeliveryTimeId.timeEnd
-                        }
-                      ]}
-                      disabled={true}
-                      theme="azure"
-                      fill />
-                  </div>
-                </div>
-              </div>
-              <div className="row">
-                <div className="col-sm-6">
-                    <label className="control-label col-md-4 mt-4" >Pick up place </label>
-                    <div className=" control-label col-md-8" style={{textAlign:"left"}}><b>{receipt.customerOrderByOrderId.pickUpPlace !=null ?receipt.customerOrderByOrderId.pickUpPlace: "_" }</b></div>
-                </div>
-                <div className="col-sm-6">
-                    <label className="control-label col-md-4 mt-4" >Delivery place </label>
-                    <div className=" control-label col-md-8" style={{textAlign:"left"}}><b>{receipt.customerOrderByOrderId.deliveryPlace !=null ?receipt.customerOrderByOrderId.deliveryPlace: "_" }</b></div>
-                </div>
-              </div>
-              <div className="row">
-                <div className="col-sm-6">
-                    <label className="control-label col-md-4 mt-4" > Pick up Staff</label>
-                    <div className=" control-label col-md-8" style={{textAlign:"left"}}><b>{(receipt.staffByStaffPickUp) ?receipt.staffByStaffPickUp.fullName: "_" }</b></div>
-                </div>
-                <div className="col-sm-6">
-                    <label className="control-label col-md-4 mt-4" >Delivery Staff </label>
-                    <div className=" control-label col-md-8" style={{textAlign:"left"}}><b>{(receipt.staffByStaffDelivery) ?receipt.staffByStaffDelivery.fullName: "_" }</b></div>
-                </div>
-              </div>
-            
-            </fieldset>
-            <br></br><br></br>
             <fieldset>
-              <legend>Receipt Detail</legend>
+              <legend>Phân loại</legend>
               <div className="col-sm-12">
+
+    <div className="row">
+    {/* <div className="col-sm-6 ">
+                  <label className="control-label col-md-4">Máy giặt</label>
+                  <div className=" control-label col-md-8" style={{textAlign:"left"}}>
+                  <Field
+                            name="wash"
+                            type="select"
+                            value={true}
+                            options={optionBranch(washer)}
+                            placeholder = "Chọn máy để xử lí"
+                            component={renderField}
+                            />
+                           
+                  </div>
+                  </div>
+                  <div className="col-sm-4 control-label" style={{textAlign:"left"}}>
+                 <button
+                    type="button"
+                        className={"btn btn-fill btn-info btn-sm"}
+                        >
+                        Xác nhận
+                    </button> &nbsp;
+
+                   
+                  </div> */}
+                 
+    </div>
+                <form className="form-horizontal" onSubmit={handleSubmit} >
+                     
+                  <FieldArray name="resultSortedCloth" serviceArrays={calService(receipt.receiptDetailsByReceiptId.nodes)}  component={SortCloth}></FieldArray>
+                <div className="text-center">
+                  <button
+                  type="submit"
+                      className={"btn btn-fill btn-success btn-wd"}
+                      >
+                    Save
+                  </button>
+                </div>
                
+              </form>
+          
               </div>
             </fieldset>
           
-          </form>
 
       );
 

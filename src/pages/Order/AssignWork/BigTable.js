@@ -1,9 +1,8 @@
 import React from 'react';
-import generateData from '../generateData';
-import moment from 'moment';
-const data = generateData(10);
+import { Link } from 'react-router-dom';
 
-const BigTable = () => (
+
+const BigTable = ({allWash}) => (
   <div className="card">
     <div className="header text-center">
       <h4 className="title">Kết quả phân công</h4>
@@ -11,46 +10,42 @@ const BigTable = () => (
       <br />
     </div>
     <div className="content table-responsive table-full-width">
-      <table className="table table-bigboy">
+      <table className="table table-striped hover">
         <thead>
-          <tr>
-            <th>Khách hàng</th>
-            <th className="th-description">Đơn hàng</th>
-            <th className="text-right">Biên nhận</th>
-            <th className="text-right">Máy giặt</th>
-            <th>Chức năng</th>
+          <tr><th className="sn">STT</th>
+            <th className="text-left ">Máy giặt</th>
+            <th className="text-left">Đơn hàng</th>
+            <th className="text-left ">Biên nhận</th>
+            <th className="text-left">Status</th>
           </tr>
         </thead>
         <tbody>
-          {data.map(item => (
-            <tr>
-              <td>
-                <div className="img-container">
-                  <img src={item.avatar} alt={item.name} />
-                </div>
-              </td>
-              <td className="td-name">
-                {item.name}
-              </td>
-              <td>
-                {item.description}
-              </td>
-              <td className="td-number">{moment(item.birthdate).format('YYYY-MM-DD')}</td>
-              <td className="td-actions">
-                <button type="button" rel="tooltip" data-placement="left" title="" className="btn btn-info btn-simple btn-icon" data-original-title="View Post">
-                  <i className="fa fa-image"></i>
-                </button>
-                <button type="button" rel="tooltip" data-placement="left" title="" className="btn btn-success btn-simple btn-icon" data-original-title="Edit Post">
-                  <i className="fa fa-edit"></i>
-                </button>
-                <button type="button" rel="tooltip" data-placement="left" title="" className="btn btn-danger btn-simple btn-icon " data-original-title="Remove Post">
-                  <i className="fa fa-times"></i>
-                </button>
-              </td>
+          {allWash.length>0? allWash.map((item, index) =>(
+            <tr key={index}>
+              <td>{index+1}</td>
+              <td>{item.washerCode}</td>
+              <td><Link rel="tooltip"
+                      className="btn btn-success btn-fill btn-sm"
+                      data-original-title="View Profile"
+                      to={"/order/assign-work/assigntoWash/"}
+                     >
+                        <strong>{item.customerName} &nbsp; - &nbsp;{item.orderId}</strong>
+                    </Link></td>
+              <td><Link rel="tooltip"
+                      className="btn btn-warning btn-fill btn-sm"
+                      data-original-title="View Profile"
+                      to={"/order/assign-work/assigntoWash/"}
+                     >
+                        {item.receiptId}
+                    </Link> {item.washbag}</td>
+              
+              <td>{item.status}</td>
             </tr>
-          ))}
 
-
+          )
+          ):
+         <tr ><td colSpan="15" className="text-center" >Không có dữ liệu</td></tr>
+          }
         </tbody>
       </table>
     </div>

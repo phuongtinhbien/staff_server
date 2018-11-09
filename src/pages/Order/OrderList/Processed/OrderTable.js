@@ -190,19 +190,13 @@ class OrderTable extends Component {
                     dataSort>
                     Delivery time
                   </TableHeaderColumn>
-                  <TableHeaderColumn
+                  {/* <TableHeaderColumn
                     dataField='amount'
                     width="25%"
                     >
                     Amount
-                  </TableHeaderColumn>
-                  <TableHeaderColumn
-                    dataField=''
-                    width="15%"
-                    dataFormat={button1Formatter}
-                    >
-                    Action
-                  </TableHeaderColumn>
+                  </TableHeaderColumn> */}
+                
                  
                 </BootstrapTable>
               </div>
