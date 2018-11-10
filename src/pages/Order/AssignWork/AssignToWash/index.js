@@ -1,10 +1,9 @@
+import gql from "graphql-tag";
 import React, { Component } from 'react';
+import { Mutation, Query } from 'react-apollo';
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
-import { Link, withRouter } from 'react-router-dom';
-import { Query, Mutation } from 'react-apollo';
-import gql  from "graphql-tag";
+import { withRouter } from 'react-router-dom';
 import Error from './../../../Error';
-import moment from 'moment';
 import AssignForm from './AssignForm';
 
 const RECEIPT_DETAIL = gql`query getCustomerReceiptByNodeId($nodeId: ID!) {
@@ -102,7 +101,8 @@ const MUT_ASSIGN_WASH = gql`mutation assignToWash($reId: BigFloat!,$currUser: Bi
 
 const ALL_WASHER = gql `query washer ($branch: BigFloat!){
   allWashingMachines (condition:{
-    branchId: $branch
+    branchId: $branch,
+    status: "ACTIVE"
   }){
     nodes{
       nodeId

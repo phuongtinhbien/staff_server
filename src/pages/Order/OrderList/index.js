@@ -1,11 +1,11 @@
-import React,{ Fragment } from 'react';
+import React from 'react';
 import { Route, Switch } from 'react-router-dom';
-import OrderPending from './Pending';
-import OrderProccessing  from './Proccessing';
-import OrderProcessed from './Processed';
+import OrderDeclined from './Declined';
 import OrderFinish from './Finish';
 import ViewOrderDetail from './OrderDetail';
-import OrderDeclined from './Declined';
+import OrderPending from './Pending';
+import OrderProccessing from './Proccessing';
+import OrderProcessed from './Processed';
 
 
 const OrderList = ({match}) => (

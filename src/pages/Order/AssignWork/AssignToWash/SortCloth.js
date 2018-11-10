@@ -1,6 +1,6 @@
-import React from 'react'
-import { Field, FieldArray, reduxForm } from 'redux-form'
 import renderField from 'components/FormInputs/renderField';
+import React from 'react';
+import { Field } from 'redux-form';
 
 
 const SortCloth = ({ fields,  meta: { error, submitFailed } }) =>(

@@ -1,10 +1,10 @@
-import React,{ Fragment } from 'react';
+import React from 'react';
 import { Route } from 'react-router-dom';
+import ReceiptDeliveried from './Deliveried';
 import ReceiptPending from './Pending';
+import ReceiptPendingDelivery from './PendingDelivery';
 import ReceiptDetail from './ReceiptDetail';
 import ReceiptReceived from './Received';
-import ReceiptPendingDelivery from './PendingDelivery';
-import ReceiptDeliveried from './Deliveried';
 import ReceiptUpdate from './UpdateReceipt';
 
 const Reciepts = ({match}) => (

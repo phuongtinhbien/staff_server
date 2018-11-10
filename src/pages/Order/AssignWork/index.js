@@ -1,10 +1,9 @@
+import gql from "graphql-tag";
 import React from 'react';
-import TableWithLinks from './TableWithLinks';
-import BigTable from './BigTable';
-import { Query, Mutation } from 'react-apollo';
-import gql  from "graphql-tag";
+import { Query } from 'react-apollo';
 import Error from './../../Error';
-import SalesChart from './SalesChart';
+import BigTable from './BigTable';
+import TableWithLinks from './TableWithLinks';
 
 
 const ASSIGN_WORK = gql`query assignWork($branch: BigFloat!) {
@@ -79,6 +78,7 @@ const ALL_WASH = gql `query allWash ($brId: BigFloat!){
       receiptId
       wbName
       washerCode
+      sn
       status
       customerName
     }
@@ -122,6 +122,7 @@ const processAllWash = (data)=>{
       if (data){
         for (let i=0;i<data.length;i++){
             let row = {
+              sn: data[i].sn,
               orderId: data[i].customerOrderId,
               receiptId: data[i].receiptId,
               wbName: data[i].wbName,

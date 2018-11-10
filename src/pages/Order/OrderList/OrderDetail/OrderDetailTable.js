@@ -1,8 +1,6 @@
 import React, { Component } from 'react';
-import { Link, withRouter } from 'react-router-dom';
-import { BootstrapTable, TableHeaderColumn,ClearSearchButton} from 'react-bootstrap-table';
+import { BootstrapTable, ClearSearchButton, TableHeaderColumn } from 'react-bootstrap-table';
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
-import ReactCurrencyFormatter from 'react-currency-formatter';
 
 class OrderDetailTable extends Component {
 

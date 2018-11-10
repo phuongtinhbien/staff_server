@@ -1,13 +1,11 @@
-import React, { Component } from 'react';
-import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
-import { Link, withRouter } from 'react-router-dom';
-import { Field, reduxForm, FieldArray } from 'redux-form';
-import {graphql,compose } from 'react-apollo';
-import { Query, Mutation } from 'react-apollo';
-import gql  from "graphql-tag";
-import ReceiptForm from './OrderDetailForm';
-import Error from '../../../Error';
+import gql from "graphql-tag";
 import moment from 'moment';
+import React, { Component } from 'react';
+import { Mutation, Query } from 'react-apollo';
+import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
+import { withRouter } from 'react-router-dom';
+import Error from '../../../Error';
+import ReceiptForm from './OrderDetailForm';
 
 const RECEIPT_DETAIL = gql`query getCustomerReceiptByNodeId($nodeId: ID!) {
   receipt(nodeId: $nodeId) {

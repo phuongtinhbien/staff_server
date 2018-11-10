@@ -1,14 +1,9 @@
 
-import React, { Component } from 'react';
-import moment from 'moment';
-import { Field, reduxForm,initialize, FieldArray } from 'redux-form';
-import { Link } from 'react-router-dom';
-import Tags from 'components/Tags';
-import OrderDetailTable from './OrderDetailTable';
 import renderField from 'components/FormInputs/renderField';
-import ItemCloth from './ItemCloth';
 import _ from 'lodash';
-import { options } from 'sw-toolbox';
+import React, { Component } from 'react';
+import { Field, FieldArray, initialize, reduxForm } from 'redux-form';
+import ItemCloth from './ItemCloth';
 
 const validate = values => {
   const errors = {};

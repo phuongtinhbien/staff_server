@@ -1,5 +1,4 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
 
 
 const BigTable = ({allWash}) => (
@@ -23,21 +22,25 @@ const BigTable = ({allWash}) => (
           {allWash.length>0? allWash.map((item, index) =>(
             <tr key={index}>
               <td>{index+1}</td>
-              <td>{item.washerCode}</td>
-              <td><Link rel="tooltip"
+              <td>{item.washerCode} - <span rel="tooltip"
+                      className="btn btn-danger btn-fill btn-xs"
+                     >
+                        {item.sn}
+                    </span></td>
+              <td><span rel="tooltip"
                       className="btn btn-success btn-fill btn-sm"
                       data-original-title="View Profile"
-                      to={"/order/assign-work/assigntoWash/"}
+                      // to={"/order/assign-work/assigntoWash/"}
                      >
                         <strong>{item.customerName} &nbsp; - &nbsp;{item.orderId}</strong>
-                    </Link></td>
-              <td><Link rel="tooltip"
+                    </span></td>
+              <td><span rel="tooltip"
                       className="btn btn-warning btn-fill btn-sm"
                       data-original-title="View Profile"
-                      to={"/order/assign-work/assigntoWash/"}
+                      // to={"/order/assign-work/assigntoWash/"}
                      >
                         {item.receiptId}
-                    </Link> {item.washbag}</td>
+                    </span> {item.washbag}</td>
               
               <td>{item.status}</td>
             </tr>

@@ -1,9 +1,9 @@
+import gql from "graphql-tag";
 import React, { Component } from 'react';
-import { Link, withRouter } from 'react-router-dom';
-import { BootstrapTable, TableHeaderColumn,ClearSearchButton} from 'react-bootstrap-table';
+import { Query } from 'react-apollo';
+import { BootstrapTable, ClearSearchButton, TableHeaderColumn } from 'react-bootstrap-table';
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
-import { Query, Mutation } from 'react-apollo';
-import gql  from "graphql-tag";
+import { Link } from 'react-router-dom';
 
 
 const CURR_USER = gql `query{

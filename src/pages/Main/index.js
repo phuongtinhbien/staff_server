@@ -1,33 +1,29 @@
-import React from 'react';
-import { Route, Router,Redirect } from 'react-router-dom';
-import { connect } from 'react-redux';
-import cx from 'classnames';
-import { setMobileNavVisibility } from '../../reducers/Layout';
-import { withRouter } from 'react-router-dom';
-
-import { InMemoryCache } from 'apollo-cache-inmemory';
-// import { ApolloClient } from 'apollo-client';
-// import { ApolloProvider } from 'react-apollo';
-import Header from './Header';
-import SideBar from '../../components/SideBar';
-import ThemeOptions from '../../components/ThemeOptions';
-import MobileMenu from '../../components/MobileMenu';
 import ApolloClient from 'apollo-boost';
-import { ApolloProvider, renderToStringWithData } from 'react-apollo';
+import { InMemoryCache } from 'apollo-cache-inmemory';
+import cx from 'classnames';
+import gql from "graphql-tag";
+import React from 'react';
+import { ApolloProvider, Query } from 'react-apollo';
+import { connect } from 'react-redux';
+import { Redirect, Route, withRouter } from 'react-router-dom';
+import SideBar from '../../components/SideBar';
+import { setMobileNavVisibility } from '../../reducers/Layout';
+import Calendar from '../Calendar';
+import Charts from '../Charts';
+import Components from '../Components';
 /**
  * Pages
  */
 import Dashboard from '../Dashboard';
-import Components from '../Components';
-import UserProfile from '../UserProfile';
 import Forms from '../Forms';
-import Charts from '../Charts';
-import Calendar from '../Calendar';
-import Tables from '../Tables';
 import Login from '../Login';
 import Orders from '../Order';
-import { Query, Mutation } from 'react-apollo';
-import gql  from "graphql-tag";
+import Tables from '../Tables';
+import UserProfile from '../UserProfile';
+// import { ApolloClient } from 'apollo-client';
+// import { ApolloProvider } from 'react-apollo';
+import Header from './Header';
+
 // First way to import
 
 // const client = new ApolloClient({

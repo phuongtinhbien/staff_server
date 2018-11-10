@@ -1,15 +1,10 @@
 
-import React, { Component } from 'react';
-import moment from 'moment';
-import { Field, reduxForm,initialize, FieldArray } from 'redux-form';
-import { Link } from 'react-router-dom';
-import Tags from 'components/Tags';
-import SortCloth from './SortCloth';
-import _ from 'lodash';
-import { Query, Mutation } from 'react-apollo';
-import gql  from "graphql-tag";
-
 import renderField from 'components/FormInputs/renderField';
+import moment from 'moment';
+import React, { Component } from 'react';
+import { Field, FieldArray, initialize, reduxForm } from 'redux-form';
+import SortCloth from './SortCloth';
+
 
 
 const validate = values => {

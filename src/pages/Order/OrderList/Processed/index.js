@@ -1,10 +1,9 @@
+import { gql } from 'apollo-boost';
 import React, { Component } from 'react';
+import { Query } from 'react-apollo';
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
+import { withRouter } from 'react-router-dom';
 import OrderTable from './OrderTable';
-import { Link, withRouter } from 'react-router-dom';
-import {graphql } from 'react-apollo';
-import {gql} from 'apollo-boost';
-import { Query, Mutation } from 'react-apollo';
 
 const ORDER_QUERY = gql`query getCustomerOrder($taskType: String!, $status: [String!], $branch: BigFloat!) {
   allTasks(filter: {taskType: {equalTo: $taskType}, currentStatus: {in: $status},previousTask: {

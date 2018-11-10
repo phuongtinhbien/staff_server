@@ -1,7 +1,4 @@
 import React, { Component } from 'react';
-import { Field, reduxForm } from 'redux-form';
-import renderField from 'components/FormInputs/renderField';
-import cx from 'classnames';
 import { Accordion, Panel } from 'react-bootstrap';
 
 const sumMoney = (data)=>{

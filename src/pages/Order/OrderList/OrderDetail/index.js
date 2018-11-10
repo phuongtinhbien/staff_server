@@ -1,10 +1,10 @@
+import gql from "graphql-tag";
 import React, { Component } from 'react';
+import { Mutation, Query } from 'react-apollo';
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
-import { Link, withRouter } from 'react-router-dom';
-import { Query, Mutation } from 'react-apollo';
-import gql  from "graphql-tag";
-import OrderDetailForm from './OrderDetailForm';
+import { withRouter } from 'react-router-dom';
 import Error from '../../../Error';
+import OrderDetailForm from './OrderDetailForm';
 
 const ORDER_DETAIL = gql`query getCustomerOrderByNodeId ($nodeId: ID!){  customerOrder(nodeId: $nodeId){
   nodeId 

@@ -1,16 +1,13 @@
 
-import React, { Component } from 'react';
-import moment from 'moment';
-import { Field, reduxForm, FieldArray } from 'redux-form';
-import { SingleDatePicker, DateRangePicker } from 'react-dates';
-import { connect } from 'react-redux';
-import { Query, Mutation } from 'react-apollo';
-import gql  from "graphql-tag";
 import renderField from 'components/FormInputs/renderField';
+import gql from "graphql-tag";
+import _ from 'lodash';
+import moment from 'moment';
+import React, { Component } from 'react';
+import { Query } from 'react-apollo';
+import { Field, FieldArray, reduxForm } from 'redux-form';
 import Error from '../../Error';
 import ItemCloth from './ItemCloth';
-import _ from 'lodash';
-import { formValueSelector } from 'redux-form'; 
 
 const validate = values => {
   const errors = {};

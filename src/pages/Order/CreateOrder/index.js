@@ -1,13 +1,12 @@
+import gql from "graphql-tag";
 import React, { Component } from 'react';
+import { Mutation, Query } from 'react-apollo';
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
-import { Link, withRouter } from 'react-router-dom';
-import { Query, Mutation } from 'react-apollo';
-import gql  from "graphql-tag";
-import CreateOrderForm from './CreateOrderForm';
-import Error from '../../Error';
-import { formValueSelector } from 'redux-form'; 
 import { connect } from 'react-redux';
-import { onError } from 'apollo-link-error';
+import { withRouter } from 'react-router-dom';
+import { formValueSelector } from 'redux-form';
+import Error from '../../Error';
+import CreateOrderForm from './CreateOrderForm';
 
 
 

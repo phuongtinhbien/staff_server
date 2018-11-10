@@ -1,6 +1,6 @@
-import React from 'react'
-import { Field, FieldArray, reduxForm } from 'redux-form'
 import renderField from 'components/FormInputs/renderField';
+import React from 'react';
+import { Field } from 'redux-form';
 
 const renderItemOrderDetail = ({ fields, color, label, material, product,service, unit,  meta: { error, submitFailed } }) =>(
   <div>

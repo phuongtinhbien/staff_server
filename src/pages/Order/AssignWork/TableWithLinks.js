@@ -65,7 +65,7 @@ class TableWithLinks extends Component {
                     type="button"
                     className="btn btn-warning btn-fill btn-wd"
                     data-original-title="View Profile"
-                    onClick = {e => (assign(CURRENT_USER.branch.id))}
+                    onClick = {e => (assign(CURRENT_USER.branch.id, CURRENT_USER.id))}
                   >
                     Tự động phân chia
                   </button>

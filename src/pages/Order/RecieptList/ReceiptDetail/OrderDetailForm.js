@@ -1,9 +1,8 @@
 
-import React, { Component } from 'react';
-import moment from 'moment';
-import { Field, reduxForm } from 'redux-form';
-import { Link } from 'react-router-dom';
 import Tags from 'components/Tags';
+import moment from 'moment';
+import React, { Component } from 'react';
+import { reduxForm } from 'redux-form';
 import OrderDetailTable from './OrderDetailTable';
 
 

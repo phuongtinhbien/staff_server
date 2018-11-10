@@ -1,11 +1,11 @@
 import React from 'react';
-import { Route,Switch } from 'react-router-dom';
-import OrderList from './OrderList';
-import Reciepts from './RecieptList';
-import CreateOrder from './CreateOrder';
+import { Route, Switch } from 'react-router-dom';
 import AssignWork from './AssignWork';
 import Assign from './AssignWork/Assign';
 import AssignToWash from './AssignWork/AssignToWash';
+import CreateOrder from './CreateOrder';
+import OrderList from './OrderList';
+import Reciepts from './RecieptList';
 const Orders = ({match}) => (
     <div className="content">
        <Route path={`${match.url}/reciept-list`} component={Reciepts} />

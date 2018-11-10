@@ -1,10 +1,10 @@
+import gql from "graphql-tag";
 import React, { Component } from 'react';
+import { Query } from 'react-apollo';
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
-import OrderTable from '../OrderTable';
-import { Link, withRouter } from 'react-router-dom';
-import { Query, Mutation } from 'react-apollo';
-import gql  from "graphql-tag";
+import { withRouter } from 'react-router-dom';
 import Error from '../../../Error';
+import OrderTable from '../OrderTable';
 
 const ORDER_QUERY = gql`
 query getCustomerOrder ($status: String!, $branch: BigFloat!){
