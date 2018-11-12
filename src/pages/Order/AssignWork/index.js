@@ -85,6 +85,39 @@ const ALL_WASH = gql `query allWash ($brId: BigFloat!){
   }
 }`;
 
+function removeDuplicates(arr){
+  var newarr = [];
+  var unique = {};
+   
+  arr.forEach((item, index) =>{
+      if (!unique[item]) {
+          newarr.push(item);
+          unique[item] = item;
+      }
+  });
+  return newarr ;
+}
+
+
+const filterWashbag = (data) =>{
+    let res = [];
+    let unique = {};
+    for (let i =0;i<data.length;i++){
+      if (!unique[data[i].orderId]) {
+        let temp = data.filter(item => item.orderId === data[i].orderId);
+        temp.forEach(el => {
+          if (!data[i].wbName.includes(el.wbName))
+            data[i].wbName = data[i].wbName.concat(el.wbName);
+        });
+        data[i].wbName = removeDuplicates(data[i].wbName);
+        res.push( data[i]);
+        unique[data[i].orderId] = data[i].orderId;
+    }
+    }
+      return res;
+
+}
+
 const processPendingServing = (data)=>{
   let a = data.getprepareorderserving.nodes;
   let res =[];
@@ -102,18 +135,6 @@ const processPendingServing = (data)=>{
     return res;
 }
 
-function removeDuplicates(arr){
-  var newarr = [];
-  var unique = {};
-   
-  arr.forEach((item, index) =>{
-      if (!unique[item.orderId]) {
-          newarr.push(item);
-          unique[item.orderId] = item;
-      }
-  });
-  return newarr ;
-}
 
 const processAllWash = (data)=>{
 
@@ -125,7 +146,7 @@ const processAllWash = (data)=>{
               sn: data[i].sn,
               orderId: data[i].customerOrderId,
               receiptId: data[i].receiptId,
-              wbName: data[i].wbName,
+              wbName: [data[i].wbName],
               washerCode: data[i].washerCode,
               status: data[i].status,
               customerName: data[i].customerName
@@ -134,7 +155,7 @@ const processAllWash = (data)=>{
         }
       }
 
-      return removeDuplicates(res);
+      return filterWashbag(res);
 }
 
 

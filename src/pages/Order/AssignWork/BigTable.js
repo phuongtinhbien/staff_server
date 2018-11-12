@@ -15,6 +15,7 @@ const BigTable = ({allWash}) => (
             <th className="text-left ">Máy giặt</th>
             <th className="text-left">Đơn hàng</th>
             <th className="text-left ">Biên nhận</th>
+            <th className="text-left ">Túi giặt</th>
             <th className="text-left">Status</th>
           </tr>
         </thead>
@@ -41,7 +42,9 @@ const BigTable = ({allWash}) => (
                      >
                         {item.receiptId}
                     </span> {item.washbag}</td>
-              
+                    <td>{item.wbName.length>0 && item.wbName.map((item, index)=>(
+                        <li key= {index}> {item}</li>
+                    ))}</td>
               <td>{item.status}</td>
             </tr>
 

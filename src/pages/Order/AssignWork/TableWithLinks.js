@@ -49,28 +49,23 @@ class TableWithLinks extends Component {
         
          <label className="title">{successContent} </label>
          <br></br>
-        <Mutation mutation= {AUTO_ASSIGN}
-                  onCompleted={data=> {handleOnCompleted(data,history);
-                   this.setState({errorContent: null, successContent: "Phân công thành công"})
-                 }}
-                update={(cache, { data: { assignAutoToWash } }) => {
-                }}
-                onError={error => this.setState({errorContent:error.message+ error.extraInfo, successContent: null})}
-
-              >
-              {
-                (assignAutoToWash) =>(
-                  // assignAutoToWash({variables:{brId: CURRENT_USER.branch.id, currUser: CURRENT_USER.id }}))
               <button 
                     type="button"
                     className="btn btn-warning btn-fill btn-wd"
                     data-original-title="View Profile"
-                    onClick = {e => (assign(CURRENT_USER.branch.id, CURRENT_USER.id))}
+                    onClick = {e => (assign(CURRENT_USER.branch.id, CURRENT_USER.id, 'TYPE_1'))}
                   >
-                    Tự động phân chia
+                    Phân công loại 1
+                  </button> &nbsp;
+                    <button 
+                    type="button"
+                    className="btn btn-warning btn-fill btn-wd"
+                    data-original-title="View Profile"
+                    onClick = {e => (assign(CURRENT_USER.branch.id, CURRENT_USER.id,'TYPE_2'))}
+                  >
+                   Phân công loại 2
                   </button>
-                )}
-          </Mutation>
+
           <table className="table table-hover table-striped">
             <thead>
               <tr>

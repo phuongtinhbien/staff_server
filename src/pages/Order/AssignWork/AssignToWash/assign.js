@@ -46,8 +46,21 @@ const SORTED_ORDER_LIST = gql `query sortedOrderList($brId: BigFloat!) {
       }
     }
   }
-  
 `;
+
+const ASSIGN_TYPE_ONE = gql`mutation assignWash ($list: [AssignWorkInput!]){
+  assignTypeOneToWash(input: {
+    list: $list
+  }){
+    boolean
+  }
+}`;
+
+Array.prototype.hasMin = function(attrib) {
+  return this.reduce(function(prev, curr){ 
+      return prev[attrib] < curr[attrib] ? prev : curr; 
+  });
+}
 
 
 const ERROR = "Xảy ra lỗi !!!";
@@ -72,7 +85,8 @@ function findMinWasher (washerInfoList){
         index = i;
     } 
     else {
-
+      index  = washerInfoList.indexOf(washerInfoList.hasMin('sum'));
+      break;
     }
   }
 
@@ -80,8 +94,7 @@ function findMinWasher (washerInfoList){
 }
 
 
-
-function assignWork(orderList, washerInfoList, curr_user) {
+function assignWorkTypeOne(orderList, washerInfoList, curr_user) {
   // itemResul = {
   //   sn,
   //   re_id,
@@ -90,29 +103,43 @@ function assignWork(orderList, washerInfoList, curr_user) {
   // }
   let result = [];
   orderList.forEach(order => {
-    let isAssigned = false;
     let sn = 1;
-
-    if (isAssigned) {
+    let index = findMinWasher (washerInfoList);
+    if (index != null){
+      let washer = washerInfoList[index];
+      washer.pending.push(order.id);
+      washer.sum = Number(washer.sum)+1;
+      sn =  washer.sum;
       result.push({
         sn: sn,
-        re_id: order.receiptsByOrderId.nodes[0].id,
-
-        curr_user:curr_user
+        reId: order.receiptsByOrderId.nodes[0].id,
+        washerId: washer.id,
+        currUser:curr_user
       });
     }
-    
   });
   console.log(result);
   console.log(washerInfoList);
+  if (result){
+    client.mutate({mutation: ASSIGN_TYPE_ONE,
+    variables:{list:result}}).then(
+        result =>{
+          if (result){
+            console.log("Thanh cong");
+          }
+        }
+    ).catch(error =>{
+      console.log(error.message)
+    })
+  }
+}
 
-
-
+function assignWorkTypeTwo(orderList, washerInfoList, curr_user){
 
 }
 
 
-function main(branch, curr) {
+function main(branch, curr, type) {
   let orderList;
   let washInfo;
   getSortedOrderList(branch).then(
@@ -120,9 +147,7 @@ function main(branch, curr) {
       if (data.data) {
         orderList = data.data.sortedOrderList.nodes;
         washInfo = data.data.getInfoWasher.nodes;
-        console.log(orderList);
-        console.log(washInfo);
-        assignWork(orderList, washInfo, curr);
+        assignWorkTypeOne(orderList, washInfo, curr);
       } else if (!data.data || data.errors) {
         console.log(data.errors.toString);
       }
