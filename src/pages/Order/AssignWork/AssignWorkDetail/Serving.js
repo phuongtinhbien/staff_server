@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link, withRouter } from 'react-router-dom';
-
+import status from '../../status';
 const BigTable = ({allWash,washer}) => (
   <div className="card">
     <div className="header text-center">
@@ -16,11 +16,19 @@ const BigTable = ({allWash,washer}) => (
        <th className="text-left">Đơn hàng</th>
        <th className="text-left ">Biên nhận</th>
        <th className="text-left ">Túi giặt</th>
-       <th className="text-left">Status</th>
+       <th className="text-left">Trạng thái</th>
      </tr>
    </thead>
    <tbody>
-     {allWash.length>0? allWash.filter(value => value.washerCode === washer).map((item, index) =>(
+     {allWash.length>0? allWash.sort(function(a, b) {
+  if (a.sn > b.sn) {
+    return 1;
+  }
+  if (a.sn < b.sn) {
+    return -1;
+  }
+  return 0;
+}).filter(value => value.washerCode === washer).map((item, index) =>(
        <tr key={index}>
          <td>{index+1}</td>
          <td>{item.washerCode} - <span rel="tooltip"
@@ -45,7 +53,7 @@ const BigTable = ({allWash,washer}) => (
                <td>{item.wbName.length>0 && item.wbName.map((item, index)=>(
                    <li key= {index}> {item}</li>
                ))}</td>
-         <td>{item.status}</td>
+         <td>{status(item.status)}</td>
        </tr>
 
      )

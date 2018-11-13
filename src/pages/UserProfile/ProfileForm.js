@@ -3,10 +3,10 @@ import { Field, reduxForm } from 'redux-form';
 import gql  from "graphql-tag";
 import renderField from 'components/FormInputs/renderField';
 
-const ProfileForm = ({current_user}) => (
+const ProfileForm = ({current_user, history}) => (
   <div className="card">
     <div className="header">
-      <h4 className="title">Cập nhật thông tin <span className="badge badge-warning">...</span></h4>
+      <h4 className="title">Thông tin người dùng <span className="badge badge-warning">{current_user.staffType.staffType}</span></h4>
     </div>
     <div className="content">
       <form>
@@ -31,26 +31,36 @@ const ProfileForm = ({current_user}) => (
           <div className="col-md-6">
             <div className="form-group">
               <label>Họ tên</label>
-              <Field type="text" className="form-control" name="fullName" placeholder="Company" defaultValue="Mike" component={renderField}/>
+              <br></br>
+              <strong>{current_user.name}</strong>
             </div>
           </div>
           <div className="col-md-6">
             <div className="form-group">
               <label>Email</label>
-              <Field type="text" className="form-control" name="email" disabled="true" placeholder="Last Name" defaultValue="Andrew" component={renderField} />
+              <br></br>
+              <strong>{current_user.email}</strong>
             </div>
           </div>
         </div>
 
         <div className="row">
-          <div className="col-md-12">
+          <div className="col-md-6">
             <div className="form-group">
               <label>Địa chỉ</label>
-              <input type="text" className="form-control" name="staffAddress" placeholder="Home Address" defaultValue={current_user.address} />
+              <br></br>
+              <strong>{current_user.address}</strong>
+            </div>
+          </div>
+          <div className="col-md-6">
+            <div className="form-group">
+              <label>Số điện thoại</label>
+              <br></br>
+              <strong>{current_user.phone}</strong>
             </div>
           </div>
         </div>
-        <button type="submit" className="btn btn-info btn-fill pull-right">Cập nhật</button>
+        <button type="submit" className="btn btn-info btn-fill pull-right" onClick={e=> history.goBack()}>Back</button>
         <div className="clearfix"></div>
       </form>
     </div>

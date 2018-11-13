@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import status from '../Order/status';
 import {
   Link
 } from "react-router-dom";
@@ -23,11 +24,11 @@ class Tasks extends Component {
                 <div className="todo-content">
                 <Link to={"/order/order-list/view/"+ todo.nodeId} className="btn btn-fill btn-sm btn-success">{todo.customerByCustomerId.fullName} </Link>
                 &nbsp;
-                <i>{todo.status}</i>
+                <i>{status(todo.status)}</i>
                 <br></br>
                 <strong>Email:&nbsp;</strong> {todo.customerByCustomerId.email}
                 <br></br>
-                <strong>Phone:&nbsp;</strong>  {todo.customerByCustomerId.phone}
+                <strong>Số điện thoại:&nbsp;</strong>  {todo.customerByCustomerId.phone}
                 
                 </div>
                

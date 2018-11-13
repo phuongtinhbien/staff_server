@@ -49,7 +49,7 @@ class SideBar extends Component {
        <UserInfo staffInfo={localStorage.getItem("luandryStaffPage.curr_staff_desc")?JSON.parse(localStorage.getItem("luandryStaffPage.curr_staff_desc")):defaultUserInfo} />
           <div className="line"></div>
           {CURRENT_USER.staffType.staffCode=== "STAFF_01"?<Nav />:null}
-          {CURRENT_USER.staffType.staffCode === "STAFF_O2"?<StaffNav />:null}
+          {CURRENT_USER.staffType.staffCode === "STAFF_02"?<StaffNav />:null}
           {CURRENT_USER.staffType.staffCode === "STAFF_03"?<ShipperNav />: null}
         </div>
         <div

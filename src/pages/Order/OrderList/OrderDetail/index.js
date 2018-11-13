@@ -5,6 +5,7 @@ import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 import { withRouter } from 'react-router-dom';
 import Error from '../../../Error';
 import OrderDetailForm from './OrderDetailForm';
+import PrintTempalte from "react-print";
 
 const ORDER_DETAIL = gql`query getCustomerOrderByNodeId ($nodeId: ID!){  customerOrder(nodeId: $nodeId){
   nodeId 
@@ -12,6 +13,12 @@ const ORDER_DETAIL = gql`query getCustomerOrderByNodeId ($nodeId: ID!){  custome
   status 
   pickUpPlace
   deliveryPlace
+  tasksByCustomerOrder(condition:{previousTask:"N"}){
+      nodes{
+        id
+        currentStaff
+      }
+    }
   receiptsByOrderId{
     nodes{
       id
@@ -24,6 +31,14 @@ const ORDER_DETAIL = gql`query getCustomerOrderByNodeId ($nodeId: ID!){  custome
         id
         fullName
       }
+      billsByReceiptId {
+          totalCount
+          nodes{
+            id
+            nodeId
+          }
+        }
+      
     }
   }
   customerByCustomerId{
@@ -260,8 +275,7 @@ class OrderPending extends Component {
         <div className="content">
         <div className="text-right">
         </div>
-                
-          <OrderDetailForm customerOrder={data.customerOrder}></OrderDetailForm>
+          <OrderDetailForm  customerOrder={data.customerOrder}></OrderDetailForm>
           <div className="row">
            
             
@@ -323,7 +337,7 @@ class OrderPending extends Component {
                       </button>}
                       &nbsp;
                       &nbsp;
-                      {(CURRENT_USER.staffType.staffCode ==='STAFF_02') &&
+                      {CURRENT_USER.staffType.staffCode ==='STAFF_02' && data.customerOrder.tasksByCustomerOrder.nodes[0].currentStaff === CURRENT_USER.id &&
                       <button
                         type="submit"
                         className="btn btn-fill btn-info"

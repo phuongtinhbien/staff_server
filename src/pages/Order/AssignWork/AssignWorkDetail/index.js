@@ -5,6 +5,8 @@ import Error from '../../../Error';
 import { Link, withRouter } from 'react-router-dom';
 import BigTable from './Pending';
 import Serving from './Serving';
+import status from '../../status';
+import WashChart from './PublicPreference';
 
 const ASSIGN_WORK = gql`query assignWork($branch: BigFloat!) {
   getprepareorderserving(brId: $branch) {
@@ -131,23 +133,6 @@ const filterWashbag = (data) =>{
 
 }
 
-const processPendingServing = (data)=>{
-  let a = data.getprepareorderserving.nodes;
-  let res =[];
-  for (let i =0;i<a.length;i++){
-    res.push({
-      nodeId: a[i].nodeId,
-      customerName: a[i].customerOrderByOrderId.customerByCustomerId.fullName,
-      deliveryDate: a[i].customerOrderByOrderId.deliveryDate,
-      deliveryTimeStart: a[i].customerOrderByOrderId.timeScheduleByDeliveryTimeId.timeStart,
-      deliveryTimeEnd: a[i].customerOrderByOrderId.timeScheduleByDeliveryTimeId.timeEnd,
-      washbag: a[i].washBagsByReceiptId.totalCount,
-      isAssignToWash: a[i].washBagsByReceiptId.totalCount>0 && a[i].washBagsByReceiptId.nodes[0].washesByWashBagId.totalCount >0? true: false
-    })
-  }
-    return res;
-}
-
 
 const processAllWash = (data)=>{
 
@@ -171,21 +156,18 @@ const processAllWash = (data)=>{
       return filterWashbag(res);
 }
 
+const processChart = (data)=>{
+    let total = data.length;
+    let chart = {
+        label:[data.filter(value => value.status === 'PENDING_SERVING').length * 100 /total + "%",data.filter(value => value.status === 'FINISHED_SERVING').length*100/total + "%"],
+        series: [data.filter(value => value.status === 'PENDING_SERVING').length *100/total, data.filter(value => value.status === 'FINISHED_SERVING').length*100/total]
+    }
+    return chart;
+}
 
 const AssignWorkDetail = (props,{CURRENT_USER= JSON.parse(localStorage.getItem("luandryStaffPage.curr_staff_desc"))}) => (
   <div className="container-fluid">
-    <div className="row">
-      <div className="col-md-12">
-     
-         
-      </div>
-      <div className="col-md-12">
-      {/* <SalesChart/> */}
-      </div>
-     
-    </div>
-    <div className="row">
-      <div className="col-md-12">
+  
       <Query
       query={ALL_WASH}
       
@@ -202,17 +184,29 @@ const AssignWorkDetail = (props,{CURRENT_USER= JSON.parse(localStorage.getItem("
       if (data != null){
         console.log(data)
       return (
-          <div>
+        <div>
+        <div className="row">
+        <div className="col-md-8">
               <Serving  washer = {props.match.params.washerCode}  allWash ={processAllWash(data.washSearch.nodes.filter(value => value.status ==='SERVING'))}/>
-            <BigTable  washer = {props.match.params.washerCode}  allWash ={processAllWash(data.washSearch.nodes)}/>
-          </div>
-        
+            </div>
+            <div className="col-md-4">
+            <WashChart dataChart = {processChart(processAllWash(data.washSearch.nodes.filter(value => value.washerCode === props.match.params.washerCode)))}/>
+            </div>
+            
+    </div>
+       <div className="row">
+       <div className="col-md-12">
+             
+           <BigTable  washer = {props.match.params.washerCode}  allWash ={processAllWash(data.washSearch.nodes)}/>
+           </div>
+           
+   </div>
+   </div>
       );
       }
     }}
     </Query>
-      </div>
-    </div>
+    
   </div>
 );
 

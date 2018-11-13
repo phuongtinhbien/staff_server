@@ -221,7 +221,7 @@ const AssignWork = ({CURRENT_USER= JSON.parse(localStorage.getItem("luandryStaff
       if (data != null){
         console.log(data)
       return (
-        <BigTable  washer = {data.allWashingMachines.nodes}  allWash ={processAllWash(data.washSearch.nodes)}/>
+        <BigTable  washer = {data.allWashingMachines.nodes}  allWash ={processAllWash(data.washSearch.nodes).filter(value => value.status != 'FINISHED_SERVING')}/>
       );
       }
     }}

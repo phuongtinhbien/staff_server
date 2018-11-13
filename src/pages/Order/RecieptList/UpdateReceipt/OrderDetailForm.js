@@ -4,7 +4,7 @@ import _ from 'lodash';
 import React, { Component } from 'react';
 import { Field, FieldArray, initialize, reduxForm } from 'redux-form';
 import ItemCloth from './ItemCloth';
-
+import status from './../../status';
 const validate = values => {
   const errors = {};
 
@@ -127,34 +127,34 @@ class ReceiptForm extends Component {
                         />
               <legend>
               <div style={{justifyContent: "space-between"}}>
-                <span>Receipt's Information - {receipt.id} - {receipt.customerOrderByOrderId.id} <span className="badge badge-warning">{receipt.status}</span> </span>
+                <span>Thông tin biên nhận - {receipt.id} - {receipt.customerOrderByOrderId.id} <span className="badge badge-warning">{status(receipt.status)}</span> </span>
                 
               </div>
               </legend>
               
               <div className="row">
                 <div className="col-sm-6 ">
-                  <label className="control-label col-md-4">Full name</label>
+                  <label className="control-label col-md-4">Họ tên</label>
                   <div className=" control-label col-md-8" style={{textAlign:"left"}}><b>{receipt.customerOrderByOrderId.customerByCustomerId.fullName}</b></div>
-                  <label className="control-label col-md-4">Phone number</label>
+                  <label className="control-label col-md-4">Số điện thoại</label>
                   <div className=" control-label col-md-8" style={{textAlign:"left"}}>{receipt.customerOrderByOrderId.customerByCustomerId.phone}</div>
                 </div>
                 <div className="col-sm-6 ">
                   <label className="control-label col-md-4">Email</label>
                   <div className=" control-label col-md-8" style={{textAlign:"left"}}>{receipt.customerOrderByOrderId.customerByCustomerId.email}</div>
-                  <label className="control-label col-md-4">Address</label>
+                  <label className="control-label col-md-4">Địa chỉ</label>
                   <div className=" control-label col-md-8" style={{textAlign:"left"}}>{receipt.customerOrderByOrderId.customerByCustomerId.address}</div>
                 </div>
               </div>
               <div className="row">
                 <div className="col-sm-6 ">
-                  <label className="control-label col-md-4 mt-4">Branch</label>
+                  <label className="control-label col-md-4 mt-4">Chi nhánh</label>
                   <div className=" control-label col-md-8" style={{textAlign:"left"}}>
                     <span className="btn btn-primary btn-sm btn-fill btn-linkedin">{receipt.customerOrderByOrderId.branchByBranchId.branchName}</span>
                   </div>
                 </div>
                 <div className="col-sm-6 ">
-                  <label className="control-label col-md-4 mt-4">Branch's Address</label>
+                  <label className="control-label col-md-4 mt-4">Địa chỉ CN</label>
                   <div className=" control-label col-md-8" style={{textAlign:"left"}}>
                     <span >{receipt.customerOrderByOrderId.branchByBranchId.address}</span>
                   </div>
@@ -163,7 +163,7 @@ class ReceiptForm extends Component {
               <div className="row"><br></br></div>
               <div className="row">
                 <div className="col-sm-6">
-                    <label className="control-label col-md-4 mt-4">Pick up date </label>
+                    <label className="control-label col-md-4 mt-4">Ngày lấy đồ </label>
                     <div className="col-md-8 mt-4">
                     <Field
                         name="pickUpDate"
@@ -172,7 +172,7 @@ class ReceiptForm extends Component {
                         component={renderField}
                         />
                     </div>
-                    <label className="control-label col-md-4 mt-6">Pick up time </label>
+                    <label className="control-label col-md-4 mt-6">Thời gian lấy đồ </label>
                     <div className="col-md-8 mt-6">
                     <Field
                         name="pickUpTime"
@@ -184,7 +184,7 @@ class ReceiptForm extends Component {
                     </div>
                 </div>
                 <div className="col-sm-6">
-                  <label className="control-label col-md-4 mt-4">Delivery date </label>
+                  <label className="control-label col-md-4 mt-4">Ngày trả đồ </label>
                     <div className="col-md-8 mt-4">
                     <Field
                         name="deliveryDate"
@@ -193,7 +193,7 @@ class ReceiptForm extends Component {
                         component={renderField}
                         />
                     </div>
-                  <label className="control-label col-md-4 mt-6">Delivery time </label>
+                  <label className="control-label col-md-4 mt-6">Thời gian trả đồ </label>
                   <div className="col-md-8 mt-6">
                   <Field
                         name="deliveryTime"
@@ -206,21 +206,21 @@ class ReceiptForm extends Component {
               </div>
               <div className="row">
                 <div className="col-sm-6">
-                    <label className="control-label col-md-4 mt-4" >Pick up place </label>
+                    <label className="control-label col-md-4 mt-4" >Nơi lấy đồ </label>
                     <div className=" control-label col-md-8" style={{textAlign:"left"}}><b>{receipt.customerOrderByOrderId.pickUpPlace !=null ?receipt.customerOrderByOrderId.pickUpPlace: "_" }</b></div>
                 </div>
                 <div className="col-sm-6">
-                    <label className="control-label col-md-4 mt-4" >Delivery place </label>
+                    <label className="control-label col-md-4 mt-4" >Nơi trả đồ </label>
                     <div className=" control-label col-md-8" style={{textAlign:"left"}}><b>{receipt.customerOrderByOrderId.deliveryPlace !=null ?receipt.customerOrderByOrderId.deliveryPlace: "_" }</b></div>
                 </div>
               </div>
               <div className="row">
                 <div className="col-sm-6">
-                    <label className="control-label col-md-4 mt-4" > Pick up Staff</label>
+                    <label className="control-label col-md-4 mt-4" > NV lấy đồ</label>
                     <div className=" control-label col-md-8" style={{textAlign:"left"}}><b>{(receipt.staffByStaffPickUp) ?receipt.staffByStaffPickUp.fullName: "_" }</b></div>
                 </div>
                 <div className="col-sm-6">
-                    <label className="control-label col-md-4 mt-4" >Delivery Staff </label>
+                    <label className="control-label col-md-4 mt-4" >NV trả đồ </label>
                     <div className=" control-label col-md-8" style={{textAlign:"left"}}><b>{(receipt.staffByStaffDelivery) ?receipt.staffByStaffDelivery.fullName: "_" }</b></div>
                 </div>
               </div>
@@ -233,7 +233,7 @@ class ReceiptForm extends Component {
                         className="btn btn-fill btn-info"
                         disabled={submitting}
                       >
-                        Update
+                        Cập nhật
                       </button>
                 </div>
                 </div>
@@ -241,7 +241,7 @@ class ReceiptForm extends Component {
             </fieldset>
             <br></br><br></br>
             <fieldset>
-              <legend>Receipt Detail</legend>
+              <legend>Chi tiết biên nhận</legend>
               <div className="col-sm-12">
                  <FieldArray name="receiptDetailsByReceiptId" orderDetailList={proccessData(receipt.receiptDetailsByReceiptId.nodes)} component={ItemCloth}></FieldArray>
               </div>

@@ -2,9 +2,13 @@
 import Tags from 'components/Tags';
 import moment from 'moment';
 import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
 import { reduxForm } from 'redux-form';
 import OrderDetailTable from './OrderDetailTable';
-import status from './../../status';
+import status from './../status';
+import gql from "graphql-tag";
+import { Mutation, Query } from 'react-apollo';
+
 
 
 const resultDetail = (data) =>{
@@ -35,19 +39,29 @@ const proccessData = (data)=>{
         productName: data[i].productByProductId != null ? data[i].productByProductId .productName: "undefine",
         serviceName: data[i].serviceTypeByServiceTypeId != null ? data[i].serviceTypeByServiceTypeId.serviceTypeName:"_",
         amount:data[i].amount,
-        receivedAmount: data[i].recievedAmount,
         unit: data[i].unitByUnitId != null ? data[i].unitByUnitId.unitName: "_",
         unitPrice:data[i].unitPriceByUnitPrice!= null?  data[i].unitPriceByUnitPrice.price :"_",
-        details: resultDetail(data)
+        details: resultDetail(data[i])
       }
       result.push(row);
   }
   return result;
 };
 
+const GENERATE_BILL = gql `mutation generateBill($coId: BigFloat!, $currUser: BigFloat!) {
+  generateBill(input: {coId: $coId, currUser: $currUser}) {
+    bill {
+      id
+      nodeId
+      receiptId
+    }
+  }
+}
+`;
 
 
-class ReceiptForm extends Component {
+
+class OrderDetailForm extends Component {
   state = {
     date: moment(),
     startDate: moment(),
@@ -58,7 +72,8 @@ class ReceiptForm extends Component {
   };
   render () {
     
-    let {receipt} = this.props;
+    let {customerOrder} = this.props;
+    const CURRENT_USER = JSON.parse(localStorage.getItem("luandryStaffPage.curr_staff_desc"));
       return(
 
           <form className="form-horizontal" >
@@ -66,63 +81,62 @@ class ReceiptForm extends Component {
               
               <legend>
               <div style={{justifyContent: "space-between"}}>
-                <span>Thông tin biên nhận - {receipt.id} - {receipt.customerOrderByOrderId.id} <span className="badge badge-warning">{status(receipt.status)}</span> </span>
-                
+                <span>Thông tin đơn hàng - {customerOrder.id} <span className="badge badge-warning">{status(customerOrder.status)}</span> &nbsp;&nbsp;&nbsp;</span>
+                {customerOrder.receiptsByOrderId.nodes[0] && <Link className="btn btn-warning btn-sm" to={"/order/reciept-list/view/"+customerOrder.receiptsByOrderId.nodes[0].nodeId}>Xem biên nhận</Link>}
               </div>
               </legend>
               
               <div className="row">
                 <div className="col-sm-6 ">
-                  <label className="control-label col-md-4">Họ tên</label>
-                  <div className=" control-label col-md-8" style={{textAlign:"left"}}><b>{receipt.customerOrderByOrderId.customerByCustomerId.fullName}</b></div>
+                  <label className="control-label col-md-4">Họ tên KH</label>
+                  <div className=" control-label col-md-8" style={{textAlign:"left"}}><b>{customerOrder.customerByCustomerId.fullName}</b></div>
                   <label className="control-label col-md-4">Số điện thoại</label>
-                  <div className=" control-label col-md-8" style={{textAlign:"left"}}>{receipt.customerOrderByOrderId.customerByCustomerId.phone}</div>
+                  <div className=" control-label col-md-8" style={{textAlign:"left"}}>{customerOrder.customerByCustomerId.phone}</div>
                 </div>
                 <div className="col-sm-6 ">
                   <label className="control-label col-md-4">Email</label>
-                  <div className=" control-label col-md-8" style={{textAlign:"left"}}>{receipt.customerOrderByOrderId.customerByCustomerId.email}</div>
+                  <div className=" control-label col-md-8" style={{textAlign:"left"}}>{customerOrder.customerByCustomerId.email}</div>
                   <label className="control-label col-md-4">Địa chỉ</label>
-                  <div className=" control-label col-md-8" style={{textAlign:"left"}}>{receipt.customerOrderByOrderId.customerByCustomerId.address}</div>
+                  <div className=" control-label col-md-8" style={{textAlign:"left"}}>{customerOrder.customerByCustomerId.address}</div>
                 </div>
               </div>
               <div className="row">
                 <div className="col-sm-6 ">
                   <label className="control-label col-md-4 mt-4">Chi nhánh</label>
                   <div className=" control-label col-md-8" style={{textAlign:"left"}}>
-                    <span className="btn btn-primary btn-sm btn-fill btn-linkedin">{receipt.customerOrderByOrderId.branchByBranchId.branchName}</span>
+                    <span className="btn btn-primary btn-sm btn-fill btn-linkedin">{customerOrder.branchByBranchId.branchName}</span>
                   </div>
                 </div>
                 <div className="col-sm-6 ">
                   <label className="control-label col-md-4 mt-4">Địa chỉ CN</label>
                   <div className=" control-label col-md-8" style={{textAlign:"left"}}>
-                    <span >{receipt.customerOrderByOrderId.branchByBranchId.address}</span>
+                    <span >{customerOrder.branchByBranchId.address}</span>
                   </div>
                 </div>
               </div>
               <div className="row"><br></br></div>
               <div className="row">
                 <div className="col-sm-6">
-                    <label className="control-label col-md-4 mt-4">NGÀY LẤY ĐỒ </label>
+                    <label className="control-label col-md-4 mt-4">Ngày lấy đồ </label>
                     <div className="col-md-8 mt-4">
                       <Tags
                         tags={ [
                           {
                             id: 1,
-                            text: receipt.pickUpDate?receipt.pickUpDate:receipt.customerOrderByOrderId.pickUpDate
+                            text: customerOrder.pickUpDate
                           }
                         ]}
                         disabled={true}
-
                         theme="azure"
                         fill />
                     </div>
-                    <label className="control-label col-md-4 mt-6">THỜI GIAN LẤY ĐỒ </label>
+                    <label className="control-label col-md-4 mt-6">Thời gian lấy đồ </label>
                     <div className="col-md-8 mt-6">
                       <Tags
                         tags={ [
                           {
                             id: 1,
-                            text: receipt.pickUpTime?receipt.pickUpTime:receipt.customerOrderByOrderId.timeScheduleByPickUpTimeId.timeStart +" - "+receipt.customerOrderByOrderId.timeScheduleByPickUpTimeId.timeEnd
+                            text: customerOrder.timeScheduleByPickUpTimeId.timeStart +" - "+customerOrder.timeScheduleByPickUpTimeId.timeEnd
                           }
                         ]}
                         disabled={true}
@@ -131,27 +145,26 @@ class ReceiptForm extends Component {
                     </div>
                 </div>
                 <div className="col-sm-6">
-                  <label className="control-label col-md-4 mt-4">NGÀY TRẢ ĐỒ
-</label>
+                  <label className="control-label col-md-4 mt-4">Ngày trả đồ </label>
                     <div className="col-md-8 mt-4">
                       <Tags
                         tags={[
                           {
                             id: 1,
-                            text: receipt.deliveryDate?receipt.deliveryDate: receipt.customerOrderByOrderId.deliveryDate
+                            text: customerOrder.deliveryDate
                           }
                         ]}
                         disabled={true}
                         theme="azure"
                         fill />
                     </div>
-                  <label className="control-label col-md-4 mt-6">THỜI GIAN TRẢ ĐỒ </label>
+                  <label className="control-label col-md-4 mt-6">Thời gian trả đồ </label>
                   <div className="col-md-8 mt-6">
                     <Tags
                       tags={ [
                         {
                           id: 1,
-                          text: receipt.deliveryTime?receipt.deliveryTime:receipt.customerOrderByOrderId.timeScheduleByDeliveryTimeId.timeStart +" - "+receipt.customerOrderByOrderId.timeScheduleByDeliveryTimeId.timeEnd
+                          text: customerOrder.timeScheduleByDeliveryTimeId.timeStart +" - "+customerOrder.timeScheduleByDeliveryTimeId.timeEnd
                         }
                       ]}
                       disabled={true}
@@ -162,31 +175,56 @@ class ReceiptForm extends Component {
               </div>
               <div className="row">
                 <div className="col-sm-6">
-                    <label className="control-label col-md-4 mt-4" >NƠI LẤY ĐỒ </label>
-                    <div className=" control-label col-md-8" style={{textAlign:"left"}}><b>{receipt.customerOrderByOrderId.pickUpPlace !=null ?receipt.customerOrderByOrderId.pickUpPlace: "_" }</b></div>
+                    <label className="control-label col-md-4 mt-4" >Nơi lấy đồ </label>
+                    <div className=" control-label col-md-8" style={{textAlign:"left"}}><b>{customerOrder.pickUpPlace !=null ?customerOrder.pickUpPlace: "_" }</b></div>
                 </div>
                 <div className="col-sm-6">
-                    <label className="control-label col-md-4 mt-4" >NƠI TRẢ ĐỒ </label>
-                    <div className=" control-label col-md-8" style={{textAlign:"left"}}><b>{receipt.customerOrderByOrderId.deliveryPlace !=null ?receipt.customerOrderByOrderId.deliveryPlace: "_" }</b></div>
+                    <label className="control-label col-md-4 mt-4" >Nơi trả đồ </label>
+                    <div className=" control-label col-md-8" style={{textAlign:"left"}}><b>{customerOrder.pickUpPlace !=null ?customerOrder.deliveryPlace: "_" }</b></div>
                 </div>
               </div>
               <div className="row">
                 <div className="col-sm-6">
-                    <label className="control-label col-md-4 mt-4" > NV LẤY ĐỒ</label>
-                    <div className=" control-label col-md-8" style={{textAlign:"left"}}><b>{(receipt.staffByStaffPickUp) ?receipt.staffByStaffPickUp.fullName: "_" }</b></div>
+                    <label className="control-label col-md-4 mt-4" >NV lấy đồ</label>
+                    <div className=" control-label col-md-8" style={{textAlign:"left"}}><b>{(customerOrder.receiptsByOrderId.nodes[0] !=null && customerOrder.receiptsByOrderId.nodes[0].staffByStaffPickUp !=null) ?customerOrder.receiptsByOrderId.nodes[0].staffByStaffPickUp.fullName: "_" }</b></div>
                 </div>
                 <div className="col-sm-6">
-                    <label className="control-label col-md-4 mt-4" >NV TRẢ ĐỒ</label>
-                    <div className=" control-label col-md-8" style={{textAlign:"left"}}><b>{(receipt.staffByStaffDelivery) ?receipt.staffByStaffDelivery.fullName: "_" }</b></div>
+                    <label className="control-label col-md-4 mt-4" >NV trả đồ</label>
+                    <div className=" control-label col-md-8" style={{textAlign:"left"}}><b>{(customerOrder.receiptsByOrderId.nodes[0] !=null && customerOrder.receiptsByOrderId.nodes[0].staffByStaffDelivery !=null) ?customerOrder.receiptsByOrderId.nodes[0].staffByStaffDelivery.fullName: "_" }</b></div>
                 </div>
               </div>
             
             </fieldset>
             <br></br><br></br>
+            <Mutation
+                  mutation={GENERATE_BILL}
+                  
+                >
+                  {generateBill => (
+                     <div className="text-center">
+                    {CURRENT_USER.staffType.staffCode ==='STAFF_01' &&
+                    <button
+                      type="submit"
+                      className="btn btn-fill btn-info"
+                      disabled={!(customerOrder.status ==="FINISHED_SERVING")}
+                      className={(customerOrder.status ==="FINISHED_SERVING")? "btn btn-fill btn-info ": "btn btn-fill btn-info hidden"}
+                      onClick={e => {
+                        e.preventDefault();
+                        this.setState({approve: true, decline: false});
+                        generateBill({variables:{coId: customerOrder.id, currUser: CURRENT_USER.id}});
+                      }}
+                    >
+                      Tạo hóa đơn
+                    </button>
+                  }
+                   </div>
+                  )}
+
+                </Mutation>
             <fieldset>
-              <legend>Chi tiết biên nhận</legend>
+              <legend>Chi tiết đơn hàng</legend>
               <div className="col-sm-12">
-                 <OrderDetailTable orderDetailList={proccessData(receipt.receiptDetailsByReceiptId.nodes)}></OrderDetailTable>
+                <OrderDetailTable orderDetailList={proccessData(customerOrder.orderDetailsByOrderId.nodes)}></OrderDetailTable>
               </div>
             </fieldset>
           
@@ -197,4 +235,4 @@ class ReceiptForm extends Component {
   }
 }
 export default reduxForm({
-  form: 'ReceiptForm'})(ReceiptForm);
+  form: 'OrderDetailForm'})(OrderDetailForm);

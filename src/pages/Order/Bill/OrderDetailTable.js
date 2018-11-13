@@ -27,7 +27,7 @@ class OrderDetailTable extends Component {
     createCustomClearButton = (onClick) => {
       return (
         <ClearSearchButton
-          btnText='Clear'
+          btnText='Xóa'
           btnContextual='btn-warning btn-fill'
           onClick={ e => this.handleClearButtonClick(onClick) }/>
       );
@@ -51,14 +51,48 @@ class OrderDetailTable extends Component {
     }
 
     function currencyFormatter (cell, row){
-        let amountMoney = 654645;
+        let amountMoney = 0;
+        if (row.unit === 'Cái')
+          amountMoney = row.amount*row.unitPrice;
         return (
             <p>
-           cell
+           {amountMoney.toLocaleString('vi-VI', { style: 'currency', currency: 'VND' })}
             </p>
         );
     }
 
+    const footerData = [
+      [
+        {
+          label: 'Tổng tiền',
+          columnIndex: 3
+        },
+        {
+          label: 'Total value',
+          columnIndex: 7,
+          align: 'right',
+        
+          formatter: (tableData) => {
+            let label = 0;
+            let serviceName = {};
+            for (let i = 0, tableDataLen = tableData.length; i < tableDataLen; i++) {
+              if (!serviceName[tableData[i].serviceName] && tableData[i].unit === "Kg"){
+                  let subList = tableData.filter(value => value.serviceName === tableData[i].serviceName && tableData[i].unit === "Kg");
+                  label += tableData[i].unitPrice*tableData[i].amount;
+                  serviceName[tableData[i].serviceName] = tableData[i].serviceName;
+              }
+              else{
+                label += tableData[i].unitPrice*tableData[i].amount;
+              }
+            
+            }
+            return (
+              <strong>{ label.toLocaleString('vi-VI', { style: 'currency', currency: 'VND' }) }</strong>
+            );
+          }
+        }
+      ]
+    ];
 
 
     const options = {
@@ -70,6 +104,7 @@ class OrderDetailTable extends Component {
       hideSizePerPage: true,
       clearSearch: true,
       clearSearchBtn: this.createCustomClearButton,
+     
     };
 
     return (
@@ -80,6 +115,9 @@ class OrderDetailTable extends Component {
                   data={orderDetailList}
                   bordered={false}
                   striped
+                  footer={true}
+                  searchPlaceholder="Tìm kiếm"
+                  footerData={ footerData }
                   search={ true } multiColumnSearch={ true }
                   pagination={true}
                   options={options}>
@@ -92,22 +130,24 @@ class OrderDetailTable extends Component {
                   <TableHeaderColumn
                     dataField='nodeId'
                     width="7%"
+                    isKey
                     hidden
                    >
                     ID
+                  </TableHeaderColumn>
+                  
+                  <TableHeaderColumn
+                    dataField='serviceName'
+                    width="25%"
+                    
+                    dataSort>
+                    Loại dịch vụ
                   </TableHeaderColumn>
                   <TableHeaderColumn
                     dataField='productName'
                     width="20%"
                     dataSort>
                     Quần áo
-                  </TableHeaderColumn>
-                  <TableHeaderColumn
-                    dataField='serviceName'
-                    width="25%"
-                    isKey
-                    dataSort>
-                    Loại dịch vụ
                   </TableHeaderColumn>
                   <TableHeaderColumn
                     dataField='amount'
@@ -123,10 +163,18 @@ class OrderDetailTable extends Component {
                     ĐVT
                   </TableHeaderColumn>
                   <TableHeaderColumn
-                    dataField='receivedAmount'
+                    dataField='unitPrice'
                     width="25%"
                     dataSort>
-                    SL đã nhận
+                    Đơn giá
+                  </TableHeaderColumn>
+
+                  <TableHeaderColumn
+                    dataField='total'
+                    width="25%"
+                    dataFormat={currencyFormatter}
+                    dataSort>
+                    Tổng cộng
                   </TableHeaderColumn>
                  
                   <TableHeaderColumn
@@ -134,7 +182,7 @@ class OrderDetailTable extends Component {
                     width="25%"
                     dataFormat={detailsFormatter}
                     dataSort>
-                    Chi tiết
+                    Chi tiết thêm
                   </TableHeaderColumn>
                 </BootstrapTable>
               </div>

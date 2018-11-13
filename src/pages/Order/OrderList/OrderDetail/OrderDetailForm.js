@@ -5,6 +5,9 @@ import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import { reduxForm } from 'redux-form';
 import OrderDetailTable from './OrderDetailTable';
+import status from './../../status';
+import gql from "graphql-tag";
+import { Mutation, Query } from 'react-apollo';
 
 
 
@@ -45,6 +48,17 @@ const proccessData = (data)=>{
   return result;
 };
 
+const GENERATE_BILL = gql `mutation generateBill($coId: BigFloat!, $currUser: BigFloat!) {
+  generateBill(input: {coId: $coId, currUser: $currUser}) {
+    bill {
+      id
+      nodeId
+      receiptId
+    }
+  }
+}
+`;
+
 
 
 class OrderDetailForm extends Component {
@@ -59,7 +73,7 @@ class OrderDetailForm extends Component {
   render () {
     
     let {customerOrder} = this.props;
-  
+    const CURRENT_USER = JSON.parse(localStorage.getItem("luandryStaffPage.curr_staff_desc"));
       return(
 
           <form className="form-horizontal" >
@@ -67,7 +81,7 @@ class OrderDetailForm extends Component {
               
               <legend>
               <div style={{justifyContent: "space-between"}}>
-                <span>Thông tin đơn hàng - {customerOrder.id} <span className="badge badge-warning">{customerOrder.status}</span> &nbsp;&nbsp;&nbsp;</span>
+                <span>Thông tin đơn hàng - {customerOrder.id} <span className="badge badge-warning">{status(customerOrder.status)}</span> &nbsp;&nbsp;&nbsp;</span>
                 {customerOrder.receiptsByOrderId.nodes[0] && <Link className="btn btn-warning btn-sm" to={"/order/reciept-list/view/"+customerOrder.receiptsByOrderId.nodes[0].nodeId}>Xem biên nhận</Link>}
               </div>
               </legend>
@@ -182,6 +196,41 @@ class OrderDetailForm extends Component {
             
             </fieldset>
             <br></br><br></br>
+            {customerOrder.receiptsByOrderId.nodes[0].billsByReceiptId.totalCount ===0? <Mutation
+                  mutation={GENERATE_BILL}
+                  
+                >
+                  {generateBill => (
+                     <div className="text-center">
+                    {CURRENT_USER.staffType.staffCode ==='STAFF_01' &&
+                    <button
+                      type="submit"
+                      className="btn btn-fill btn-info"
+                      disabled={!(customerOrder.status ==="FINISHED_SERVING")}
+                      className={(customerOrder.status ==="FINISHED_SERVING")? "btn btn-fill btn-info ": "btn btn-fill btn-info hidden"}
+                      onClick={e => {
+                        e.preventDefault();
+                        this.setState({approve: true, decline: false});
+                        generateBill({variables:{coId: customerOrder.id, currUser: CURRENT_USER.id}});
+                      }}
+                    >
+                      Tạo hóa đơn
+                    </button>
+                  }
+                   </div>
+                  )}
+
+                </Mutation>: <div className="text-center">
+                <Link
+                      type="submit"
+                      className="btn  btn-success"
+                      disabled={!(customerOrder.status ==="FINISHED_SERVING")}
+                      className={(customerOrder.status ==="FINISHED_SERVING")? "btn btn-success ": "btn btn-success hidden"}
+                      to={"/order/bill/"+customerOrder.receiptsByOrderId.nodes[0].billsByReceiptId.nodes[0].nodeId}
+                    >
+                      Xem hóa đơn
+                    </Link></div> }
+           
             <fieldset>
               <legend>Chi tiết đơn hàng</legend>
               <div className="col-sm-12">
