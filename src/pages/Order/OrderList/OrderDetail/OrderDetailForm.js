@@ -5,6 +5,7 @@ import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import { reduxForm } from 'redux-form';
 import OrderDetailTable from './OrderDetailTable';
+import status from './../../status';
 
 
 
@@ -67,7 +68,7 @@ class OrderDetailForm extends Component {
               
               <legend>
               <div style={{justifyContent: "space-between"}}>
-                <span>Thông tin đơn hàng - {customerOrder.id} <span className="badge badge-warning">{customerOrder.status}</span> &nbsp;&nbsp;&nbsp;</span>
+                <span>Thông tin đơn hàng - {customerOrder.id} <span className="badge badge-warning">{status(customerOrder.status)}</span> &nbsp;&nbsp;&nbsp;</span>
                 {customerOrder.receiptsByOrderId.nodes[0] && <Link className="btn btn-warning btn-sm" to={"/order/reciept-list/view/"+customerOrder.receiptsByOrderId.nodes[0].nodeId}>Xem biên nhận</Link>}
               </div>
               </legend>

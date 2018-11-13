@@ -4,7 +4,7 @@ import moment from 'moment';
 import React, { Component } from 'react';
 import { reduxForm } from 'redux-form';
 import OrderDetailTable from './OrderDetailTable';
-
+import status from './../../status';
 
 
 const resultDetail = (data) =>{
@@ -66,7 +66,7 @@ class ReceiptForm extends Component {
               
               <legend>
               <div style={{justifyContent: "space-between"}}>
-                <span>Thông tin biên nhận - {receipt.id} - {receipt.customerOrderByOrderId.id} <span className="badge badge-warning">{receipt.status}</span> </span>
+                <span>Thông tin biên nhận - {receipt.id} - {receipt.customerOrderByOrderId.id} <span className="badge badge-warning">{status(receipt.status)}</span> </span>
                 
               </div>
               </legend>

@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { BootstrapTable, ClearSearchButton, TableHeaderColumn } from 'react-bootstrap-table';
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 import { Link } from 'react-router-dom';
-
+import status from './../../status';
 class OrderTable extends Component {
 
   state = {
@@ -81,7 +81,7 @@ class OrderTable extends Component {
         c= "btn-primary";
       }
       return (<a style={{width:"75%"}} className={`btn btn-sm btn-fill  ${c}`}
-      >{cell}</a>);
+      >{status(cell)}</a>);
     };
 
     function pickUpFormatter (cell,row){
@@ -147,7 +147,7 @@ class OrderTable extends Component {
                     dataField='sn'
                     width="7%"
                    >
-                    S/N
+                    STT
                   </TableHeaderColumn>
                   <TableHeaderColumn
                     dataField='nodeId'
@@ -157,19 +157,19 @@ class OrderTable extends Component {
                    >
                     ID
                   </TableHeaderColumn>
-                  <TableHeaderColumn
+                  {/* <TableHeaderColumn
                     dataField='branch'
                     width="20%"
                     dataSort>
                     Branch
-                  </TableHeaderColumn>
+                  </TableHeaderColumn> */}
                   <TableHeaderColumn
                     dataField='customerName'
                     width="25%"
                     
                     dataFormat={buttonFormatter}
                     dataSort>
-                    Customer
+                    Khách hàng
                   </TableHeaderColumn>
                   {/* <TableHeaderColumn
                     dataField='pickUpDate'
@@ -204,21 +204,21 @@ class OrderTable extends Component {
                     width="25%"
                     hidden
                     >
-                    Amount
+                    Số lượng
                   </TableHeaderColumn>
                   <TableHeaderColumn
                     dataField='currentStaff'
                     width="25%"
                     
                     >
-                    Performer
+                    Người thực hiện
                   </TableHeaderColumn>
                   <TableHeaderColumn
                     dataField='status'
                     width="25%"
                     dataFormat={button1Formatter}
                     >
-                    Status
+                    Trạng thái
                   </TableHeaderColumn>
                   
                  

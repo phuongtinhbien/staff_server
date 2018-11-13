@@ -87,7 +87,7 @@ class OrderDetailTable extends Component {
                     dataField='sn'
                     width="7%"
                    >
-                    S/N
+                    STT
                   </TableHeaderColumn>
                   <TableHeaderColumn
                     dataField='nodeId'
@@ -100,33 +100,33 @@ class OrderDetailTable extends Component {
                     dataField='productName'
                     width="20%"
                     dataSort>
-                    Product
+                    Quần áo
                   </TableHeaderColumn>
                   <TableHeaderColumn
                     dataField='serviceName'
                     width="25%"
                     isKey
                     dataSort>
-                    Service name
+                    Loại dịch vụ
                   </TableHeaderColumn>
                   <TableHeaderColumn
                     dataField='amount'
                     width="15%"
                     dataSort>
-                    Amount
+                    Số lượng
                   </TableHeaderColumn>
                   <TableHeaderColumn
                     dataField='unit'
                     width="10%"
                     dataFormat={checkNull}
                     dataSort>
-                    Unit
+                    ĐVT
                   </TableHeaderColumn>
                   <TableHeaderColumn
                     dataField='receivedAmount'
                     width="25%"
                     dataSort>
-                    Received Amount
+                    SL đã nhận
                   </TableHeaderColumn>
                  
                   <TableHeaderColumn
@@ -134,7 +134,7 @@ class OrderDetailTable extends Component {
                     width="25%"
                     dataFormat={detailsFormatter}
                     dataSort>
-                    Details
+                    Chi tiết
                   </TableHeaderColumn>
                 </BootstrapTable>
               </div>

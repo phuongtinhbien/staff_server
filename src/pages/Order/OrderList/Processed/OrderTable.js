@@ -129,7 +129,7 @@ class OrderTable extends Component {
                   striped
                 
                   search={ true } multiColumnSearch={ true }
-                 selectRow={ selectRowProp }
+                //  selectRow={ selectRowProp }
                   pagination={true}
                   options={options}>
 
@@ -137,7 +137,7 @@ class OrderTable extends Component {
                     dataField='sn'
                     width="7%"
                    >
-                    S/N
+                    STT
                   </TableHeaderColumn>
                   <TableHeaderColumn
                     dataField='nodeId'
@@ -147,19 +147,19 @@ class OrderTable extends Component {
                    >
                     ID
                   </TableHeaderColumn>
-                  <TableHeaderColumn
+                  {/* <TableHeaderColumn
                     dataField='branch'
                     width="20%"
                     dataSort>
                     Branch
-                  </TableHeaderColumn>
+                  </TableHeaderColumn> */}
                   <TableHeaderColumn
                     dataField='customerName'
                     width="25%"
                     
                     dataFormat={buttonFormatter}
                     dataSort>
-                    Customer
+                    Khách hàng
                   </TableHeaderColumn>
                   <TableHeaderColumn
                     dataField='pickUpDate'
@@ -173,7 +173,7 @@ class OrderTable extends Component {
                     width="25%"
                     dataFormat={pickUpFormatter}
                     dataSort>
-                    Pick up time
+                    Thời gian lấy đồ
                   </TableHeaderColumn>
                   <TableHeaderColumn
                     dataField='deliveryDate'
@@ -187,7 +187,7 @@ class OrderTable extends Component {
                     width="25%"
                     dataFormat={deliveryFormatter}
                     dataSort>
-                    Delivery time
+                    Thời gian trả đồ
                   </TableHeaderColumn>
                   {/* <TableHeaderColumn
                     dataField='amount'
