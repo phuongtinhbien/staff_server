@@ -292,7 +292,7 @@ class OrderPending extends Component {
                           updatestatuscustomerorder({variables:{coId: data.customerOrder.id, pStatus:"PENDING", pUser: CURRENT_USER.id}});
                         }}
                       >
-                        Order
+                        Đặt đơn
                       </button>
                       <button
                         type="submit"
@@ -305,8 +305,9 @@ class OrderPending extends Component {
                           updatestatuscustomerorder({variables:{coId: data.customerOrder.id, pStatus:"APPROVED", pUser: CURRENT_USER.id}});
                         }}
                       >
-                        Approve
+                        Chấp nhận
                       </button>
+                      {(CURRENT_USER.staffType.staffCode ==='STAFF_02') &&
                       <button
                         type="submit"
                         className="btn btn-fill btn-info"
@@ -318,10 +319,11 @@ class OrderPending extends Component {
                           updatestatuscustomerorder({variables:{coId: data.customerOrder.id, pStatus:"SERVING", pUser: CURRENT_USER.id}});
                         }}
                       >
-                        Start Serving
-                      </button>
+                        Xử lí
+                      </button>}
                       &nbsp;
                       &nbsp;
+                      {(CURRENT_USER.staffType.staffCode ==='STAFF_02') &&
                       <button
                         type="submit"
                         className="btn btn-fill btn-info"
@@ -333,8 +335,10 @@ class OrderPending extends Component {
                           updatestatuscustomerorder({variables:{coId: data.customerOrder.id, pStatus:"FINISHED_SERVING", pUser: CURRENT_USER.id}});
                         }}
                       >
-                        Finished
+                        Hoàn tất
                       </button>
+                    }
+                      
                       &nbsp;
                       &nbsp;
                       <button
@@ -347,14 +351,14 @@ class OrderPending extends Component {
                         updatestatuscustomerorder({variables:{coId: data.customerOrder.id, pStatus:"DECLINED", pUser: CURRENT_USER.id}});
                       }}
                     >
-                      Decline
+                      Hủy đơn
                     </button>
              
                       &nbsp;
                       &nbsp;
                     &nbsp;
                     <button className="btn btn-fill btn-danger" onClick={e=> history.goBack()}>
-                    Cancel
+                    Trở lại
                     </button>
                     </div>
                     }

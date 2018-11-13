@@ -188,7 +188,7 @@ class OrderTable extends Component {
                     dataField='sn'
                     width="7%"
                    >
-                    S/N
+                    STT
                   </TableHeaderColumn>
                   <TableHeaderColumn
                     dataField='nodeId'
@@ -201,8 +201,9 @@ class OrderTable extends Component {
                   <TableHeaderColumn
                     dataField='branch'
                     width="20%"
+                    hidden
                     dataSort>
-                    Branch
+                    Chi nhánh
                   </TableHeaderColumn>
                   <TableHeaderColumn
                     dataField='customerName'
@@ -210,42 +211,42 @@ class OrderTable extends Component {
                     
                     dataFormat={buttonFormatter}
                     dataSort>
-                    Customer
+                    Khách hàng
                   </TableHeaderColumn>
                   <TableHeaderColumn
                     dataField='pickUpDate'
                     width="25%"
                     hidden
                     dataSort>
-                    Pick up date
+                   Ngày lấy đồ
                   </TableHeaderColumn>
                   <TableHeaderColumn
                     dataField='pickupTime'
                     width="25%"
                     dataFormat={pickUpFormatter}
                     dataSort>
-                    Pick up time
+                    Thời gian lấy đồ
                   </TableHeaderColumn>
                   <TableHeaderColumn
                     dataField='deliveryDate'
                     width="25%"
                     hidden
                     dataSort>
-                    Delivery date
+                   Ngày trả đồ
                   </TableHeaderColumn>
                   <TableHeaderColumn
                     dataField='deliveryTime'
                     width="25%"
                     dataFormat={deliveryFormatter}
                     dataSort>
-                    Delivery time
+                   Thời gian trả đồ
                   </TableHeaderColumn>
                   <TableHeaderColumn
                     dataField='amount'
                     width="25%"
                     dataFormat={amountFormat}
                     >
-                    Amount
+                    Số lượng
                   </TableHeaderColumn>
                  
                  

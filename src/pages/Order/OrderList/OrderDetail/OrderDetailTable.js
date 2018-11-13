@@ -27,7 +27,7 @@ class OrderDetailTable extends Component {
     createCustomClearButton = (onClick) => {
       return (
         <ClearSearchButton
-          btnText='Clear'
+          btnText='Xóa'
           btnContextual='btn-warning btn-fill'
           onClick={ e => this.handleClearButtonClick(onClick) }/>
       );
@@ -51,8 +51,9 @@ class OrderDetailTable extends Component {
     }
 
     function currencyFormatter (cell, row){
-        let amountMoney = 654645;
-        amountMoney = row.amount*row.unitPrice;
+        let amountMoney = 0;
+        if (row.unit === 'Cái')
+          amountMoney = row.amount*row.unitPrice;
         return (
             <p>
            {amountMoney.toLocaleString('vi-VI', { style: 'currency', currency: 'VND' })}
@@ -63,7 +64,7 @@ class OrderDetailTable extends Component {
     const footerData = [
       [
         {
-          label: 'Total',
+          label: 'Tổng tiền',
           columnIndex: 3
         },
         {
@@ -73,8 +74,17 @@ class OrderDetailTable extends Component {
         
           formatter: (tableData) => {
             let label = 0;
+            let serviceName = {};
             for (let i = 0, tableDataLen = tableData.length; i < tableDataLen; i++) {
-              label += tableData[i].unitPrice*tableData[i].amount;
+              if (!serviceName[tableData[i].serviceName] && tableData[i].unit === "Kg"){
+                  let subList = tableData.filter(value => value.serviceName === tableData[i].serviceName && tableData[i].unit === "Kg");
+                  label += tableData[i].unitPrice*tableData[i].amount;
+                  serviceName[tableData[i].serviceName] = tableData[i].serviceName;
+              }
+              else{
+                label += tableData[i].unitPrice*tableData[i].amount;
+              }
+            
             }
             return (
               <strong>{ label.toLocaleString('vi-VI', { style: 'currency', currency: 'VND' }) }</strong>
@@ -94,6 +104,7 @@ class OrderDetailTable extends Component {
       hideSizePerPage: true,
       clearSearch: true,
       clearSearchBtn: this.createCustomClearButton,
+     
     };
 
     return (
@@ -105,6 +116,7 @@ class OrderDetailTable extends Component {
                   bordered={false}
                   striped
                   footer={true}
+                  searchPlaceholder="Tìm kiếm"
                   footerData={ footerData }
                   search={ true } multiColumnSearch={ true }
                   pagination={true}
@@ -113,46 +125,48 @@ class OrderDetailTable extends Component {
                     dataField='sn'
                     width="7%"
                    >
-                    S/N
+                    STT
                   </TableHeaderColumn>
                   <TableHeaderColumn
                     dataField='nodeId'
                     width="7%"
+                    isKey
                     hidden
                    >
                     ID
+                  </TableHeaderColumn>
+                  
+                  <TableHeaderColumn
+                    dataField='serviceName'
+                    width="25%"
+                    
+                    dataSort>
+                    Loại dịch vụ
                   </TableHeaderColumn>
                   <TableHeaderColumn
                     dataField='productName'
                     width="20%"
                     dataSort>
-                    Product
-                  </TableHeaderColumn>
-                  <TableHeaderColumn
-                    dataField='serviceName'
-                    width="25%"
-                    isKey
-                    dataSort>
-                    Service name
+                    Quần áo
                   </TableHeaderColumn>
                   <TableHeaderColumn
                     dataField='amount'
                     width="15%"
                     dataSort>
-                    Amount
+                    Số lượng
                   </TableHeaderColumn>
                   <TableHeaderColumn
                     dataField='unit'
                     width="10%"
                     dataFormat={checkNull}
                     dataSort>
-                    Unit
+                    ĐVT
                   </TableHeaderColumn>
                   <TableHeaderColumn
                     dataField='unitPrice'
                     width="25%"
                     dataSort>
-                    Unit price
+                    Đơn giá
                   </TableHeaderColumn>
 
                   <TableHeaderColumn
@@ -160,7 +174,7 @@ class OrderDetailTable extends Component {
                     width="25%"
                     dataFormat={currencyFormatter}
                     dataSort>
-                    Total
+                    Tổng cộng
                   </TableHeaderColumn>
                  
                   <TableHeaderColumn
@@ -168,7 +182,7 @@ class OrderDetailTable extends Component {
                     width="25%"
                     dataFormat={detailsFormatter}
                     dataSort>
-                    Details
+                    Chi tiết thêm
                   </TableHeaderColumn>
                 </BootstrapTable>
               </div>

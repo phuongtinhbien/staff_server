@@ -9,7 +9,7 @@ const renderItemOrderDetail = ({ fields, color, label, material, product,service
         className={"btn btn-fill btn-warning"}
         onClick={() => fields.push({})}
         >
-        Add to bag
+        Thêm quần áo
     </button> &nbsp;
       {submitFailed &&
         error &&
@@ -19,15 +19,15 @@ const renderItemOrderDetail = ({ fields, color, label, material, product,service
           <table className="table table-hover table-striped">
             <thead>
               <tr>
-                <th style={{width:"5%"}}>S/N</th>
-                <th>SERVICE TYPE</th>
-                <th style={{width:"25%"}}>CLOTH</th>
-                <th style={{width:"15%"}}>AMOUNT</th>
-                <th style={{width:"20%"}}>Options</th>
+                <th style={{width:"5%"}}>STT</th>
+                <th>Loại DV</th>
+                <th style={{width:"25%"}}>Quần áo</th>
+                <th style={{width:"15%"}}>Số lượng</th>
+                <th style={{width:"20%"}}>Chi tiết</th>
               </tr>
             </thead>
             <tbody>
-            { 
+            { fields.length>0?
               fields.map((orderDetail, index) => (
                 <tr key={index}>
                   <td>{index + 1}</td>
@@ -115,7 +115,7 @@ const renderItemOrderDetail = ({ fields, color, label, material, product,service
                     </a>
                   </td>
                 </tr>
-              ))}
+              )): <tr><td colSpan="15" className="text-center">Không có quần áo trong đơn hàng</td></tr>}
             </tbody>
             </table>
             </div>

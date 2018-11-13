@@ -1,29 +1,28 @@
 import React from 'react';
 import { Field, reduxForm } from 'redux-form';
-import { SingleDatePicker, DateRangePicker } from 'react-dates';
 import gql  from "graphql-tag";
 import renderField from 'components/FormInputs/renderField';
 
-const CURRENT_USER = localStorage.getItem("luandryStaffPage.curr_staff_desc");
-const ProfileForm = () => (
+const ProfileForm = ({current_user}) => (
   <div className="card">
     <div className="header">
-      <h4 className="title">Edit Profile <span className="badge badge-warning">...</span></h4>
+      <h4 className="title">Cập nhật thông tin <span className="badge badge-warning">...</span></h4>
     </div>
     <div className="content">
       <form>
         <div className="row">
           <div className="col-md-6">
             <div className="form-group">
-              <label>Store (disabled)</label>
-              <Field type="text" className="form-control" name="store" disabled="true" placeholder="store" defaultValue="Creative Code Inc." 
-              component={renderField}/>
+            <label>Chi nhánh</label>
+              <br></br>
+              <strong>{current_user.branch.branchName}</strong>
             </div>
           </div>
           <div className="col-md-6">
             <div className="form-group">
-              <label>Branch</label>
-              <Field type="text" className="form-control" name="branch" disabled="true" placeholder="Username" defaultValue="michael23" component={renderField}/>
+            <label>Địa chỉ chi nhánh</label>
+              <br></br>
+              <strong>{current_user.branch.address}</strong>
             </div>
           </div>
         </div>
@@ -31,7 +30,7 @@ const ProfileForm = () => (
         <div className="row">
           <div className="col-md-6">
             <div className="form-group">
-              <label>Full Name</label>
+              <label>Họ tên</label>
               <Field type="text" className="form-control" name="fullName" placeholder="Company" defaultValue="Mike" component={renderField}/>
             </div>
           </div>
@@ -46,12 +45,12 @@ const ProfileForm = () => (
         <div className="row">
           <div className="col-md-12">
             <div className="form-group">
-              <label>Address</label>
-              <input type="text" className="form-control" placeholder="Home Address" defaultValue="Bld Mihail Kogalniceanu, nr. 8 Bl 1, Sc 1, Ap 09" />
+              <label>Địa chỉ</label>
+              <input type="text" className="form-control" name="staffAddress" placeholder="Home Address" defaultValue={current_user.address} />
             </div>
           </div>
         </div>
-        <button type="submit" className="btn btn-info btn-fill pull-right">Update Profile</button>
+        <button type="submit" className="btn btn-info btn-fill pull-right">Cập nhật</button>
         <div className="clearfix"></div>
       </form>
     </div>

@@ -187,14 +187,14 @@ class CreateOrder extends Component {
               
               <legend>
               <div style={{justifyContent: "space-between"}}>
-                <span>New Order </span>
+                <span>Đơn hàng mới </span>
                 
               </div>
               </legend>
               
               <div className="row">
                 <div className="col-sm-6 ">
-                  <label className="control-label col-md-4">Full name</label>
+                  <label className="control-label col-md-4">Họ tên</label>
                   <div className=" control-label col-md-8" style={{textAlign:"left"}}>
                   <Field
                     name="fullName"
@@ -203,7 +203,7 @@ class CreateOrder extends Component {
                     component={renderField}
                     />
                   </div>
-                  <label className="control-label col-md-4">Phone number</label>
+                  <label className="control-label col-md-4">Số điện thoại</label>
                   <div className=" control-label col-md-8" style={{textAlign:"left"}}>
                   <Field
                     name="phoneNumber"
@@ -231,19 +231,19 @@ class CreateOrder extends Component {
                     placeholder="Enter customer's address"
                     component={renderField}
                     /> */}
-                    <button
+                    {/* <button
                       type="button"
                         className={"btn btn-fill btn-sm btn-info"}
                         disabled={submitting}
                         >
                         Search
-                    </button>
+                    </button> */}
                   </div>
                 </div>
               </div>
               <div className="row">
                 <div className="col-sm-6 ">
-                  <label className="control-label col-md-4 mt-4">Branch</label>
+                  <label className="control-label col-md-4 mt-4">Chi nhánh</label>
                   <div className=" control-label col-md-8" style={{textAlign:"left"}}>
                   <Field
                     name="branchId"
@@ -258,7 +258,7 @@ class CreateOrder extends Component {
                   </div>
                 </div>
                 <div className="col-sm-6 ">
-                  <label className="control-label col-md-4 mt-4">Branch's Address</label>
+                  <label className="control-label col-md-4 mt-4">Địa chỉ CN</label>
                   <div className=" control-label col-md-8" style={{textAlign:"left"}}>
                     <span>{branch.address}</span>
                   </div>
@@ -267,7 +267,7 @@ class CreateOrder extends Component {
               <div className="row"><br></br></div>
               <div className="row">
                 <div className="col-sm-6">
-                    <label className="control-label col-md-4 mt-4">Pick up date </label>
+                    <label className="control-label col-md-4 mt-4">Ngày lấy đồ</label>
                     <div className="col-md-8 mt-4">
                     <Field
                         name="pickUpDate"
@@ -278,19 +278,19 @@ class CreateOrder extends Component {
                         />
                     </div>
                     <br></br><br></br>
-                    <label className="control-label col-md-4 mt-6">Pick up time </label>
+                    <label className="control-label col-md-4 mt-6">Thời gian lấy đồ </label>
                     <div className="col-md-8 mt-6">
                         <Field
                         name="pickUpTime"
                         type="select"
-                        
+                        placeholder="Chọn khung giờ"
                         options={timeSchedule}
                         component={renderField}
                         />
                     </div>
                 </div>
                 <div className="col-sm-6">
-                  <label className="control-label col-md-4 mt-4">Delivery date </label>
+                  <label className="control-label col-md-4 mt-4">Ngày trả đồ </label>
                     <div className="col-md-8 mt-4">
                     <Field
                         name="deliveryDate"
@@ -301,11 +301,12 @@ class CreateOrder extends Component {
 
                     </div>
                     <br></br><br></br>
-                  <label className="control-label col-md-4 mt-6">Delivery time </label>
+                  <label className="control-label col-md-4 mt-6">Thời gian trả đồ</label>
                   <div className="col-md-8 mt-6">
                     <Field
                         name="deliveryTime"
                         type="select"
+                        placeholder="Chọn khung giờ"
                         options={this.props.timeSchedule}
                         component={renderField}
                         />
@@ -315,7 +316,7 @@ class CreateOrder extends Component {
               </div>
               <div className="row">
                 <div className="col-sm-6">
-                    <label className="control-label col-md-4 mt-4" >Pick up place </label>
+                    <label className="control-label col-md-4 mt-4" >Nơi lấy đồ</label>
                     <div className=" control-label col-md-8" style={{textAlign:"left"}}>
                     <Field
                     name="pickUpPlace"
@@ -327,7 +328,7 @@ class CreateOrder extends Component {
                     </div>
                 </div>
                 <div className="col-sm-6">
-                    <label className="control-label col-md-4 mt-4" >Delivery place </label>
+                    <label className="control-label col-md-4 mt-4" >Nơi trả đồ</label>
                     <div className=" control-label col-md-8" style={{textAlign:"left"}}>
                     <Field
                     name="deliveryPlace"
@@ -340,11 +341,11 @@ class CreateOrder extends Component {
               </div>
               <div className="row">
                 <div className="col-sm-6">
-                    <label className="control-label col-md-4 mt-4" > Pick up Staff</label>
+                    <label className="control-label col-md-4 mt-4" > NV lấy đồ</label>
                     <div className=" control-label col-md-8" style={{textAlign:"left"}}><b></b></div>
                 </div>
                 <div className="col-sm-6">
-                    <label className="control-label col-md-4 mt-4" >Delivery Staff </label>
+                    <label className="control-label col-md-4 mt-4" >NV trả đồ</label>
                     <div className=" control-label col-md-8" style={{textAlign:"left"}}><b></b></div>
                 </div>
               </div>
@@ -356,7 +357,7 @@ class CreateOrder extends Component {
                 className={"btn btn-fill btn-info"}
                 disabled={submitting}
                 >
-                Place an order
+                Tạo đơn hàng
             </button>
               </div>
               </div>
@@ -364,7 +365,7 @@ class CreateOrder extends Component {
             </fieldset>
             <br></br><br></br>
             <fieldset>
-              <legend>Add Clothes</legend>
+              <legend>Quần áo</legend>
               <Query query={SERVICE_TYPE_QUERY}
               variables={{branch:branch.id}}>
                 {({loading, error,data, refetch}) => {

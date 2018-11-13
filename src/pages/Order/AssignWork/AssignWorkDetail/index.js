@@ -1,10 +1,10 @@
 import gql from "graphql-tag";
 import React from 'react';
 import { Query } from 'react-apollo';
-import Error from './../../Error';
-import BigTable from './BigTable';
-import TableWithLinks from './TableWithLinks';
-
+import Error from '../../../Error';
+import { Link, withRouter } from 'react-router-dom';
+import BigTable from './Pending';
+import Serving from './Serving';
 
 const ASSIGN_WORK = gql`query assignWork($branch: BigFloat!) {
   getprepareorderserving(brId: $branch) {
@@ -172,31 +172,12 @@ const processAllWash = (data)=>{
 }
 
 
-const AssignWork = ({CURRENT_USER= JSON.parse(localStorage.getItem("luandryStaffPage.curr_staff_desc"))}) => (
+const AssignWorkDetail = (props,{CURRENT_USER= JSON.parse(localStorage.getItem("luandryStaffPage.curr_staff_desc"))}) => (
   <div className="container-fluid">
     <div className="row">
       <div className="col-md-12">
-      {CURRENT_USER.staffType.staffCode === 'STAFF_01' &&
-      <Query
-      query={ASSIGN_WORK}
-      
-      variables = {{branch: CURRENT_USER.branch.id }}
- 
-    >{({ loading, error, data, refetch, }) => {
-      if (loading) return null;
-      if (refetch) {
-        console.log(refetch);
-      }
-      if (error){
-        return (<Error errorContent= {error.message}></Error>);
-      }
-      if (data != null){
-      return (
-        <TableWithLinks  assignWork ={processPendingServing(data)}/>
-      );
-      }
-    }}
-    </Query>}
+     
+         
       </div>
       <div className="col-md-12">
       {/* <SalesChart/> */}
@@ -221,7 +202,11 @@ const AssignWork = ({CURRENT_USER= JSON.parse(localStorage.getItem("luandryStaff
       if (data != null){
         console.log(data)
       return (
-        <BigTable  washer = {data.allWashingMachines.nodes}  allWash ={processAllWash(data.washSearch.nodes)}/>
+          <div>
+              <Serving  washer = {props.match.params.washerCode}  allWash ={processAllWash(data.washSearch.nodes.filter(value => value.status ==='SERVING'))}/>
+            <BigTable  washer = {props.match.params.washerCode}  allWash ={processAllWash(data.washSearch.nodes)}/>
+          </div>
+        
       );
       }
     }}
@@ -231,4 +216,4 @@ const AssignWork = ({CURRENT_USER= JSON.parse(localStorage.getItem("luandryStaff
   </div>
 );
 
-export default AssignWork;
+export default withRouter(AssignWorkDetail);

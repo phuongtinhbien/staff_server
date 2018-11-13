@@ -44,7 +44,7 @@ class UserInfo extends Component {
       <Collapse in={isShowingUserMenu}>
         <ul className="nav user-nav">
           <li><Link to="/userProfile">
-          My Profile
+          Thông tin cá nhân
         </Link></li>
           {/* <li><a href="#">Edit Profile</a></li>
           <li><a href="#">Settings</a></li> */}

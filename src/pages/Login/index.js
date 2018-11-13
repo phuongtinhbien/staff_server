@@ -64,12 +64,12 @@ class  Login extends Component {
       <div className="col-md-4">
       </div>
         <div className="col-md-4 ">
-        <div className="text-center"><img src={ic} style={{height:"150px"}}/> <h3>Ordered Management</h3></div>
+        <div className="text-center"><img src={ic} style={{height:"150px"}}/> <h3>Quản lí đơn hàng</h3></div>
         <Mutation
                     mutation={AUTH_MUT}
                     onCompleted={data=> {handleOnCompleted(data,history);
                   
-                      // this.setState({isLogined: true})
+                      this.setState({errorContent: data.authenticate.jwt? null: "Tài khoản không tồn tại"})
                      }}
                     update={(cache, { data: { authenticate } }) => {
                       const { jwt } = cache.readQuery({ query: AUTH_MUT });

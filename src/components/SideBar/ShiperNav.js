@@ -14,7 +14,7 @@ class ShipperNav extends Component {
         <li className={location.pathname === '/' ? 'active' : null}>
           <Link to="/">
             <i className="pe-7s-graph"></i>
-            <p>Dashboard</p>
+            <p>Tổng quan</p>
           </Link>
         </li>
         {/* <li className={this.isPathActive('/order/create-order') ? 'active' : null}>
@@ -60,7 +60,7 @@ class ShipperNav extends Component {
             data-toggle="collapse">
             <i className="pe-7s-plugin"></i>
             <p>
-              Customer's Reciept
+              Đơn hàng 
             <b className="caret"></b>
             </p>
           </a>
@@ -68,17 +68,17 @@ class ShipperNav extends Component {
             <div>
               <ul className="nav">
               <li className={this.isPathActive('/order/reciept-list/pending') ? 'active' : null}>
-                  <Link to="/order/reciept-list/pending">Pending pick up</Link>
+                  <Link to="/order/reciept-list/pending">Đang chờ lấy đồ</Link>
                 </li>
-                <li className={this.isPathActive('/order/reciept-list/processing') ? 'active' : null}>
+                {/* <li className={this.isPathActive('/order/reciept-list/processing') ? 'active' : null}>
                   <Link to="/order/reciept-list/processing">Recieved</Link>
-                </li>
+                </li> */}
                 <li className={this.isPathActive('/order/reciept-list/delivery') ? 'active' : null}>
-                  <Link to="/order/reciept-list/delivery">Pending delivery</Link>
+                  <Link to="/order/reciept-list/delivery">Đang chờ trả đồ</Link>
                 </li>
-                <li className={this.isPathActive('/order/reciept-list/deliveried') ? 'active' : null}>
+                {/* <li className={this.isPathActive('/order/reciept-list/deliveried') ? 'active' : null}>
                   <Link to="/order/reciept-list/deliveried">Deliveried</Link>
-                </li>
+                </li> */}
               </ul>
             </div>
           </Collapse>

@@ -4,13 +4,11 @@ import { Link, withRouter } from 'react-router-dom';
 const BigTable = ({allWash,washer}) => (
   <div className="card">
     <div className="header text-center">
-      <h4 className="title">Kết quả phân công</h4>
-      <p className="category">Kết quả tự động lưu vào hệ thống</p>
+      <h4 className="title">Đơn hàng đang xử lí</h4>
+      <p className="category"></p>
       <br />
     </div>
-    {washer.length>0 && washer.map((washerItem,i) =>(
  <div className="content table-responsive table-full-width">
- <Link className ="btn btn-success" to={"assign-work/assignWorkDetail/"+washerItem.washerCode}>{washerItem.washerCode} </Link>
  <table className="table table-striped hover">
    <thead>
      <tr><th className="sn">STT</th>
@@ -22,7 +20,7 @@ const BigTable = ({allWash,washer}) => (
      </tr>
    </thead>
    <tbody>
-     {allWash.length>0? allWash.filter(value => value.washerCode === washerItem.washerCode ).map((item, index) =>(
+     {allWash.length>0? allWash.filter(value => value.washerCode === washer).map((item, index) =>(
        <tr key={index}>
          <td>{index+1}</td>
          <td>{item.washerCode} - <span rel="tooltip"
@@ -57,7 +55,6 @@ const BigTable = ({allWash,washer}) => (
    </tbody>
  </table>
 </div>
-    ))}
    
   </div>
 );

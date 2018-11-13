@@ -11,13 +11,13 @@ const resultDetail = (data) =>{
 
   return (
     <p>
-      <span style={{fontSize:"12px"}}> - Material : {data.materialByMaterialId!= null?data.materialByMaterialId.materialName: "Undefine"} </span>
+      <span style={{fontSize:"12px"}}> - Chất liệu : {data.materialByMaterialId!= null?data.materialByMaterialId.materialName: "Undefine"} </span>
       <br></br>
-      <span style={{fontSize:"12px"}}> - Label : {data.labelByLabelId!= null?data.labelByLabelId.labelName: "Undefine"} </span>
+      <span style={{fontSize:"12px"}}> - Nhãn hiệu : {data.labelByLabelId!= null?data.labelByLabelId.labelName: "Undefine"} </span>
       <br></br>
-      <span style={{fontSize:"12px"}}> - Color : {data.colorByColorId!= null?data.colorByColorId.colorName: "Undefine"} </span>
+      <span style={{fontSize:"12px"}}> - Màu : {data.colorByColorId!= null?data.colorByColorId.colorName: "Undefine"} </span>
       <br></br>
-      <span style={{fontSize:"12px"}}> - Note : {data.note!= null?data.note: "_"} </span>
+      <span style={{fontSize:"12px"}}> - Ghi chú : {data.note!= null?data.note: "_"} </span>
     </p>
   );
 
@@ -66,34 +66,34 @@ class ReceiptForm extends Component {
               
               <legend>
               <div style={{justifyContent: "space-between"}}>
-                <span>Receipt's Information - {receipt.id} - {receipt.customerOrderByOrderId.id} <span className="badge badge-warning">{receipt.status}</span> </span>
+                <span>Thông tin biên nhận - {receipt.id} - {receipt.customerOrderByOrderId.id} <span className="badge badge-warning">{receipt.status}</span> </span>
                 
               </div>
               </legend>
               
               <div className="row">
                 <div className="col-sm-6 ">
-                  <label className="control-label col-md-4">Full name</label>
+                  <label className="control-label col-md-4">Họ tên</label>
                   <div className=" control-label col-md-8" style={{textAlign:"left"}}><b>{receipt.customerOrderByOrderId.customerByCustomerId.fullName}</b></div>
-                  <label className="control-label col-md-4">Phone number</label>
+                  <label className="control-label col-md-4">Số điện thoại</label>
                   <div className=" control-label col-md-8" style={{textAlign:"left"}}>{receipt.customerOrderByOrderId.customerByCustomerId.phone}</div>
                 </div>
                 <div className="col-sm-6 ">
                   <label className="control-label col-md-4">Email</label>
                   <div className=" control-label col-md-8" style={{textAlign:"left"}}>{receipt.customerOrderByOrderId.customerByCustomerId.email}</div>
-                  <label className="control-label col-md-4">Address</label>
+                  <label className="control-label col-md-4">Địa chỉ</label>
                   <div className=" control-label col-md-8" style={{textAlign:"left"}}>{receipt.customerOrderByOrderId.customerByCustomerId.address}</div>
                 </div>
               </div>
               <div className="row">
                 <div className="col-sm-6 ">
-                  <label className="control-label col-md-4 mt-4">Branch</label>
+                  <label className="control-label col-md-4 mt-4">Chi nhánh</label>
                   <div className=" control-label col-md-8" style={{textAlign:"left"}}>
                     <span className="btn btn-primary btn-sm btn-fill btn-linkedin">{receipt.customerOrderByOrderId.branchByBranchId.branchName}</span>
                   </div>
                 </div>
                 <div className="col-sm-6 ">
-                  <label className="control-label col-md-4 mt-4">Branch's Address</label>
+                  <label className="control-label col-md-4 mt-4">Địa chỉ CN</label>
                   <div className=" control-label col-md-8" style={{textAlign:"left"}}>
                     <span >{receipt.customerOrderByOrderId.branchByBranchId.address}</span>
                   </div>
@@ -102,7 +102,7 @@ class ReceiptForm extends Component {
               <div className="row"><br></br></div>
               <div className="row">
                 <div className="col-sm-6">
-                    <label className="control-label col-md-4 mt-4">Pick up date </label>
+                    <label className="control-label col-md-4 mt-4">NGÀY LẤY ĐỒ </label>
                     <div className="col-md-8 mt-4">
                       <Tags
                         tags={ [
@@ -116,7 +116,7 @@ class ReceiptForm extends Component {
                         theme="azure"
                         fill />
                     </div>
-                    <label className="control-label col-md-4 mt-6">Pick up time </label>
+                    <label className="control-label col-md-4 mt-6">THỜI GIAN LẤY ĐỒ </label>
                     <div className="col-md-8 mt-6">
                       <Tags
                         tags={ [
@@ -131,7 +131,8 @@ class ReceiptForm extends Component {
                     </div>
                 </div>
                 <div className="col-sm-6">
-                  <label className="control-label col-md-4 mt-4">Delivery date </label>
+                  <label className="control-label col-md-4 mt-4">NGÀY TRẢ ĐỒ
+</label>
                     <div className="col-md-8 mt-4">
                       <Tags
                         tags={[
@@ -144,7 +145,7 @@ class ReceiptForm extends Component {
                         theme="azure"
                         fill />
                     </div>
-                  <label className="control-label col-md-4 mt-6">Delivery time </label>
+                  <label className="control-label col-md-4 mt-6">THỜI GIAN TRẢ ĐỒ </label>
                   <div className="col-md-8 mt-6">
                     <Tags
                       tags={ [
@@ -161,21 +162,21 @@ class ReceiptForm extends Component {
               </div>
               <div className="row">
                 <div className="col-sm-6">
-                    <label className="control-label col-md-4 mt-4" >Pick up place </label>
+                    <label className="control-label col-md-4 mt-4" >NƠI LẤY ĐỒ </label>
                     <div className=" control-label col-md-8" style={{textAlign:"left"}}><b>{receipt.customerOrderByOrderId.pickUpPlace !=null ?receipt.customerOrderByOrderId.pickUpPlace: "_" }</b></div>
                 </div>
                 <div className="col-sm-6">
-                    <label className="control-label col-md-4 mt-4" >Delivery place </label>
+                    <label className="control-label col-md-4 mt-4" >NƠI TRẢ ĐỒ </label>
                     <div className=" control-label col-md-8" style={{textAlign:"left"}}><b>{receipt.customerOrderByOrderId.deliveryPlace !=null ?receipt.customerOrderByOrderId.deliveryPlace: "_" }</b></div>
                 </div>
               </div>
               <div className="row">
                 <div className="col-sm-6">
-                    <label className="control-label col-md-4 mt-4" > Pick up Staff</label>
+                    <label className="control-label col-md-4 mt-4" > NV LẤY ĐỒ</label>
                     <div className=" control-label col-md-8" style={{textAlign:"left"}}><b>{(receipt.staffByStaffPickUp) ?receipt.staffByStaffPickUp.fullName: "_" }</b></div>
                 </div>
                 <div className="col-sm-6">
-                    <label className="control-label col-md-4 mt-4" >Delivery Staff </label>
+                    <label className="control-label col-md-4 mt-4" >NV TRẢ ĐỒ</label>
                     <div className=" control-label col-md-8" style={{textAlign:"left"}}><b>{(receipt.staffByStaffDelivery) ?receipt.staffByStaffDelivery.fullName: "_" }</b></div>
                 </div>
               </div>
@@ -183,7 +184,7 @@ class ReceiptForm extends Component {
             </fieldset>
             <br></br><br></br>
             <fieldset>
-              <legend>Receipt Detail</legend>
+              <legend>Chi tiết biên nhận</legend>
               <div className="col-sm-12">
                  <OrderDetailTable orderDetailList={proccessData(receipt.receiptDetailsByReceiptId.nodes)}></OrderDetailTable>
               </div>

@@ -17,13 +17,13 @@ const SortCloth = ({ fields, receiptDetail,serviceArrays,  meta: { error, submit
             <thead>
 
               <tr>
-                <th style={{width:"5%"}}>S/N</th>
-                <th style={{width:"15%"}}>WASH BAG</th>
-                <th>SERVICE TYPE</th>
-                <th style={{width:"15%"}}>COLOR GROUP</th>
-                <th style={{width:"20%"}}>CLOTH</th>
-                <th style={{width:"15%"}}>AMOUNT</th>
-                <th style={{width:"15%"}}>Options</th>
+                <th style={{width:"5%"}}>STT</th>
+                <th style={{width:"15%"}}>Túi giặt</th>
+                <th>Loại DV</th>
+                <th style={{width:"15%"}}>Nhóm màu</th>
+                <th style={{width:"20%"}}>Quần áo</th>
+                <th style={{width:"15%"}}>Số lượng</th>
+                <th style={{width:"15%"}}>Chi tiết</th>
               </tr>
             </thead>
             <tbody>

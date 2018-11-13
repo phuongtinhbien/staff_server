@@ -12,6 +12,8 @@ let client = new ApolloClient({
 
 });
 
+
+
 const SORTED_ORDER_LIST = gql `query sortedOrderList($brId: BigFloat!) {
     sortedOrderList(brId: $brId) {
       totalCount
@@ -32,6 +34,23 @@ const SORTED_ORDER_LIST = gql `query sortedOrderList($brId: BigFloat!) {
         receiptsByOrderId{
           nodes{
             id
+            washBagsByReceiptId {
+            nodes {
+              id
+              nodeId
+              washBagName
+              washBagDetailsByWashBagId {
+                nodes {
+                  id
+                  serviceTypeId
+                  colorByColorId {
+                    id
+                    colorGroupId
+                  }
+                }
+              }
+            }
+          }
           }
         }
       }
@@ -101,6 +120,7 @@ function assignWorkTypeOne(orderList, washerInfoList, curr_user) {
   //   washer_id,
   //   curr_user
   // }
+  console.log(orderList);
   let result = [];
   orderList.forEach(order => {
     let sn = 1;

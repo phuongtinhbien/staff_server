@@ -27,7 +27,7 @@ class OrderDetailTable extends Component {
     createCustomClearButton = (onClick) => {
       return (
         <ClearSearchButton
-          btnText='Clear'
+          btnText='Xóa'
           btnContextual='btn-warning btn-fill'
           onClick={ e => this.handleClearButtonClick(onClick) }/>
       );
@@ -80,6 +80,7 @@ class OrderDetailTable extends Component {
                   data={orderDetailList}
                   bordered={false}
                   striped
+                  searchPlaceholder="Tìm kiếm"
                   search={ true } multiColumnSearch={ true }
                   pagination={true}
                   options={options}>
@@ -87,7 +88,7 @@ class OrderDetailTable extends Component {
                     dataField='sn'
                     width="7%"
                    >
-                    S/N
+                    STT
                   </TableHeaderColumn>
                   <TableHeaderColumn
                     dataField='nodeId'
@@ -96,37 +97,38 @@ class OrderDetailTable extends Component {
                    >
                     ID
                   </TableHeaderColumn>
-                  <TableHeaderColumn
-                    dataField='productName'
-                    width="20%"
-                    dataSort>
-                    Product
-                  </TableHeaderColumn>
+                  
                   <TableHeaderColumn
                     dataField='serviceName'
                     width="25%"
                     isKey
                     dataSort>
-                    Service name
+                    Dịch vụ
+                  </TableHeaderColumn>
+                  <TableHeaderColumn
+                    dataField='productName'
+                    width="20%"
+                    dataSort>
+                    Quần áo
                   </TableHeaderColumn>
                   <TableHeaderColumn
                     dataField='amount'
                     width="15%"
                     dataSort>
-                    Amount
+                    Số lượng
                   </TableHeaderColumn>
                   <TableHeaderColumn
                     dataField='unit'
                     width="10%"
                     dataFormat={checkNull}
                     dataSort>
-                    Unit
+                    ĐVT
                   </TableHeaderColumn>
                   <TableHeaderColumn
                     dataField='receivedAmount'
                     width="25%"
                     dataSort>
-                    Received Amount
+                    SL đã nhận
                   </TableHeaderColumn>
                  
                   <TableHeaderColumn
@@ -134,7 +136,7 @@ class OrderDetailTable extends Component {
                     width="25%"
                     dataFormat={detailsFormatter}
                     dataSort>
-                    Details
+                    Chi tiết thêm
                   </TableHeaderColumn>
                 </BootstrapTable>
               </div>

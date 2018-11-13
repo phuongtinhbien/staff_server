@@ -99,7 +99,7 @@ const proccessInfoUser = (data)=>{
       email: data.staffById.email,
       gender: data.staffById.gender ==true?"Female": "Male",
       address: data.staffById.address,
-      phone: data.staffById.status,
+      phone: data.staffById.phone,
       staffType: {
         staffCode: data.staffById.staffTypeByStaffTypeId? data.staffById.staffTypeByStaffTypeId.staffCode: "",
         staffType: data.staffById.staffTypeByStaffTypeId? data.staffById.staffTypeByStaffTypeId.staffTypeName: "undefined",
@@ -107,7 +107,8 @@ const proccessInfoUser = (data)=>{
       branch: {
         id: data.staffById.branchByBranchId.id,
         branchName: data.staffById.branchByBranchId.branchName,
-        address: data.staffById.branchByBranchId.address
+        address: data.staffById.branchByBranchId.address,
+        storeName: data.staffById.branchByBranchId.storeByStoreId.storeName
       }
 
     }

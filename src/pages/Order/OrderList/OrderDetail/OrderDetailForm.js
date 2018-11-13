@@ -12,13 +12,13 @@ const resultDetail = (data) =>{
 
   return (
     <p>
-      <span style={{fontSize:"12px"}}> - Material : {data.materialByMaterialId!= null?data.materialByMaterialId.materialName: "Undefine"} </span>
+      <span style={{fontSize:"12px"}}> - Chất liệu : {data.materialByMaterialId!= null?data.materialByMaterialId.materialName: "Undefine"} </span>
       <br></br>
-      <span style={{fontSize:"12px"}}> - Label : {data.labelByLabelId!= null?data.labelByLabelId.labelName: "Undefine"} </span>
+      <span style={{fontSize:"12px"}}> - Nhãn hiệu : {data.labelByLabelId!= null?data.labelByLabelId.labelName: "Undefine"} </span>
       <br></br>
-      <span style={{fontSize:"12px"}}> - Color : {data.colorByColorId!= null?data.colorByColorId.colorName: "Undefine"} </span>
+      <span style={{fontSize:"12px"}}> - Màu : {data.colorByColorId!= null?data.colorByColorId.colorName: "Undefine"} </span>
       <br></br>
-      <span style={{fontSize:"12px"}}> - Note : {data.note!= null?data.note: "_"} </span>
+      <span style={{fontSize:"12px"}}> - Ghi chú : {data.note!= null?data.note: "_"} </span>
     </p>
   );
 
@@ -67,34 +67,34 @@ class OrderDetailForm extends Component {
               
               <legend>
               <div style={{justifyContent: "space-between"}}>
-                <span>Order's Information - {customerOrder.id} <span className="badge badge-warning">{customerOrder.status}</span> &nbsp;&nbsp;&nbsp;</span>
-                {customerOrder.receiptsByOrderId.nodes[0] && <Link className="btn btn-warning btn-sm" to={"/order/reciept-list/view/"+customerOrder.receiptsByOrderId.nodes[0].nodeId}>Watch Receipt</Link>}
+                <span>Thông tin đơn hàng - {customerOrder.id} <span className="badge badge-warning">{customerOrder.status}</span> &nbsp;&nbsp;&nbsp;</span>
+                {customerOrder.receiptsByOrderId.nodes[0] && <Link className="btn btn-warning btn-sm" to={"/order/reciept-list/view/"+customerOrder.receiptsByOrderId.nodes[0].nodeId}>Xem biên nhận</Link>}
               </div>
               </legend>
               
               <div className="row">
                 <div className="col-sm-6 ">
-                  <label className="control-label col-md-4">Full name</label>
+                  <label className="control-label col-md-4">Họ tên KH</label>
                   <div className=" control-label col-md-8" style={{textAlign:"left"}}><b>{customerOrder.customerByCustomerId.fullName}</b></div>
-                  <label className="control-label col-md-4">Phone number</label>
+                  <label className="control-label col-md-4">Số điện thoại</label>
                   <div className=" control-label col-md-8" style={{textAlign:"left"}}>{customerOrder.customerByCustomerId.phone}</div>
                 </div>
                 <div className="col-sm-6 ">
                   <label className="control-label col-md-4">Email</label>
                   <div className=" control-label col-md-8" style={{textAlign:"left"}}>{customerOrder.customerByCustomerId.email}</div>
-                  <label className="control-label col-md-4">Address</label>
+                  <label className="control-label col-md-4">Địa chỉ</label>
                   <div className=" control-label col-md-8" style={{textAlign:"left"}}>{customerOrder.customerByCustomerId.address}</div>
                 </div>
               </div>
               <div className="row">
                 <div className="col-sm-6 ">
-                  <label className="control-label col-md-4 mt-4">Branch</label>
+                  <label className="control-label col-md-4 mt-4">Chi nhánh</label>
                   <div className=" control-label col-md-8" style={{textAlign:"left"}}>
                     <span className="btn btn-primary btn-sm btn-fill btn-linkedin">{customerOrder.branchByBranchId.branchName}</span>
                   </div>
                 </div>
                 <div className="col-sm-6 ">
-                  <label className="control-label col-md-4 mt-4">Branch's Address</label>
+                  <label className="control-label col-md-4 mt-4">Địa chỉ CN</label>
                   <div className=" control-label col-md-8" style={{textAlign:"left"}}>
                     <span >{customerOrder.branchByBranchId.address}</span>
                   </div>
@@ -103,7 +103,7 @@ class OrderDetailForm extends Component {
               <div className="row"><br></br></div>
               <div className="row">
                 <div className="col-sm-6">
-                    <label className="control-label col-md-4 mt-4">Pick up date </label>
+                    <label className="control-label col-md-4 mt-4">Ngày lấy đồ </label>
                     <div className="col-md-8 mt-4">
                       <Tags
                         tags={ [
@@ -116,7 +116,7 @@ class OrderDetailForm extends Component {
                         theme="azure"
                         fill />
                     </div>
-                    <label className="control-label col-md-4 mt-6">Pick up time </label>
+                    <label className="control-label col-md-4 mt-6">Thời gian lấy đồ </label>
                     <div className="col-md-8 mt-6">
                       <Tags
                         tags={ [
@@ -131,7 +131,7 @@ class OrderDetailForm extends Component {
                     </div>
                 </div>
                 <div className="col-sm-6">
-                  <label className="control-label col-md-4 mt-4">Delivery date </label>
+                  <label className="control-label col-md-4 mt-4">Ngày trả đồ </label>
                     <div className="col-md-8 mt-4">
                       <Tags
                         tags={[
@@ -144,7 +144,7 @@ class OrderDetailForm extends Component {
                         theme="azure"
                         fill />
                     </div>
-                  <label className="control-label col-md-4 mt-6">Delivery time </label>
+                  <label className="control-label col-md-4 mt-6">Thời gian trả đồ </label>
                   <div className="col-md-8 mt-6">
                     <Tags
                       tags={ [
@@ -161,21 +161,21 @@ class OrderDetailForm extends Component {
               </div>
               <div className="row">
                 <div className="col-sm-6">
-                    <label className="control-label col-md-4 mt-4" >Pick up place </label>
+                    <label className="control-label col-md-4 mt-4" >Nơi lấy đồ </label>
                     <div className=" control-label col-md-8" style={{textAlign:"left"}}><b>{customerOrder.pickUpPlace !=null ?customerOrder.pickUpPlace: "_" }</b></div>
                 </div>
                 <div className="col-sm-6">
-                    <label className="control-label col-md-4 mt-4" >Delivery place </label>
+                    <label className="control-label col-md-4 mt-4" >Nơi trả đồ </label>
                     <div className=" control-label col-md-8" style={{textAlign:"left"}}><b>{customerOrder.pickUpPlace !=null ?customerOrder.deliveryPlace: "_" }</b></div>
                 </div>
               </div>
               <div className="row">
                 <div className="col-sm-6">
-                    <label className="control-label col-md-4 mt-4" > Pick up Staff</label>
+                    <label className="control-label col-md-4 mt-4" >NV lấy đồ</label>
                     <div className=" control-label col-md-8" style={{textAlign:"left"}}><b>{(customerOrder.receiptsByOrderId.nodes[0] !=null && customerOrder.receiptsByOrderId.nodes[0].staffByStaffPickUp !=null) ?customerOrder.receiptsByOrderId.nodes[0].staffByStaffPickUp.fullName: "_" }</b></div>
                 </div>
                 <div className="col-sm-6">
-                    <label className="control-label col-md-4 mt-4" >Delivery Staff </label>
+                    <label className="control-label col-md-4 mt-4" >NV trả đồ</label>
                     <div className=" control-label col-md-8" style={{textAlign:"left"}}><b>{(customerOrder.receiptsByOrderId.nodes[0] !=null && customerOrder.receiptsByOrderId.nodes[0].staffByStaffDelivery !=null) ?customerOrder.receiptsByOrderId.nodes[0].staffByStaffDelivery.fullName: "_" }</b></div>
                 </div>
               </div>
@@ -183,7 +183,7 @@ class OrderDetailForm extends Component {
             </fieldset>
             <br></br><br></br>
             <fieldset>
-              <legend>Order Detail</legend>
+              <legend>Chi tiết đơn hàng</legend>
               <div className="col-sm-12">
                 <OrderDetailTable orderDetailList={proccessData(customerOrder.orderDetailsByOrderId.nodes)}></OrderDetailTable>
               </div>

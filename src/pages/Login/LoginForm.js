@@ -25,11 +25,12 @@ const LoginForm = ({
 }) => (
   <div className="card">
     <div className="header">
-      <h4>Login</h4>
+      <h4>Đăng nhập</h4>
     </div>
     <div className="content">
-    <label className="error">{errorContent}</label>
+    
       <form onSubmit={handleSubmit}>
+     { errorContent &&<label className="error">{errorContent}</label>}
         <div className="form-group">
           <label className="control-label">Email</label>
           <Field
@@ -39,20 +40,16 @@ const LoginForm = ({
         </div>
 
         <div className="form-group">
-          <label className="control-label">Password</label>
+          <label className="control-label">Mật khẩu</label>
           <Field
             name="password"
             type="password"
             component={renderField} />
         </div>
 
-        <Field
-          name="newsletter"
-          type="checkbox"
-          component={renderField}
-          label="Remember me" />
+
       <div className="text-right">
-        <button type="submit" className="btn btn-fill btn-info" disabled={submitting}>Login</button>
+        <button type="submit" className="btn btn-fill btn-info" disabled={submitting}>Đăng nhập</button>
         </div>
       </form>
     </div>

@@ -147,7 +147,7 @@ class OrderTable extends Component {
                     dataField='sn'
                     width="7%"
                    >
-                    S/N
+                    STT
                   </TableHeaderColumn>
                   <TableHeaderColumn
                     dataField='nodeId'
@@ -160,6 +160,7 @@ class OrderTable extends Component {
                   <TableHeaderColumn
                     dataField='branch'
                     width="20%"
+                    hidden
                     dataSort>
                     Branch
                   </TableHeaderColumn>
@@ -169,7 +170,7 @@ class OrderTable extends Component {
                     
                     dataFormat={buttonFormatter}
                     dataSort>
-                    Customer
+                    Khách hàng
                   </TableHeaderColumn>
                   {/* <TableHeaderColumn
                     dataField='pickUpDate'
@@ -204,21 +205,21 @@ class OrderTable extends Component {
                     width="25%"
                     hidden
                     >
-                    Amount
+                    Số lượng
                   </TableHeaderColumn>
                   <TableHeaderColumn
                     dataField='currentStaff'
                     width="25%"
                     
                     >
-                    Performer
+                    Người thực hiện
                   </TableHeaderColumn>
                   <TableHeaderColumn
                     dataField='status'
                     width="25%"
                     dataFormat={button1Formatter}
                     >
-                    Status
+                    Trạng thái
                   </TableHeaderColumn>
                   
                  

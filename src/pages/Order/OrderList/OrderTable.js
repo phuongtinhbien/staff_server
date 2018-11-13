@@ -185,7 +185,7 @@ class OrderTable extends Component {
                   striped
                   
                   search={ true } multiColumnSearch={ true }
-                  selectRow={ selectRowProp }
+                  searchPlaceholder="Tìm kiếm"
                   pagination={true}
                   options={options}>
 
