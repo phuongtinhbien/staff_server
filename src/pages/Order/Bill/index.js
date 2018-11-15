@@ -5,82 +5,89 @@ import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 import { withRouter } from 'react-router-dom';
 import Error from './../../Error';
 import OrderDetailForm from './OrderDetailForm';
-import PrintTempalte from "react-print";
+import ReactToPrint from 'react-to-print';
 
 const BILL_DETAIL = gql`query billDetail($nodeId: ID!) {
-    bill(nodeId: $nodeId) {
+  bill(nodeId: $nodeId) {
+    nodeId
+    id
+    createDate
+    staffByCreateBy{
+        nodeId
+        fullName
+        id
+      }
+    receiptByReceiptId {
       nodeId
       id
-      createDate
-      staffByCreateId {
+      customerOrderByOrderId {
         nodeId
-        id
-        fullName
-      }
-      receiptByReceiptId {
-        nodeId
-        id
-        customerOrderByOrderId {
-          nodeId
-          customerByCustomerId {
-            nodeId
-            id
-            fullName
-            phone
-            email
-          }
-        }
-
-      }
-      billDetailsByBillId {
-        nodes {
+        customerByCustomerId {
           nodeId
           id
-          serviceTypeByServiceTypeId {
-            id
+          fullName
+          phone
+          email
+        }
+        pickUpPlace
+        deliveryPlace
+        branchByBranchId{
+          id
+          branchName
+          address
+        }
+      }
+
+    }
+    billDetailsByBillId {
+      nodes {
+        nodeId
+        id
+        serviceTypeByServiceTypeId {
+          id
+          nodeId
+          serviceTypeName
+        }
+        unitByUnitId {
+          id
+          nodeId
+          unitName
+        }
+        productByProductId {
+          id
+          nodeId
+          productName
+        }
+        materialByMaterialId {
+          id
+          materialName
+          nodeId
+        }
+        labelByLabelId {
+          id
+          labelName
+          nodeId
+        }
+        colorByColorId {
+          id
+          nodeId
+          colorName
+          colorGroupByColorGroupId {
+            colorGroupName
             nodeId
-            serviceTypeName
           }
-          unitByUnitId {
-            id
-            nodeId
-            unitName
-          }
-          productByProductId {
-            id
-            nodeId
-            productName
-          }
-          materialByMaterialId {
-            id
-            materialName
-            nodeId
-          }
-          labelByLabelId {
-            id
-            labelName
-            nodeId
-          }
-          colorByColorId {
-            id
-            nodeId
-            colorName
-            colorGroupByColorGroupId {
-              colorGroupName
-              nodeId
-            }
-          }
-          note
-          amount
-          unitPriceByUnitPrice {
-            id
-            price
-            nodeId
-          }
+        }
+        note
+        amount
+        unitPriceByUnitPrice {
+          id
+          price
+          nodeId
         }
       }
     }
-  }`;
+  }
+}`;
 
  
 
@@ -88,7 +95,7 @@ const BILL_DETAIL = gql`query billDetail($nodeId: ID!) {
 
 
 
-class OrderPending extends Component {
+class Billing extends Component {
 
   render() {
     let {match,data,history} = this.props;
@@ -113,7 +120,21 @@ class OrderPending extends Component {
         console.log(data)
       return (
         <div className="content">
-          <OrderDetailForm  customerOrder={data.customerOrder}></OrderDetailForm>
+          <OrderDetailForm  bill={data.bill} ref={el => (this.componentRef = el)}></OrderDetailForm>
+          <ReactToPrint
+          pageStyle={"margin:'20px'"}
+          trigger={() => <div className="text-center">
+          {CURRENT_USER.staffType.staffCode ==='STAFF_01' &&
+          <button
+            type="button"
+            className="btn btn-fill btn-success"
+          >
+            In hóa đơn
+          </button>
+        }
+         </div>}
+          content={() => this.componentRef}
+        />
       </div>
       
         
@@ -126,13 +147,5 @@ class OrderPending extends Component {
     );
   }
 }
-// const queryOptions = {
-//   options: props => ({
-//     variables: {
-//       status: "PENDING",
-//     },
-//   }),
-//  }
 
-//  OrderPending = graphql(ORDER_QUERY,queryOptions) (OrderPending);
-export default withRouter(OrderPending);
+export default withRouter(Billing);

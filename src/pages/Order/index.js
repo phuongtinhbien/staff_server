@@ -16,7 +16,7 @@ const Orders = ({match}) => (
         <Route   path={`${match.url}/order-list`} component={OrderList} />
         <Route  path={`${match.url}/create-order`} component={CreateOrder} />
         <Route  path={`${match.url}/staff-task`} component={StaffTask} />
-        <Route  path={`${match.url}/bill:nodeId`} component={Bill} />
+        <Route  path={`${match.url}/bill/:nodeId`} component={Bill} />
         <Switch>
             <Route exact path={`${match.url}/assign-work`} component={AssignWork} /> 
             <Route   path={`${match.url}/assign-work/assign/:nodeId`} component={Assign} /> 
