@@ -465,7 +465,7 @@ class ReceiptPending extends Component {
                         assignPickUp({variables:{id: data.receipt.id, pickUp: CURRENT_USER.id, updateDate: moment(), updateBy: CURRENT_USER.id }});
                       }}
                     >
-                      Pick up
+                      Lấy đồ
                     </button>
                   )}
 
@@ -495,7 +495,7 @@ class ReceiptPending extends Component {
                         assignPickUp({variables:{id: data.receipt.id, shipper: CURRENT_USER.id, updateDate: moment(), updateBy: CURRENT_USER.id }});
                       }}
                     >
-                      Delivery
+                      Trả đồ
                     </button>
                   )}
 
@@ -503,8 +503,7 @@ class ReceiptPending extends Component {
                   
                  
                 </div>
-               
-<br/>                  
+                          
                 <Mutation
                   mutation={UPDATE_RECEIPT_MUT}
                   update={(cache, { data: { updatestatusreceipt } }) => {
@@ -527,7 +526,7 @@ class ReceiptPending extends Component {
                           className={((data.receipt.status ==="PENDING") || (data.receipt.status ==="PENDING_DELIVERY")) && (data.receipt.staffByStaffPickUp)? "btn btn-fill btn-warning ": "btn btn-fill btn-warning hidden"}
                           
                         >
-                          Update Receipt
+                          Cập nhật biên nhận
                   </Link>
                   &nbsp;
                       <button
@@ -541,7 +540,7 @@ class ReceiptPending extends Component {
                           updatestatuscustomerorder({variables:{rId: data.receipt.id, pStatus:"RECEIVED", pUser: CURRENT_USER.id}});
                         }}
                       >
-                        Received
+                        Đã lấy đồ
                       </button>
                       
                       &nbsp;
@@ -556,7 +555,7 @@ class ReceiptPending extends Component {
                           updatestatuscustomerorder({variables:{rId: data.receipt.id, pStatus:"DELIVERIED", pUser: CURRENT_USER.id}});
                         }}
                       >
-                        Deliveried
+                        Đã giao đồ
                       </button>
                     &nbsp;
                     

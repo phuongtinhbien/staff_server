@@ -281,12 +281,12 @@ class OrderPending extends Component {
             
             <Mutation
                   mutation={UPDATE_ORDER_MUT}
-                  update={(cache, { data: { updatestatuscustomerorder } }) => {
+                  update={(cache, { data: { updatestatuscustomerorder:{customerOrder1} } }) => {
                     const { customerOrder } = cache.readQuery({ query: ORDER_DETAIL });
                     cache.writeQuery({
                       query: ORDER_DETAIL,
                       variables:{nodeId:match.params.nodeId },
-                      data: { customerOrder: customerOrder.concat(updatestatuscustomerorder) }
+                      data: { customerOrder: customerOrder.concat(customerOrder1) }
 
                     });
                   }}

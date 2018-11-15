@@ -7,6 +7,7 @@ const APPROVED = "APPROVED";
 const PENDING_DELIVERY = "PENDING_DELIVERY";
 const FINISHED = "FINISHED";
 const DECLINED = "DECLINED";
+const DRAFT = "DRAFT";
 
 
 
@@ -37,6 +38,9 @@ function main (status){
     }
     else if (status === DECLINED){
         return "Đã hủy";
+    }
+    else if (status === DRAFT){
+        return "Tạm";
     }
 }
 

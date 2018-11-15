@@ -67,7 +67,8 @@ class OrderDetailForm extends Component {
     startDate: moment(),
     endDate: moment(),
     dateRangeFocusedInput: null,
-    viewMode: false
+    viewMode: false,
+    generateSuccess: false,
   
   };
   render () {
@@ -81,7 +82,7 @@ class OrderDetailForm extends Component {
               
               <legend>
               <div style={{justifyContent: "space-between"}}>
-                <span>Thông tin đơn hàng - {customerOrder.id} <span className="badge badge-warning">{status(customerOrder.status)}</span> &nbsp;&nbsp;&nbsp;</span>
+                <span>Thông tin đơn hàng - {customerOrder&& customerOrder.id} <span className="badge badge-warning">{status(customerOrder.status)}</span> &nbsp;&nbsp;&nbsp;</span>
                 {customerOrder.receiptsByOrderId.nodes[0] && <Link className="btn btn-warning btn-sm" to={"/order/reciept-list/view/"+customerOrder.receiptsByOrderId.nodes[0].nodeId}>Xem biên nhận</Link>}
               </div>
               </legend>
@@ -196,9 +197,10 @@ class OrderDetailForm extends Component {
             
             </fieldset>
             <br></br><br></br>
-            {customerOrder.receiptsByOrderId.nodes[0].billsByReceiptId.totalCount ===0? <Mutation
+            {customerOrder.receiptsByOrderId.nodes[0] && (customerOrder.receiptsByOrderId.nodes[0].billsByReceiptId.totalCount ===0? 
+            <Mutation
                   mutation={GENERATE_BILL}
-                  
+                  onCompleted = {data => data?this.setState({generateSuccess: true}):null }
                 >
                   {generateBill => (
                      <div className="text-center">
@@ -206,8 +208,8 @@ class OrderDetailForm extends Component {
                     <button
                       type="submit"
                       className="btn btn-fill btn-info"
-                      disabled={!(customerOrder.status ==="FINISHED_SERVING")}
-                      className={(customerOrder.status ==="FINISHED_SERVING")? "btn btn-fill btn-info ": "btn btn-fill btn-info hidden"}
+                      disabled={generateSuccess}
+                      className={(!generateSuccess)? "btn btn-fill btn-info ": "btn btn-fill btn-info hidden"}
                       onClick={e => {
                         e.preventDefault();
                         this.setState({approve: true, decline: false});
@@ -224,12 +226,12 @@ class OrderDetailForm extends Component {
                 <Link
                       type="submit"
                       className="btn  btn-success"
-                      disabled={!(customerOrder.status ==="FINISHED_SERVING")}
-                      className={(customerOrder.status ==="FINISHED_SERVING")? "btn btn-success ": "btn btn-success hidden"}
+                      disabled={!(generateSuccess)}
+                      className={(generateSuccess)? "btn btn-success ": "btn btn-success hidden"}
                       to={"/order/bill/"+customerOrder.receiptsByOrderId.nodes[0].billsByReceiptId.nodes[0].nodeId}
                     >
                       Xem hóa đơn
-                    </Link></div> }
+            </Link></div>) }
            
             <fieldset>
               <legend>Chi tiết đơn hàng</legend>
