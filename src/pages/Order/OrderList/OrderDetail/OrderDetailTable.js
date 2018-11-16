@@ -103,6 +103,7 @@ class OrderDetailTable extends Component {
       lastPage: 'Last',
       hideSizePerPage: true,
       clearSearch: true,
+      noDataText: "Không có dữ liệu",
       clearSearchBtn: this.createCustomClearButton,
      
     };

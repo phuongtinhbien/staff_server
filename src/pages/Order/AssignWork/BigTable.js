@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link, withRouter } from 'react-router-dom';
 import status from '../status';
-
+import RedirectPage from './Redirect';
 const BigTable = ({allWash,washer}) => (
   <div className="card">
     <div className="header text-center">
@@ -44,14 +44,14 @@ const BigTable = ({allWash,washer}) => (
                  data-original-title="View Profile"
                  // to={"/order/assign-work/assigntoWash/"}
                 >
-                   <strong>{item.customerName} &nbsp; - &nbsp;{item.orderId}</strong>
+                   <RedirectPage type="customer_order" typeId = {item.orderId} content ={item.customerName +" - "+item.orderId}/>
                </span></td>
          <td><span rel="tooltip"
                  className="btn btn-warning btn-fill btn-sm"
                  data-original-title="View Profile"
                  // to={"/order/assign-work/assigntoWash/"}
                 >
-                   {item.receiptId}
+                   <RedirectPage type="receipt" typeId = {item.receiptId} content ={item.receiptId}/>
                </span> {item.washbag}</td>
                <td>{item.wbName.length>0 && item.wbName.map((item, index)=>(
                    <li key= {index}> {item}</li>

@@ -53,7 +53,7 @@ class OrderTable extends Component {
     createCustomClearButton = (onClick) => {
       return (
         <ClearSearchButton
-          btnText='Clear'
+          btnText='Xóa'
           btnContextual='btn-warning btn-fill'
           onClick={ e => this.handleClearButtonClick(onClick) }/>
       );
@@ -113,7 +113,7 @@ class OrderTable extends Component {
       nextPage: 'Next',
       firstPage: 'First',
       lastPage: 'Last',
-      
+      noDataText: "Không có dữ liệu",
       hideSizePerPage: true,
       clearSearch: true,
       afterDeleteRow: onAfterDeleteRow,
@@ -137,7 +137,7 @@ class OrderTable extends Component {
                   data={orderList}
                   bordered={false}
                   striped
-                  
+                  searchPlaceholder="Tìm kiếm"
                   search={ true } multiColumnSearch={ true }
                   
                   pagination={true}

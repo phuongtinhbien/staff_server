@@ -20,7 +20,7 @@ const BigTable = ({allWash,washer}) => (
      </tr>
    </thead>
    <tbody>
-     {allWash.length>0? allWash.sort(function(a, b) {
+     {allWash.filter(value => value.washerCode === washer).length>0? allWash.sort(function(a, b) {
   if (a.sn > b.sn) {
     return 1;
   }

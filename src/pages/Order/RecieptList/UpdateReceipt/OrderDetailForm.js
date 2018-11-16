@@ -92,7 +92,8 @@ const proccessData = (data)=>{
         receivedAmount: data[i].recievedAmount,
         unit: data[i].unitByUnitId != null ? data[i].unitByUnitId.unitName: "_",
         unitPrice:data[i].unitPriceByUnitPrice!= null?  data[i].unitPriceByUnitPrice.price :"_",
-        details: resultDetail(data)
+        details: resultDetail(data),
+        status: data[i].status
       }
       result.push(row);
   }
@@ -243,7 +244,7 @@ class ReceiptForm extends Component {
             <fieldset>
               <legend>Chi tiết biên nhận</legend>
               <div className="col-sm-12">
-                 <FieldArray name="receiptDetailsByReceiptId" orderDetailList={proccessData(receipt.receiptDetailsByReceiptId.nodes)} component={ItemCloth}></FieldArray>
+                 <FieldArray name="receiptDetailsByReceiptId" status={receipt.status} orderDetailList={proccessData(receipt.receiptDetailsByReceiptId.nodes)} component={ItemCloth}></FieldArray>
               </div>
             </fieldset>
           

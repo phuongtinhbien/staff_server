@@ -2,7 +2,7 @@ import renderField from 'components/FormInputs/renderField';
 import React from 'react';
 import { Field } from 'redux-form';
 
-const renderItemOrderDetail = ({ fields, color, label, material, product,service, unit,  meta: { error, submitFailed } }) =>(
+const renderItemOrderDetail = ({ fields, product,service,status,  meta: { error, submitFailed } }) =>(
   <div>
      
       {submitFailed &&
@@ -18,6 +18,7 @@ const renderItemOrderDetail = ({ fields, color, label, material, product,service
                 <th style={{width:"25%"}}>Quần áo</th>
                 <th style={{width:"15%"}}>Số lượng</th>
                 <th style={{width:"20%"}}>SL đã nhận</th>
+                <th style={{width:"20%"}}>SL đã trả</th>
               </tr>
             </thead>
             <tbody>
@@ -76,20 +77,22 @@ const renderItemOrderDetail = ({ fields, color, label, material, product,service
                         name={`${orderDetail}.receivedAmount`}
                         type="text"
                         className="form-control"
-                        placeholder = "Enter Received Amount"
+                        disabled = {!(status === 'PENDING')}
+                        placeholder = "Nhập số lượng lấy"
                         component={renderField}
                         />
                     </td>
+                    <td>
 
-                  
-                  {/* <td className="text-right">
-                    <a rel="tooltip"
-                      className="btn btn-danger btn-simple btn-xs"
-                      data-original-title="View Profile"
-                      onClick={() => fields.remove(index)}>
-                      <i className="fa fa-remove"></i>
-                    </a>
-                  </td> */}
+                    <Field
+                        name={`${orderDetail}.deliveryAmount`}
+                        type="text"
+                        disabled = {!(status === "PENDING_DELIVERY")}
+                        className="form-control"
+                        placeholder = "Nhập số lượng trả"
+                        component={renderField}
+                        />
+                    </td>
                 </tr>
               ))}
             </tbody>

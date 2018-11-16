@@ -94,8 +94,8 @@ class OrderProcessing extends Component {
       }
       if (data != null){
       return (
-        <OrderTable tableName="Procesing Orders" 
-        tableDesc="All the list of processing orders" 
+        <OrderTable tableName="Đơn hàng đang xử lí" 
+        tableDesc="Bao gồm các đơn hàng có trạng thái đã xác nhận, đang chờ xử lí, đang xử lí,... " 
         orderList={proccessData(data.allTasks.nodes)}></OrderTable>
       );
       }

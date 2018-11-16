@@ -110,8 +110,8 @@ class OrderDeclined extends Component {
       }
       if (data != null){
       return (
-        <OrderTable tableName="Declined Orders" 
-        tableDesc="All the list of delcined orders" 
+        <OrderTable tableName="Đơn hàng bị hủy" 
+        tableDesc="Các đơn hàng bị hủy do nhân viên quản lí đơn hàng hoặc do khách hàng yêu cầu hủy" 
         orderList={proccessData(data.allTasks.nodes)}></OrderTable>
       );
       }

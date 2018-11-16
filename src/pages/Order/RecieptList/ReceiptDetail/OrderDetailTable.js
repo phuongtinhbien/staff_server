@@ -130,6 +130,12 @@ class OrderDetailTable extends Component {
                     dataSort>
                     SL đã nhận
                   </TableHeaderColumn>
+                  <TableHeaderColumn
+                    dataField='receivedAmount'
+                    width="25%"
+                    dataSort>
+                    SL đã trả
+                  </TableHeaderColumn>
                  
                   <TableHeaderColumn
                     dataField='details'

@@ -176,7 +176,7 @@ const AssignWork = ({CURRENT_USER= JSON.parse(localStorage.getItem("luandryStaff
   <div className="container-fluid">
     <div className="row">
       <div className="col-md-12">
-      {CURRENT_USER.staffType.staffCode === 'STAFF_01' &&
+      {(CURRENT_USER.staffType.staffCode === 'STAFF_01' || CURRENT_USER.staffType.staffCode === 'STAFF_02') &&
       <Query
       query={ASSIGN_WORK}
       

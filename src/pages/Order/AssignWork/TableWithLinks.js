@@ -55,16 +55,9 @@ class TableWithLinks extends Component {
                     data-original-title="View Profile"
                     onClick = {e => (assign(CURRENT_USER.branch.id, CURRENT_USER.id, 'TYPE_1'))}
                   >
-                    Phân công loại 1
+                    Phân công
                   </button> &nbsp;
-                    <button 
-                    type="button"
-                    className="btn btn-warning btn-fill btn-wd"
-                    data-original-title="View Profile"
-                    onClick = {e => (assign(CURRENT_USER.branch.id, CURRENT_USER.id,'TYPE_2'))}
-                  >
-                   Phân công loại 2
-                  </button>
+                   
 
           <table className="table table-hover table-striped">
             <thead>
@@ -78,7 +71,7 @@ class TableWithLinks extends Component {
             </thead>
             <tbody>
               {assignWork.length>0?assignWork.map((item,index) => (
-                <tr key={item.id}>
+                <tr key={index}>
                   <td>{index+1}</td>
                   <td>{item.customerName}</td>
                   <td><strong>{item.deliveryDate}</strong> <br>
@@ -111,7 +104,7 @@ class TableWithLinks extends Component {
                       data-original-title="View Profile"
                       to={"/order/assign-work/assigntoWash/"+ item.nodeId}
                      >
-                        Xem
+                        Phân công lại
                     </Link>
                   )}
                   </td>

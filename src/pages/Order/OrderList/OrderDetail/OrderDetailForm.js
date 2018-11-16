@@ -208,8 +208,8 @@ class OrderDetailForm extends Component {
                     <button
                       type="submit"
                       className="btn btn-fill btn-info"
-                      disabled={generateSuccess}
-                      className={(!generateSuccess)? "btn btn-fill btn-info ": "btn btn-fill btn-info hidden"}
+                      disabled={!(customerOrder.status ==="FINISHED_SERVING")}
+                      className={(customerOrder.status ==="FINISHED_SERVING" && !customerOrder.receiptsByOrderId.nodes[0].billsByReceiptId.totalCount===0)? "btn btn-fill btn-info ": "btn btn-fill btn-info hidden"}
                       onClick={e => {
                         e.preventDefault();
                         this.setState({approve: true, decline: false});
@@ -226,8 +226,8 @@ class OrderDetailForm extends Component {
                 <Link
                       type="submit"
                       className="btn  btn-success"
-                      disabled={!(generateSuccess)}
-                      className={(generateSuccess)? "btn btn-success ": "btn btn-success hidden"}
+                      disabled={!(customerOrder.status ==="FINISHED_SERVING" || customerOrder.status ==="FINISHED")}
+                      className={(customerOrder.status ==="FINISHED_SERVING" || customerOrder.status ==="FINISHED")? "btn btn-success ": "btn btn-success hidden"}
                       to={"/order/bill/"+customerOrder.receiptsByOrderId.nodes[0].billsByReceiptId.nodes[0].nodeId}
                     >
                       Xem hóa đơn

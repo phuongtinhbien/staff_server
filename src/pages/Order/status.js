@@ -8,6 +8,8 @@ const PENDING_DELIVERY = "PENDING_DELIVERY";
 const FINISHED = "FINISHED";
 const DECLINED = "DECLINED";
 const DRAFT = "DRAFT";
+const ACTIVE = "ACTIVE";
+const INACTIVE = "INACTIVE";
 
 
 
@@ -41,6 +43,12 @@ function main (status){
     }
     else if (status === DRAFT){
         return "Tạm";
+    }
+    else if (status === ACTIVE){
+        return "Đang hoạt động";
+    }
+    else if (status === INACTIVE){
+        return "Ngưng hoạt động";
     }
 }
 

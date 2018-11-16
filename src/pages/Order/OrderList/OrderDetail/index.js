@@ -5,7 +5,8 @@ import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 import { withRouter } from 'react-router-dom';
 import Error from '../../../Error';
 import OrderDetailForm from './OrderDetailForm';
-import PrintTempalte from "react-print";
+import NotificationSystem from 'react-notification-system';
+import status from './../../status';
 
 const ORDER_DETAIL = gql`query getCustomerOrderByNodeId ($nodeId: ID!){  customerOrder(nodeId: $nodeId){
   nodeId 
@@ -249,7 +250,14 @@ class OrderPending extends Component {
     approve: false,
     decline: false,
   }
-
+  showNotification(message, level) {
+    this.notificationSystem.addNotification({
+      message: message,
+      level: level,
+      autoDismiss: 5,
+      position: "tc"
+    });
+  }
   render() {
     let {match,data,history} = this.props;
     const CURRENT_USER = JSON.parse(localStorage.getItem("luandryStaffPage.curr_staff_desc"));
@@ -290,6 +298,10 @@ class OrderPending extends Component {
 
                     });
                   }}
+                  onCompleted={data=> {
+                  
+                    this.showNotification("Cập nhật thành công " +data.updatestatuscustomerorder.customerOrder.id+" - " + status(data.updatestatuscustomerorder.customerOrder.status), "success") 
+                   }}
                 >
                   {updatestatuscustomerorder => (
                     <frameElement>
@@ -380,6 +392,8 @@ class OrderPending extends Component {
                   
                   )}
                 </Mutation>
+                <NotificationSystem
+                ref={ref => this.notificationSystem = ref} />
         </div>
       </div>
       

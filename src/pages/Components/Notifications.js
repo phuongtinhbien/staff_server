@@ -7,7 +7,7 @@ class Notifications extends Component {
     this.notificationSystem.addNotification({
       message: 'Welcome to Crystal Dashboard - a beautiful React dashboard for everyone.',
       level: 'success',
-      autoDismiss: 0,
+      autoDismiss: 1,
       position
     });
   }

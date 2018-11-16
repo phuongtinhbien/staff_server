@@ -109,7 +109,7 @@ class OrderPending extends Component {
       if (data != null){
 
       return (
-        <OrderTable tableName="Pending Orders" tableDesc="All the list of pending orders" orderList={proccessData(data.allCustomerOrders.nodes)}></OrderTable>
+        <OrderTable tableName="Đơn hàng đang chờ" tableDesc="Bao gồm các đơn hàng có trạng thái đang chờ" orderList={proccessData(data.allCustomerOrders.nodes)}></OrderTable>
       );
       }
     }}

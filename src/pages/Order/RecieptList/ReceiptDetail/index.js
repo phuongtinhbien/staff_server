@@ -176,6 +176,7 @@ mutation updateReceipt ($id: BigFloat!, $pickUp: BigFloat!, $updateDate:Datetime
         id
         nodeId
         recievedAmount
+        deliveryAmount
         status
         amount
         productByProductId{

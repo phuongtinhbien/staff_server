@@ -36,9 +36,10 @@ const proccessData = (data)=>{
         serviceName: data[i].serviceTypeByServiceTypeId != null ? data[i].serviceTypeByServiceTypeId.serviceTypeName:"_",
         amount:data[i].amount,
         receivedAmount: data[i].recievedAmount,
+        deliveryAmount: data[i].deliveryAmount,
         unit: data[i].unitByUnitId != null ? data[i].unitByUnitId.unitName: "_",
         unitPrice:data[i].unitPriceByUnitPrice!= null?  data[i].unitPriceByUnitPrice.price :"_",
-        details: resultDetail(data)
+        details: resultDetail(data[i])
       }
       result.push(row);
   }

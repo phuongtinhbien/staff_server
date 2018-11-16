@@ -9,6 +9,7 @@ import Reciepts from './RecieptList';
 import AssignWorkDetail from './AssignWork/AssignWorkDetail';
 import StaffTask from './StaffTask';
 import Bill  from './Bill';
+import Washer from  './washer';
 const Orders = ({match}) => (
     <div className="content">
        <Route path={`${match.url}/reciept-list`} component={Reciepts} />
@@ -17,6 +18,7 @@ const Orders = ({match}) => (
         <Route  path={`${match.url}/create-order`} component={CreateOrder} />
         <Route  path={`${match.url}/staff-task`} component={StaffTask} />
         <Route  path={`${match.url}/bill/:nodeId`} component={Bill} />
+        <Route  path={`${match.url}/washer`} component={Washer} />
         <Switch>
             <Route exact path={`${match.url}/assign-work`} component={AssignWork} /> 
             <Route   path={`${match.url}/assign-work/assign/:nodeId`} component={Assign} /> 
