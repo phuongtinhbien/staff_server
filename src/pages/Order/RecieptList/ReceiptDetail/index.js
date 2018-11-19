@@ -6,6 +6,8 @@ import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 import { Link, withRouter } from 'react-router-dom';
 import Error from '../../../Error';
 import ReceiptForm from './OrderDetailForm';
+import NotificationSystem from 'react-notification-system';
+import status from './../../status';
 
 const RECEIPT_DETAIL = gql`query getCustomerReceiptByNodeId($nodeId: ID!) {
   receipt(nodeId: $nodeId) {
@@ -96,7 +98,12 @@ const RECEIPT_DETAIL = gql`query getCustomerReceiptByNodeId($nodeId: ID!) {
         serviceTypeByServiceTypeId{
           id
           serviceTypeName
-        }  
+        }
+        unitPriceByUnitPrice{
+        id
+        price
+        nodeId
+      }  
       }
     }
   }
@@ -415,6 +422,14 @@ const UPDATE_RECEIPT_MUT= gql`mutation updatestatusreceipt($rId: BigFloat!, $pSt
 
 class ReceiptPending extends Component {
 
+  showNotification(message, level) {
+    this.notificationSystem.addNotification({
+      message: message,
+      level: level,
+      autoDismiss: 5,
+      position: "tc"
+    });
+  }
   render() {
     let {match,data} = this.props;
     const CURRENT_USER = JSON.parse(localStorage.getItem("luandryStaffPage.curr_staff_desc"));
@@ -453,6 +468,11 @@ class ReceiptPending extends Component {
 
                     });
                   }}
+                  onCompleted={data=> {
+                  
+                    this.showNotification("Cập nhật thành công " +data.receipt.id+" - " + status(data.receipt.status), "success") 
+                   }}
+                   onError={error => this.showNotification(error.message, "error")}
                 >
                   {assignPickUp=>(
                     <button
@@ -568,6 +588,8 @@ class ReceiptPending extends Component {
               
                   
                 </div>
+                <NotificationSystem
+                ref={ref => this.notificationSystem = ref} />
               </div>
 
       );

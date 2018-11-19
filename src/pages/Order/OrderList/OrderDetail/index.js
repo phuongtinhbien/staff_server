@@ -17,7 +17,10 @@ const ORDER_DETAIL = gql`query getCustomerOrderByNodeId ($nodeId: ID!){  custome
   tasksByCustomerOrder(condition:{previousTask:"N"}){
       nodes{
         id
-        currentStaff
+        staffByCurrentStaff{
+          id
+          fullName
+        }
       }
     }
   receiptsByOrderId{
@@ -139,6 +142,15 @@ const UPDATE_ORDER_MUT = gql`mutation updateCustomerOrder( $coId: BigFloat!,  $p
   status 
   pickUpPlace
   deliveryPlace
+  tasksByCustomerOrder(condition:{previousTask:"N"}){
+      nodes{
+        id
+        staffByCurrentStaff{
+          id
+          fullName
+        }
+      }
+    }
   receiptsByOrderId{
     nodes{
       id
@@ -268,7 +280,7 @@ class OrderPending extends Component {
         <div className="header"></div>
             <Query     
       query={ORDER_DETAIL}
-      fetchPolicy={"network-only"}
+      // fetchPolicy={"network-only"}
       variables = {{nodeId:match.params.nodeId }}
 
     >{({ loading, error, data, refetch }) => {
@@ -289,19 +301,20 @@ class OrderPending extends Component {
             
             <Mutation
                   mutation={UPDATE_ORDER_MUT}
-                  update={(cache, { data: { updatestatuscustomerorder:{customerOrder1} } }) => {
-                    const { customerOrder } = cache.readQuery({ query: ORDER_DETAIL });
+                  update={(cache, { data: { updatestatuscustomerorder:{customerOrder} } }) => {
+                    // const { customerOrder } = cache.readQuery({ query: ORDER_DETAIL });
                     cache.writeQuery({
                       query: ORDER_DETAIL,
                       variables:{nodeId:match.params.nodeId },
-                      data: { customerOrder: customerOrder.concat(customerOrder1) }
+                      data: { customerOrder: customerOrder }
 
                     });
                   }}
                   onCompleted={data=> {
                   
-                    this.showNotification("Cập nhật thành công " +data.updatestatuscustomerorder.customerOrder.id+" - " + status(data.updatestatuscustomerorder.customerOrder.status), "success") 
+                    this.showNotification("Cập nhật thành công đơn hàng số " +data.updatestatuscustomerorder.customerOrder.id+" - " + status(data.updatestatuscustomerorder.customerOrder.status), "success") 
                    }}
+                   onError={error => this.showNotification(error.message, "error")}
                 >
                   {updatestatuscustomerorder => (
                     <frameElement>
@@ -315,6 +328,7 @@ class OrderPending extends Component {
                         onClick={e => {
                           e.preventDefault();
                           this.setState({approve: true, decline: false});
+                          window.location.reload();
                           updatestatuscustomerorder({variables:{coId: data.customerOrder.id, pStatus:"PENDING", pUser: CURRENT_USER.id}});
                         }}
                       >
@@ -328,6 +342,7 @@ class OrderPending extends Component {
                         onClick={e => {
                           e.preventDefault();
                           this.setState({approve: true, decline: false});
+                          window.location.reload();
                           updatestatuscustomerorder({variables:{coId: data.customerOrder.id, pStatus:"APPROVED", pUser: CURRENT_USER.id}});
                         }}
                       >
@@ -342,6 +357,7 @@ class OrderPending extends Component {
                         onClick={e => {
                           e.preventDefault();
                           this.setState({approve: true, decline: false});
+                          window.location.reload();
                           updatestatuscustomerorder({variables:{coId: data.customerOrder.id, pStatus:"SERVING", pUser: CURRENT_USER.id}});
                         }}
                       >
@@ -349,7 +365,7 @@ class OrderPending extends Component {
                       </button>}
                       &nbsp;
                       &nbsp;
-                      {CURRENT_USER.staffType.staffCode ==='STAFF_02' && data.customerOrder.tasksByCustomerOrder.nodes[0].currentStaff === CURRENT_USER.id &&
+                      {CURRENT_USER.staffType.staffCode ==='STAFF_02' && data.customerOrder.tasksByCustomerOrder.nodes[0].staffByCurrentStaff.id === CURRENT_USER.id &&
                       <button
                         type="submit"
                         className="btn btn-fill btn-info"
@@ -358,6 +374,7 @@ class OrderPending extends Component {
                         onClick={e => {
                           e.preventDefault();
                           this.setState({approve: true, decline: false});
+                          window.location.reload();
                           updatestatuscustomerorder({variables:{coId: data.customerOrder.id, pStatus:"FINISHED_SERVING", pUser: CURRENT_USER.id}});
                         }}
                       >
@@ -374,6 +391,7 @@ class OrderPending extends Component {
                       onClick={e => {
                         e.preventDefault();
                         this.setState({approve: false, decline: true});
+                        window.location.reload();
                         updatestatuscustomerorder({variables:{coId: data.customerOrder.id, pStatus:"DECLINED", pUser: CURRENT_USER.id}});
                       }}
                     >

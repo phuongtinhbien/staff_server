@@ -113,7 +113,7 @@ class OrderTable extends Component {
       nextPage: 'Next',
       firstPage: 'First',
       lastPage: 'Last',
-      
+      noDataText: "Không có dữ liệu",
       hideSizePerPage: true,
       clearSearch: true,
       afterDeleteRow: onAfterDeleteRow,
@@ -150,12 +150,12 @@ class OrderTable extends Component {
                     STT
                   </TableHeaderColumn>
                   <TableHeaderColumn
-                    dataField='nodeId'
+                    dataField='cusstomerOrderId'
                     width="7%"
                     isKey
-                    hidden
+                    
                    >
-                    ID
+                    Mã ĐH
                   </TableHeaderColumn>
                   <TableHeaderColumn
                     dataField='branch'

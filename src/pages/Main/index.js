@@ -174,8 +174,8 @@ const PrivateMain = ({mobileNavVisibility,
                               <PrivateRoute  path="/forms" component={Forms} />
                               <PrivateRoute  path="/tables" component={Tables} />
                   
-                              <PrivateRoute  path="/charts" component={Charts} />
-                              <PrivateRoute  path="/calendar" component={Calendar} />
+                              {/* <PrivateRoute  path="/charts" component={Charts} /> */}
+                              {/* <PrivateRoute  path="/calendar" component={Calendar} /> */}
                               <PrivateRoute  path="/userProfile" component={UserProfile} />
                               <PrivateRoute  path="/order" component={Orders} />
   
@@ -207,8 +207,8 @@ const PrivateMain = ({mobileNavVisibility,
                             <PrivateRoute  path="/forms" component={Forms} />
                             <PrivateRoute  path="/tables" component={Tables} />
                 
-                            <PrivateRoute  path="/charts" component={Charts} />
-                            <PrivateRoute  path="/calendar" component={Calendar} />
+                            {/* <PrivateRoute  path="/charts" component={Charts} />
+                            <PrivateRoute  path="/calendar" component={Calendar} /> */}
                             <PrivateRoute  path="/userProfile" component={UserProfile} />
                             <PrivateRoute  path="/order" component={Orders} />
                                 

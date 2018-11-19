@@ -8,7 +8,7 @@ import OrderDetailTable from './OrderDetailTable';
 import status from './../../status';
 import gql from "graphql-tag";
 import { Mutation, Query } from 'react-apollo';
-
+import NotificationSystem from 'react-notification-system';
 
 
 const resultDetail = (data) =>{
@@ -71,6 +71,14 @@ class OrderDetailForm extends Component {
     generateSuccess: false,
   
   };
+  showNotification(message, level) {
+    this.notificationSystem.addNotification({
+      message: message,
+      level: level,
+      autoDismiss: 5,
+      position: "tc"
+    });
+  }
   render () {
     
     let {customerOrder} = this.props;
@@ -82,7 +90,7 @@ class OrderDetailForm extends Component {
               
               <legend>
               <div style={{justifyContent: "space-between"}}>
-                <span>Thông tin đơn hàng - {customerOrder&& customerOrder.id} <span className="badge badge-warning">{status(customerOrder.status)}</span> &nbsp;&nbsp;&nbsp;</span>
+                <span>Thông tin đơn hàng - {customerOrder&& customerOrder.id} <span className="badge badge-warning">{customerOrder && status(customerOrder.status)} {customerOrder && customerOrder.tasksByCustomerOrder.nodes[0] && " - " + customerOrder.tasksByCustomerOrder.nodes[0].staffByCurrentStaff.fullName}</span> &nbsp;&nbsp;&nbsp;</span>
                 {customerOrder.receiptsByOrderId.nodes[0] && <Link className="btn btn-warning btn-sm" to={"/order/reciept-list/view/"+customerOrder.receiptsByOrderId.nodes[0].nodeId}>Xem biên nhận</Link>}
               </div>
               </legend>
@@ -200,7 +208,11 @@ class OrderDetailForm extends Component {
             {customerOrder.receiptsByOrderId.nodes[0] && (customerOrder.receiptsByOrderId.nodes[0].billsByReceiptId.totalCount ===0? 
             <Mutation
                   mutation={GENERATE_BILL}
-                  onCompleted = {data => data?this.setState({generateSuccess: true}):null }
+                  onCompleted={data=> {
+                  
+                    this.showNotification("Tạo hóa đơn thành công") 
+                   }}
+                   onError={error => this.showNotification(error.message, "error")}
                 >
                   {generateBill => (
                      <div className="text-center">
@@ -209,11 +221,12 @@ class OrderDetailForm extends Component {
                       type="submit"
                       className="btn btn-fill btn-info"
                       disabled={!(customerOrder.status ==="FINISHED_SERVING")}
-                      className={(customerOrder.status ==="FINISHED_SERVING" && !customerOrder.receiptsByOrderId.nodes[0].billsByReceiptId.totalCount===0)? "btn btn-fill btn-info ": "btn btn-fill btn-info hidden"}
+                      className={(customerOrder.status ==="FINISHED_SERVING")? "btn btn-fill btn-info ": "btn btn-fill btn-info hidden"}
                       onClick={e => {
                         e.preventDefault();
                         this.setState({approve: true, decline: false});
                         generateBill({variables:{coId: customerOrder.id, currUser: CURRENT_USER.id}});
+                      
                       }}
                     >
                       Tạo hóa đơn
@@ -228,7 +241,7 @@ class OrderDetailForm extends Component {
                       className="btn  btn-success"
                       disabled={!(customerOrder.status ==="FINISHED_SERVING" || customerOrder.status ==="FINISHED")}
                       className={(customerOrder.status ==="FINISHED_SERVING" || customerOrder.status ==="FINISHED")? "btn btn-success ": "btn btn-success hidden"}
-                      to={"/order/bill/"+customerOrder.receiptsByOrderId.nodes[0].billsByReceiptId.nodes[0].nodeId}
+                      to={"/order/bill/view/"+customerOrder.receiptsByOrderId.nodes[0].billsByReceiptId.nodes[0].nodeId}
                     >
                       Xem hóa đơn
             </Link></div>) }
@@ -239,7 +252,8 @@ class OrderDetailForm extends Component {
                 <OrderDetailTable orderDetailList={proccessData(customerOrder.orderDetailsByOrderId.nodes)}></OrderDetailTable>
               </div>
             </fieldset>
-          
+            <NotificationSystem
+                ref={ref => this.notificationSystem = ref} />
           </form>
 
       );

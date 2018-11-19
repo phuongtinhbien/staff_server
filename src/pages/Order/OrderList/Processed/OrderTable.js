@@ -147,6 +147,13 @@ class OrderTable extends Component {
                    >
                     ID
                   </TableHeaderColumn>
+                  <TableHeaderColumn
+                    dataField='id'
+                    width="7%"
+          
+                   >
+                    Mã ĐH
+                  </TableHeaderColumn>
                   {/* <TableHeaderColumn
                     dataField='branch'
                     width="20%"

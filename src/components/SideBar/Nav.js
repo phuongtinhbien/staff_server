@@ -89,7 +89,7 @@ class Nav extends Component {
             </div>
           </Collapse>
         </li>
-        <li className={this.isPathActive('/charts') ? 'active' : null}>
+        <li className={this.isPathActive('/order/washer') ? 'active' : null}>
           <Link to="/order/washer">
             <i className="pe-7s-config"></i>
             <p>Máy giặt</p>

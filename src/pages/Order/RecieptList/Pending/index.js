@@ -52,6 +52,7 @@ const proccessData = (pdata)=>{
       row = {
         sn: i+1,
         nodeId: data.nodeId,
+        id: data.id,
         customerName: data.customerOrderByOrderId.customerByCustomerId.fullName,
         deliveryDate: data.customerOrderByOrderId.deliveryDate,
         deliveryTime: data.customerOrderByOrderId.timeScheduleByDeliveryTimeId.timeStart + " - " +data.customerOrderByOrderId.timeScheduleByDeliveryTimeId.timeEnd,
@@ -89,7 +90,7 @@ class ReceiptPending extends Component {
       if (data != null){
 
       return (
-        <ReceiptTable tableName="Pending Receipts" tableDesc="All the list of pending receipts" orderList={proccessData(data.allTasks.nodes)}></ReceiptTable>
+        <ReceiptTable tableName="Biên nhận chờ lấy đồ" tableDesc="Tất cả biên nhận đang chờ lấy đồ" orderList={proccessData(data.allTasks.nodes)}></ReceiptTable>
       );
       }
     }}

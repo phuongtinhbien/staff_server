@@ -5,6 +5,7 @@ import status from '../status';
 import { Mutation } from 'react-apollo';
 import NotificationSystem from 'react-notification-system';
 import { Link} from 'react-router-dom';
+import assign from '../AssignWork/AssignToWash/assign';
 
 const UPDATE_WASHER_STATUS = gql`mutation updateStatusWasher ($id:BigFloat!, $status: String!){
   updateWashingMachineById(input:{
@@ -48,6 +49,7 @@ class TableWithSwitch extends Component {
   render() {
     let {washer,history} = this.props;
     let {success} = this.state;
+    let CURRENT_USER = JSON.parse(localStorage.getItem("luandryStaffPage.curr_staff_desc"));
     console.log(washer);
     return (
       <div className="card">
@@ -69,7 +71,7 @@ class TableWithSwitch extends Component {
             <tbody>
               {washer.map((item,index)=> (
                 <tr key={item.id}>
-                  <td>{index}</td>
+                  <td>{index+1}</td>
                   <td><Link rel="tooltip"
                       className="btn btn-success btn-fill btn-sm btn-xs"
                       data-original-title="View Profile" to={"assign-work/assignWorkDetail/"+item.washerCode}><strong>{item.washerCode}</strong> </Link></td>
@@ -79,15 +81,16 @@ class TableWithSwitch extends Component {
                     mutation={UPDATE_WASHER_STATUS}
                     onCompleted={data=> {
                   
-                      this.showNotification("Cập nhật thành công " + data.updateWashingMachineById.washingMachine.washerCode, "success") 
+                      this.showNotification("Cập nhật thành công " + data.updateWashingMachineById.washingMachine.washerCode, "success") ;
+                      if (data.updateWashingMachineById.washingMachine.status ==="INACTIVE")
+                        assign(CURRENT_USER.branch.id, CURRENT_USER.id)
                      }}
                     onError={error => this.showNotification(error.message, "error")}
-
                   >
                   {
                     (updateStatusWasher) =>(
                     <div>
-                      <Switch value={item.status==="ACTIVE"?true: false}  onChange={() => {updateStatusWasher({variables:{id:item.id, status: item.status ==="ACTIVE"?"INACTIVE":"ACTIVE" }});
+                      <Switch value={item.status==="ACTIVE"?true: false}   onChange={() => {updateStatusWasher({variables:{id:item.id, status: item.status ==="ACTIVE"?"INACTIVE":"ACTIVE" }});
                      }} />
                       
                     </div>

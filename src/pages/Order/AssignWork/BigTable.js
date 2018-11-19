@@ -32,7 +32,7 @@ const BigTable = ({allWash,washer}) => (
   }
   return 0;
 }).filter(value => value.washerCode === washerItem.washerCode ).map((item, index) =>(
-       <tr key={index}>
+       <tr key={index+1}>
          <td>{index+1}</td>
          <td>{item.washerCode} - <span rel="tooltip"
                  className="btn btn-danger btn-fill btn-xs"

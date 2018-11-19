@@ -7,8 +7,8 @@ import { withRouter } from 'react-router-dom';
 import { formValueSelector } from 'redux-form';
 import Error from '../../Error';
 import CreateOrderForm from './CreateOrderForm';
-
-
+import NotificationSystem from 'react-notification-system';
+import moment from 'moment';
 
 
 const OPTION_LIST = gql `query optionList {
@@ -98,9 +98,10 @@ const optionValue = (val,lab )=>{
 
 const processTime =  (data)=>{
   let res=[];
+  let timeNow = moment();
   if (data!= null){
   for (let i = 0; i<data.length;i++){
-
+    // if (timeNow>= data[i].timeStart && timeNow <= data[i].timeEnd)
     res.push(optionValue(data[i].id, `${data[i].timeScheduleNo} (${data[i].timeStart} - ${data[i].timeEnd})`));
   }
 }
@@ -154,7 +155,7 @@ const handleCreateOrder = ( createCusOrderAndDetail,values, errorCreate, success
   console.log(OrderDetailInputs)
   createCusOrderAndDetail({variables:{cus:CustomerInput, o:CustomerOrderInput,d:OrderDetailInputs }});
 
-  alert(JSON.stringify({cus:CustomerInput, o:CustomerOrderInput,d:OrderDetailInputs }));
+  // alert(JSON.stringify({cus:CustomerInput, o:CustomerOrderInput,d:OrderDetailInputs }));
 
 }
 
@@ -175,14 +176,22 @@ class CreateOrder extends Component {
     errorCreate: null,
     success: null
   }
+  showNotification(message, level) {
+    this.notificationSystem.addNotification({
+      message: message,
+      level: level,
+      autoDismiss: 1,
+      position: "tc"
+    });
+  }
 
   render() {
     let {match,data,history} = this.props;
     let {errorCreate,success} = this.state;
   const CURRENT_USER = JSON.parse(localStorage.getItem("luandryStaffPage.curr_staff_desc"));
     let timeSchedule;
-    // console.log(this.props);
-    console.log(this.props)
+    console.log(this.props);
+    console.log(this.state)
     return (
       <div className="container-fluid">
       <div className="card">
@@ -204,15 +213,12 @@ class CreateOrder extends Component {
                     return  (
                        <Mutation
                                 mutation={CREATE_ORDER}
-                                onCompleted={data=> {handleOnCompleted(data,history);
-                                  this.setState({success: "Create successfully"})
-                                }}
-                                onError={error => {
-                                 console.log(error)
-                                  this.setState({
-                                      errorCreate: "Can't create new order"
-                                  });
-                              }}
+                                onCompleted={data=> {
+                  
+                                  this.showNotification("Tạo đơn hàng mới thành công", "success") 
+                                  handleOnCompleted(data,history)
+                                 }}
+                                onError={error => this.showNotification(error.message, "error")}
                               >
                               {
                                 (createCusOrderAndDetail) =>(
@@ -238,7 +244,8 @@ class CreateOrder extends Component {
                 </Query>
 
           <div className="row">
-           
+           <NotificationSystem
+                ref={ref => this.notificationSystem = ref} />
            </div>
       </div>
     </div>

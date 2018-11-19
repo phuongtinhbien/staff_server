@@ -69,6 +69,7 @@ const proccessData = (data)=>{
       row = {
         sn: i+1,
         nodeId: data[i].nodeId,
+        id: data.id,
         customerName: data[i].customerByCustomerId.fullName,
         branch: data[i].branchByBranchId.branchName.replace("CHI NHANH ",""),
         deliveryDate: data[i].deliveryDate,

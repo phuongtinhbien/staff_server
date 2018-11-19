@@ -264,6 +264,7 @@ class ReceiptUpdate extends Component {
           <Query     
             query={RECEIPT_DETAIL}
             variables = {{nodeId:match.params.nodeId }}
+            fetchPolicy={"network-only"}
 
           >{({ loading, error, data, refetch }) => {
             

@@ -32,6 +32,7 @@ const TextInput = ({
     { helpText &&
       <span className="help-block">{helpText}</span>
     }
+    
   </div>
 );
 

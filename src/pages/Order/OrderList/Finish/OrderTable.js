@@ -103,7 +103,7 @@ class OrderTable extends Component {
       nextPage: 'Next',
       firstPage: 'First',
       lastPage: 'Last',
-      
+      noDataText: "Không có dữ liệu",
       hideSizePerPage: true,
       clearSearch: true,
       afterDeleteRow: onAfterDeleteRow,
@@ -146,6 +146,12 @@ class OrderTable extends Component {
                     hidden
                    >
                     ID
+                  </TableHeaderColumn>
+                  <TableHeaderColumn
+                    dataField='id'
+                    width="7%"
+                   >
+                    Mã ĐH
                   </TableHeaderColumn>
                   <TableHeaderColumn
                     dataField='branch'

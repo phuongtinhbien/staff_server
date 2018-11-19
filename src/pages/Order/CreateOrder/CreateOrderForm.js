@@ -1,96 +1,97 @@
-
 import renderField from 'components/FormInputs/renderField';
-import gql from "graphql-tag";
+import gql, { resetCaches } from "graphql-tag";
 import _ from 'lodash';
 import moment from 'moment';
 import React, { Component } from 'react';
 import { Query } from 'react-apollo';
-import { Field, FieldArray, reduxForm } from 'redux-form';
+import { connect } from 'react-redux';
+import { Field, FieldArray, reduxForm,formValueSelector, initialize } from 'redux-form';
 import Error from '../../Error';
 import ItemCloth from './ItemCloth';
+import NotificationSystem from 'react-notification-system';
 
 const validate = values => {
   const errors = {};
   if (!values.email) {
-    errors.email = 'Email is required';
+    errors.email = 'Bắt buộc';
   } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(values.email)) {
-    errors.email = 'Invalid email address'
+    errors.email = 'Email chưa đúng'
   }
   if (!values.fullName) {
-    errors.fullName = 'Full name is required';
+    errors.fullName = 'Bắt buộc';
   } else if (values.fullName.length < 6) {
-    errors.fullName = 'Must be 6 characters or more';
+    errors.fullName = 'Ít nhất 6 kí tự';
   }
   if (!values.phoneNumber) {
-    errors.phoneNumber = 'Phone number is required';
+    errors.phoneNumber = 'Bắt buộc';
   } else if (values.phoneNumber.length < 10) {
-    errors.phoneNumber = 'Must be 10 characters or more';
+    errors.phoneNumber = 'Chưa đúng định dạng';
   }
   // if (!values.address) {
   //   errors.address = 'Address is required';
   // }
 
   if (!values.pickUpDate){
-    errors.pickUpDate = 'Pick up date is required';
+    errors.pickUpDate = 'Bắt buộc';
   }
   if (!values.deliveryDate){
-    errors.deliveryDate = 'Delivery date is required';
+    errors.deliveryDate = 'Bắt buộc';
   }
   else if ( !(values.pickUpDate && (values.deliveryDate>= values.pickUpDate ))){
-     errors.deliveryDate = " Choose delivery date again!!!"
+     errors.deliveryDate = "Chọn lại thời gian"
   }
   
   if (!values.pickUpTime){
-    errors.pickUpTime = 'Pick up time is required';
+    errors.pickUpTime = 'Bắt buộc';
   }
   if (!values.deliveryTime){
-    errors.deliveryTime = 'Delivery time is required';
+    errors.deliveryTime = 'Bắt buộc';
   }
   else if (values.pickUpDate && values.deliveryDate && values.pickUpDate == values.deliveryDate && !(values.pickUpTime && (values.deliveryTime.value > values.pickUpTime.value ))){
-    errors.deliveryTime = " Choose delivery time again!!!"
+    errors.deliveryTime = " Chọn lại thời gian"
   }
 
 
   if (!values.pickUpPlace) {
-    errors.pickUpPlace = 'Pick up place is required';
+    errors.pickUpPlace = 'Bắt buộc';
   } else if (values.pickUpPlace.length < 30) {
-    errors.pickUpPlace = 'Must be 30 characters or more';
+    errors.pickUpPlace = 'Ít nhất 30 kí tự';
   }
   if (!values.deliveryPlace) {
-    errors.deliveryPlace = 'Delivery place is required';
+    errors.deliveryPlace = 'Ít nhất 30 kí tự';
   } else if (values.deliveryPlace.length < 30) {
-    errors.deliveryPlace = 'Must be 30 characters or more';
+    errors.deliveryPlace = 'Ít nhất 30 kí tự';
   }
 
   if (!values.customerOrderDetail || !values.customerOrderDetail.length) {
-    errors.customerOrderDetail = { _error: 'At least one item must be entered'}
+    errors.customerOrderDetail = { _error: 'Thêm ít nhất một quần áo'}
   }
   else {
     const customerOrderDetailArrayErrors = []
     values.customerOrderDetail.forEach((item, itemIndex) => {
       const itemErrors = {}
       if (!item || !item.serviceTypeId) {
-        itemErrors.serviceTypeId = 'Required'
+        itemErrors.serviceTypeId = 'Bắt buộc'
         customerOrderDetailArrayErrors[itemIndex] = itemErrors
       }
       if (!item || !item.productId) {
-        itemErrors.productId = 'Required'
+        itemErrors.productId = 'Bắt buộc'
         customerOrderDetailArrayErrors[itemIndex] = itemErrors
       }
       if (!item || !item.productId) {
-        itemErrors.productId = 'Required'
+        itemErrors.productId = 'Bắt buộc'
         customerOrderDetailArrayErrors[itemIndex] = itemErrors
       }
       if (!item || !item.unitId) {
-        itemErrors.unitId = 'Required'
+        itemErrors.unitId = 'Bắt buộc'
         customerOrderDetailArrayErrors[itemIndex] = itemErrors
       }
       if (!item || !item.amount) {
-        itemErrors.amount = 'Required'
+        itemErrors.amount = 'Bắt buộc'
         customerOrderDetailArrayErrors[itemIndex] = itemErrors
       }
       else if (item.amount && _.isNaN(item.amount)) {
-        itemErrors.amount = 'Please enter a number';
+        itemErrors.amount = 'Nhập một số';
         customerOrderDetailArrayErrors[itemIndex] = itemErrors
       }
 
@@ -157,8 +158,30 @@ return res;
 
 }
 
+const CUS_INFO = gql`query getCustomerInfo ($email: String!){
+  allCustomers(condition: {
+    email: $email
+  }){
+    nodes{
+      id
+      fullName
+      phone
+    }
+  }
+}
+`;
 
+const TIME_DELIVERY = gql`query getMinTimeforHanlde ($brId: BigFloat!){
+  getMinTimeForHandle(brId:$brId)
+}
+`;
 
+const func_delivery = (pickUpDate, pickUpTime, aware_time, timeSchedule)=>{
+  let deliveryDate;
+  let deliveryTime;
+
+  return [deliveryDate,deliveryTime]
+}
 
 
 class CreateOrder extends Component {
@@ -169,17 +192,26 @@ class CreateOrder extends Component {
     endDate: moment(),
     dateRangeFocusedInput: null,
     viewMode: false,
-    focused1: null
+    focused1: null,
+    timeforDelivery: null
   
   };
+
+  showNotification(message, level) {
+    this.notificationSystem.addNotification({
+      message: message,
+      level: level,
+      autoDismiss: 1,
+      position: "tc"
+    });
+  }
   render () {
     let { date, date1 } = this.state;
     let {timeSchedule, branch, optionListDetail,  submitting,
+      hasEmailValue, haspickUpDate,
       handleSubmit,} = this.props;
-    function approveFunction(customerOrder){
-      alert(customerOrder.toString());
-    };
-
+  
+      console.log(this.props)
       return(
 
           <form className="form-horizontal" onSubmit={handleSubmit} >
@@ -193,22 +225,47 @@ class CreateOrder extends Component {
               </legend>
               
               <div className="row">
+              
+              <Query query={CUS_INFO} 
+              variables={{email: hasEmailValue?hasEmailValue: ''}}
+              fetchPolicy={"network-only"}
+              onError={error => this.showNotification(error.message, "error")}
+              onCompleted={data => { if (data.allCustomers.nodes[0] != null){
+                this.props.dispatch(initialize('CreateOrder',{
+                  fullName: data.allCustomers.nodes[0].fullName,
+                  phoneNumber: data.allCustomers.nodes[0].phone
+                },{keepValues: true}));
+                
+              }}}
+              fetchPolicy={"network-only"}>
+              {
+                ({loading,data,error, refetch})=>{
+                  if (loading) return null;
+                  if (error){
+                    return (<Error errorContent= {error.message}></Error>);
+                  }
+                return (
+                  <div></div>
+            )
+              }
+            }
+              </Query>
                 <div className="col-sm-6 ">
                   <label className="control-label col-md-4">Họ tên</label>
                   <div className=" control-label col-md-8" style={{textAlign:"left"}}>
-                  <Field
-                    name="fullName"
-                    type="text"
-                    placeholder="Enter customer's name"
-                    component={renderField}
-                    />
+                    <Field
+                      name="fullName"
+                      type="text"
+                      placeholder="Họ tên khách hàng"
+                      component={renderField}
+                      />
                   </div>
                   <label className="control-label col-md-4">Số điện thoại</label>
                   <div className=" control-label col-md-8" style={{textAlign:"left"}}>
                   <Field
                     name="phoneNumber"
                     type="text"
-                    placeholder="Enter customer's phone"
+                    placeholder="Số điện thoại"
                     component={renderField}
                     />
                   </div>
@@ -219,7 +276,7 @@ class CreateOrder extends Component {
                   <Field
                     name="email"
                     type="text"
-                    placeholder="Enter customer's email"
+                    placeholder="Email"
                     component={renderField}
                     />
                   </div>
@@ -251,7 +308,7 @@ class CreateOrder extends Component {
                     disabled = "true"
                     inputClassName=" hidden"
                     value={branch.id}
-                    placeholder="Enter customer's address"
+                    placeholder="Địa chỉ"
                     component={renderField}
                     />
                     <span>{branch.branchName}</span>
@@ -308,6 +365,7 @@ class CreateOrder extends Component {
                         type="select"
                         placeholder="Chọn khung giờ"
                         options={this.props.timeSchedule}
+                        selectedValue={this.props.timeSchedule[1]}
                         component={renderField}
                         />
                     
@@ -322,7 +380,7 @@ class CreateOrder extends Component {
                     name="pickUpPlace"
                     type="text"
                     
-                    placeholder="Enter address pick up"
+                    placeholder="Nơi lấy đồ"
                     component={renderField}
                     />
                     </div>
@@ -333,7 +391,7 @@ class CreateOrder extends Component {
                     <Field
                     name="deliveryPlace"
                     type="text"
-                    placeholder="Enter address delivery"
+                    placeholder="Nơi trả đồ"
                     component={renderField}
                     />
                     </div>
@@ -392,14 +450,34 @@ class CreateOrder extends Component {
                 </Query>
               
             </fieldset>
-          
+            <NotificationSystem
+                ref={ref => this.notificationSystem = ref} />
           </form>
       );
   }
 }
 
-export default reduxForm({
+CreateOrder = reduxForm({
   form: 'CreateOrder',
   validate,
-    
-})(CreateOrder);
+
+})(CreateOrder)
+
+const selector = formValueSelector('CreateOrder') // <-- same as form name
+CreateOrder = connect(
+  state => {
+    // can select values individually
+    const hasEmailValue = selector(state, 'email')
+    const hasPickUpDate = selector(state, 'pickUpDate')
+    const hasPickUpTime = selector(state, 'pickUpTime')
+    // or together as a group
+    // const { firstName, lastName } = selector(state, 'firstName', 'lastName')
+    return {
+      hasEmailValue,
+      hasPickUpDate,
+      hasPickUpTime
+
+    }
+  }
+)(CreateOrder)
+export default (CreateOrder);

@@ -101,21 +101,21 @@ const SortCloth = ({ fields, receiptDetail,serviceArrays,  meta: { error, submit
                         />
                     </td>
                     <td>
-                      <span><strong>- Label : </strong><Field
+                      <span><strong>- Nhãn hiệu : </strong><Field
                           name={`${item}.labelName`}
                           type="text"
                           disabled="true"
                           viewMode ={true}
                           component={renderField}
                         /></span>
-                      <span><strong>- Material :</strong>  <Field
+                      <span><strong>- Chất liệu :</strong>  <Field
                           name={`${item}.materialName`}
                           type="text"
                           disabled="true"
                           viewMode ={true}
                           component={renderField}
                         /></span>
-                      <span><strong>- ColorName :</strong>  <Field
+                      <span><strong>- Màu sắc :</strong>  <Field
                           name={`${item}.colorName`}
                           type="text"
                           disabled="true"

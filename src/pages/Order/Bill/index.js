@@ -2,9 +2,10 @@ import gql from "graphql-tag";
 import React, { Component } from 'react';
 import { Mutation, Query } from 'react-apollo';
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
-import { withRouter } from 'react-router-dom';
+import { withRouter,Link } from 'react-router-dom';
 import Error from './../../Error';
 import OrderDetailForm from './OrderDetailForm';
+
 import ReactToPrint from 'react-to-print';
 
 const BILL_DETAIL = gql`query billDetail($nodeId: ID!) {
@@ -12,6 +13,7 @@ const BILL_DETAIL = gql`query billDetail($nodeId: ID!) {
     nodeId
     id
     createDate
+    status
     staffByCreateBy{
         nodeId
         fullName
@@ -78,6 +80,7 @@ const BILL_DETAIL = gql`query billDetail($nodeId: ID!) {
           }
         }
         note
+        receivedAmount
         amount
         unitPriceByUnitPrice {
           id
@@ -121,20 +124,30 @@ class Billing extends Component {
       return (
         <div className="content">
           <OrderDetailForm  bill={data.bill} ref={el => (this.componentRef = el)}></OrderDetailForm>
-          <ReactToPrint
-          pageStyle={"margin:'20px'"}
-          trigger={() => <div className="text-center">
-          {CURRENT_USER.staffType.staffCode ==='STAFF_01' &&
-          <button
-            type="button"
-            className="btn btn-fill btn-success"
-          >
-            In hóa đơn
-          </button>
-        }
-         </div>}
-          content={() => this.componentRef}
-        />
+           <div className="text-center">
+           {CURRENT_USER.staffType.staffCode ==='STAFF_01' &&<ReactToPrint
+              pageStyle={"margin:'20px'"}
+              trigger={() => 
+              
+              
+              <button
+                type="button"
+                className="btn btn-fill btn-success"
+              >
+                In hóa đơn
+              </button>
+            }
+          
+              content={() => this.componentRef}
+          />} &nbsp;
+            <Link
+            to={"/order/bill/edit/"+match.params.nodeId}
+              type="button"
+              className="btn btn-fill btn-warning"
+            >
+              Cập nhật hóa đơn
+            </Link>
+          </div>
       </div>
       
         

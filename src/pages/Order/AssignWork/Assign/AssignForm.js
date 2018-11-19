@@ -184,7 +184,7 @@ class AssignForm extends Component {
                   type="submit"
                       className={"btn btn-fill btn-success btn-wd"}
                       >
-                    Save
+                    Lưu lại
                   </button>
                 </div>
                

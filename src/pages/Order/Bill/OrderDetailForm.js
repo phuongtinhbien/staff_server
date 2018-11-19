@@ -144,7 +144,8 @@ class OrderDetailForm extends Component {
                       <th>Quần áo</th>
                       <th className="text-right">ĐVT</th>
                       <th className="text-right">Đơn giá</th>
-                      <th className="text-right">Số lượng/ Khối lượng</th>
+                      <th className="text-right">Số lượng/ Khối lượng đã nhận</th>
+                      <th className="text-right">Số lượng/ Khối lượng giao</th>
                       <th className="text-right">Tổng tạm</th>
                     </thead>
                     <tbody>
@@ -168,6 +169,9 @@ class OrderDetailForm extends Component {
                             {value.unitPriceByUnitPrice?value.unitPriceByUnitPrice.price.toLocaleString('vi-VI', { style: 'currency', currency: 'VND' }):"" }
                           </td>
                           <td className="text-right">
+                            {value.receivedAmount}
+                          </td>
+                          <td className="text-right">
                             {value.amount}
                           </td>
                           <td className="text-right">
@@ -177,7 +181,7 @@ class OrderDetailForm extends Component {
                         ))
                       }
                       <tr>
-                    <td colSpan="6" className="text-right"><h5> Tổng tiền: &nbsp;</h5></td>
+                    <td colSpan="7" className="text-right"><h5> Tổng tiền: &nbsp;</h5></td>
                       <td  className="text-right"><h5> {sum(proccessData(bill.billDetailsByBillId.nodes))}</h5></td>
                     </tr>
 

@@ -94,6 +94,9 @@ const ALL_WASH = gql `query allWash ($brId: BigFloat!){
       id
       nodeId
       washerCode
+      washesByWashingMachineId{
+        totalCount
+      }
     }
   }
 }`;
@@ -137,6 +140,7 @@ const processPendingServing = (data)=>{
   for (let i =0;i<a.length;i++){
     res.push({
       nodeId: a[i].nodeId,
+      customerOrderId: a[i].customerOrderByOrderId.id,
       customerName: a[i].customerOrderByOrderId.customerByCustomerId.fullName,
       deliveryDate: a[i].customerOrderByOrderId.deliveryDate,
       deliveryTimeStart: a[i].customerOrderByOrderId.timeScheduleByDeliveryTimeId.timeStart,
@@ -179,7 +183,7 @@ const AssignWork = ({CURRENT_USER= JSON.parse(localStorage.getItem("luandryStaff
       {(CURRENT_USER.staffType.staffCode === 'STAFF_01' || CURRENT_USER.staffType.staffCode === 'STAFF_02') &&
       <Query
       query={ASSIGN_WORK}
-      
+      fetchPolicy={"network-only"}
       variables = {{branch: CURRENT_USER.branch.id }}
  
     >{({ loading, error, data, refetch, }) => {
@@ -221,7 +225,15 @@ const AssignWork = ({CURRENT_USER= JSON.parse(localStorage.getItem("luandryStaff
       if (data != null){
         console.log(data)
       return (
-        <BigTable  washer = {data.allWashingMachines.nodes}  allWash ={processAllWash(data.washSearch.nodes).filter(value => value.status != 'FINISHED_SERVING')}/>
+        <BigTable  washer = {data.allWashingMachines.nodes.sort(function(a, b) {
+          if (a.washesByWashingMachineId.totalCount <b.washesByWashingMachineId.totalCount) {
+            return 1;
+          }
+          if (a.washesByWashingMachineId.totalCount > b.washesByWashingMachineId.totalCount) {
+            return -1;
+          }
+          return 0;
+        })}  allWash ={processAllWash(data.washSearch.nodes).filter(value => value.status != 'FINISHED_SERVING')}/>
       );
       }
     }}

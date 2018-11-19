@@ -53,7 +53,7 @@ class OrderTable extends Component {
     createCustomClearButton = (onClick) => {
       return (
         <ClearSearchButton
-          btnText='Clear'
+          btnText='Xóa'
           btnContextual='btn-warning btn-fill'
           onClick={ e => this.handleClearButtonClick(onClick) }/>
       );
@@ -103,7 +103,7 @@ class OrderTable extends Component {
       nextPage: 'Next',
       firstPage: 'First',
       lastPage: 'Last',
-      
+      noDataText: "Không có dữ liệu",
       hideSizePerPage: true,
       clearSearch: true,
       afterDeleteRow: onAfterDeleteRow,
@@ -127,17 +127,17 @@ class OrderTable extends Component {
                   data={orderList}
                   bordered={false}
                   striped
-                  
+                  searchPlaceholder={"Tìm kiếm"}
                   search={ true } multiColumnSearch={ true }
-                  selectRow={ selectRowProp }
+                 
                   pagination={true}
                   options={options}>
 
                   <TableHeaderColumn
                     dataField='sn'
-                    width="7%"
+                    width="5%"
                    >
-                    S/N
+                    STT
                   </TableHeaderColumn>
                   <TableHeaderColumn
                     dataField='nodeId'
@@ -148,40 +148,46 @@ class OrderTable extends Component {
                     ID
                   </TableHeaderColumn>
                   <TableHeaderColumn
+                    dataField='id'
+                    width="7%"
+                   >
+                    Mã số BN
+                  </TableHeaderColumn>
+                  <TableHeaderColumn
                     dataField='customerName'
                     width="25%"
                     
                     dataFormat={buttonFormatter}
                     dataSort>
-                    Customer
+                    Khách hàng
                   </TableHeaderColumn>
                   <TableHeaderColumn
                     dataField='pickUpDate'
                     width="25%"
                     hidden
                     dataSort>
-                    Pick up date
+                    Ngày lấy đồ
                   </TableHeaderColumn>
                   <TableHeaderColumn
                     dataField='pickupTime'
                     width="25%"
                     dataFormat={pickUpFormatter}
                     dataSort>
-                    Pick up time
+                   Thời gian lấy đồ
                   </TableHeaderColumn>
                   <TableHeaderColumn
                     dataField='deliveryDate'
                     width="25%"
                     hidden
                     dataSort>
-                    Delivery date
+                    Ngày trả đồ
                   </TableHeaderColumn>
                   <TableHeaderColumn
                     dataField='deliveryTime'
                     width="25%"
                     dataFormat={deliveryFormatter}
                     dataSort>
-                    Delivery time
+                    Thời gian trả đồ
                   </TableHeaderColumn>
                   {/* <TableHeaderColumn
                     dataField=''

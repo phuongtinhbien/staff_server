@@ -49,23 +49,26 @@ class TableWithLinks extends Component {
         
          <label className="title">{successContent} </label>
          <br></br>
-              <button 
-                    type="button"
-                    className="btn btn-warning btn-fill btn-wd"
-                    data-original-title="View Profile"
-                    onClick = {e => (assign(CURRENT_USER.branch.id, CURRENT_USER.id, 'TYPE_1'))}
-                  >
-                    Phân công
-                  </button> &nbsp;
-                   
-
+         {
+          CURRENT_USER.staffType.staffCode ==='STAFF_01' &&<button 
+          type="button"
+          className="btn btn-warning btn-fill btn-wd"
+          data-original-title="View Profile"
+          onClick = {e => {assign(CURRENT_USER.branch.id, CURRENT_USER.id);
+          window.location.reload();
+          }}
+          >
+          Phân công
+          </button>
+         }
+             
           <table className="table table-hover table-striped">
             <thead>
               <tr>
                 <th>STT</th>
                 <th>Khách hàng</th>
                 <th>Thời gian trả</th>
-                <th>Status</th>
+                <th>Trạng thái</th>
                 <th className="text-right">Chức năng</th>
               </tr>
             </thead>
@@ -73,7 +76,7 @@ class TableWithLinks extends Component {
               {assignWork.length>0?assignWork.map((item,index) => (
                 <tr key={index}>
                   <td>{index+1}</td>
-                  <td>{item.customerName}</td>
+                  <td>{item.customerName +" - " +item.customerOrderId}</td>
                   <td><strong>{item.deliveryDate}</strong> <br>
                   </br>
                   {item.deliveryTimeStart} &nbsp; - &nbsp; {item.deliveryTimeEnd}

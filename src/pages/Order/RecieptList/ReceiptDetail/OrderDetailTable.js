@@ -49,15 +49,48 @@ class OrderDetailTable extends Component {
     function detailsFormatter(cell, row){
         return row.details;
     }
-
     function currencyFormatter (cell, row){
-        let amountMoney = 654645;
-        return (
-            <p>
-           cell
-            </p>
-        );
-    }
+      let amountMoney = 0;
+      if (row.unit === 'Cái')
+        amountMoney = row.receivedAmount*row.unitPrice;
+      return (
+          <p>
+         {amountMoney.toLocaleString('vi-VI', { style: 'currency', currency: 'VND' })}
+          </p>
+      );
+  }
+    const footerData = [
+      [
+        {
+          label: 'Tổng tiền',
+          columnIndex: 3
+        },
+        {
+          label: 'Total value',
+          columnIndex: 7,
+          align: 'right',
+        
+          formatter: (tableData) => {
+            let label = 0;
+            let serviceName = {};
+            for (let i = 0, tableDataLen = tableData.length; i < tableDataLen; i++) {
+              if (!serviceName[tableData[i].serviceName] && tableData[i].unit === "Kg"){
+                  let subList = tableData.filter(value => value.serviceName === tableData[i].serviceName && tableData[i].unit === "Kg");
+                  label += tableData[i].unitPrice*tableData[i].receivedAmount;
+                  serviceName[tableData[i].serviceName] = tableData[i].serviceName;
+              }
+              else{
+                label += tableData[i].unitPrice*tableData[i].receivedAmount;
+              }
+            
+            }
+            return (
+              <strong>{ label.toLocaleString('vi-VI', { style: 'currency', currency: 'VND' }) }</strong>
+            );
+          }
+        }
+      ]
+    ];
 
 
 
@@ -68,6 +101,7 @@ class OrderDetailTable extends Component {
       firstPage: 'First',
       lastPage: 'Last',
       hideSizePerPage: true,
+      noDataText: "Không có dữ liệu",
       clearSearch: true,
       clearSearchBtn: this.createCustomClearButton,
     };
@@ -80,13 +114,15 @@ class OrderDetailTable extends Component {
                   data={orderDetailList}
                   bordered={false}
                   striped
+                  footer={true}
                   searchPlaceholder="Tìm kiếm"
+                  footerData={ footerData }
                   search={ true } multiColumnSearch={ true }
                   pagination={true}
                   options={options}>
                   <TableHeaderColumn
                     dataField='sn'
-                    width="7%"
+                    width="10%"
                    >
                     STT
                   </TableHeaderColumn>
@@ -114,12 +150,14 @@ class OrderDetailTable extends Component {
                   <TableHeaderColumn
                     dataField='amount'
                     width="15%"
+                    tdStyle={{textAlign:"right"}}
                     dataSort>
-                    Số lượng
+                    SL/KL
                   </TableHeaderColumn>
                   <TableHeaderColumn
                     dataField='unit'
                     width="10%"
+                    tdStyle={{textAlign:"right"}}
                     dataFormat={checkNull}
                     dataSort>
                     ĐVT
@@ -127,12 +165,22 @@ class OrderDetailTable extends Component {
                   <TableHeaderColumn
                     dataField='receivedAmount'
                     width="25%"
+                    tdStyle={{textAlign:"right"}}
                     dataSort>
                     SL đã nhận
                   </TableHeaderColumn>
                   <TableHeaderColumn
-                    dataField='receivedAmount'
+                    dataField='total'
                     width="25%"
+                    tdStyle={{textAlign:"right"}}
+                    dataFormat={currencyFormatter}
+                    dataSort>
+                    Tổng tạm
+                  </TableHeaderColumn>
+                  <TableHeaderColumn
+                    dataField='deliveryAmount'
+                    width="25%"
+                    tdStyle={{textAlign:"right"}}
                     dataSort>
                     SL đã trả
                   </TableHeaderColumn>

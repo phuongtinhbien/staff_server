@@ -67,6 +67,18 @@ const SORTED_ORDER_LIST = gql `query sortedOrderList($brId: BigFloat!) {
   }
 `;
 
+
+const CLARIFY = gql`mutation clarify ($brId: BigFloat!, $currUser: BigFloat!){
+  assignAutoToWash(input:{
+    brId:$brId,
+    currUser: $currUser
+  }){
+    boolean
+  }
+}
+`;
+
+
 const ASSIGN_TYPE_ONE = gql`mutation assignWash ($list: [AssignWorkInput!]){
   assignTypeOneToWash(input: {
     list: $list
@@ -82,18 +94,18 @@ Array.prototype.hasMin = function(attrib) {
 }
 
 
-const ERROR = "Xảy ra lỗi !!!";
-const SUCCESS = "Phân công thành công";
 
 const getSortedOrderList = (branch) => {
-
-  return client.query({
-    query: SORTED_ORDER_LIST,
-    variables: {
-      brId: branch
-    },
-    fetchPolicy: "network-only"
-  });
+ 
+      return client.query({
+        query: SORTED_ORDER_LIST,
+        variables: {
+          brId: branch
+        },
+        fetchPolicy: "network-only"
+      });
+ 
+ 
 }
 
 function findMinWasher (washerInfoList){
@@ -154,14 +166,15 @@ function assignWorkTypeOne(orderList, washerInfoList, curr_user) {
   }
 }
 
-function assignWorkTypeTwo(orderList, washerInfoList, curr_user){
 
-}
-
-
-function main(branch, curr, type) {
+function main(branch, curr) {
   let orderList;
   let washInfo;
+  client.mutate({mutation: CLARIFY, variables:{
+    brId: branch,
+    currUser: curr,
+  }}).then(data=>{
+    if (data)
   getSortedOrderList(branch).then(
     data => {
       if (data.data) {
@@ -175,6 +188,9 @@ function main(branch, curr, type) {
   ).catch(errors => {
     console.log(errors);
   });
+}).catch(errors => {
+  console.log(errors);
+});
 
 }
 
