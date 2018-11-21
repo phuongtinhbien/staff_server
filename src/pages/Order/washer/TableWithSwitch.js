@@ -69,7 +69,8 @@ class TableWithSwitch extends Component {
                 <th>STT</th>
                 <th>Mã máy giặt</th>
                 <th>Trạng thái</th>
-                <th>Chức năng</th>
+
+                {(CURRENT_USER.staffType.staffCode === "STAFF_01" ||CURRENT_USER.staffType.staffCode === "STAFF_02") && <th>Chức năng</th>}
               </tr>
             </thead>
             <tbody>
@@ -80,6 +81,7 @@ class TableWithSwitch extends Component {
                       className="btn btn-success btn-fill btn-sm btn-xs"
                       data-original-title="View Profile" to={"assign-work/assignWorkDetail/"+item.washerCode}><strong>{item.washerCode}</strong> </Link></td>
                   <td>{status(item.status)}</td>
+                  {(CURRENT_USER.staffType.staffCode === "STAFF_01" ||CURRENT_USER.staffType.staffCode === "STAFF_02") &&
                   <td>
                   <Mutation
                     mutation={UPDATE_WASHER_STATUS}
@@ -94,6 +96,7 @@ class TableWithSwitch extends Component {
                   {
                     (updateStatusWasher) =>(
                     <div>
+
                       <Switch value={item.status==="ACTIVE"?true: false}   onChange={() => {updateStatusWasher({variables:{brId: CURRENT_USER.branch.id, id:item.id,currUser: CURRENT_USER.id, status: item.status ==="ACTIVE"?"INACTIVE":"ACTIVE" }});
                      }} />
                       
@@ -102,7 +105,7 @@ class TableWithSwitch extends Component {
                   }
           
           </Mutation>
-                  </td>
+                  </td>}
                 </tr>
               ))}
             </tbody>

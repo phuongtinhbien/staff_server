@@ -5,14 +5,14 @@ import renderField from 'components/FormInputs/renderField';
 const validate = values => {
   const errors = {};
   if (!values.email) {
-    errors.email = 'Email is required';
+    errors.email = 'Bắt buộc';
   } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(values.email)) {
-    errors.email = 'Invalid email address'
+    errors.email = 'Email chưa đúng'
   }
   if (!values.password) {
-    errors.password = 'Password is required';
+    errors.password = 'Bắt buộc';
   } else if (values.password.length < 6) {
-    errors.password = 'Must be 6 characters or more';
+    errors.password = 'Mật khẩu phải từ 6 kí tự trở lên';
   }
   return errors;
 };
