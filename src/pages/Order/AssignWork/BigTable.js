@@ -9,7 +9,7 @@ const BigTable = ({allWash,washer}) => (
       <p className="category">Kết quả tự động lưu vào hệ thống</p>
       <br />
     </div>
-    {washer.length>0 && washer.map((washerItem,i) =>(
+    {washer.length>0 ? washer.map((washerItem,i) =>(
  <div className="content table-responsive table-full-width">
  <Link className ="btn btn-success" to={"assign-work/assignWorkDetail/"+washerItem.washerCode}>{washerItem.washerCode} </Link>
  <table className="table table-striped hover">
@@ -66,7 +66,7 @@ const BigTable = ({allWash,washer}) => (
    </tbody>
  </table>
 </div>
-    ))}
+    )):<div className="text-center mb-2"> <span  className="error" style={{color:"red",fontSize:12, fontWeight:"normal"}} >Không có dữ liệu máy giặt </span></div>}
    
   </div>
 );

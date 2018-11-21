@@ -203,6 +203,7 @@ class ReceiptForm extends Component {
                     <Field
                         name="deliveryDate"
                         type="date"
+                        viewMode={receipt.status === "PENDING_DELIVERY"? false: true}
                         disabled={receipt.status === "PENDING_DELIVERY"? false: true}
                         component={renderField}
                         />
@@ -212,6 +213,7 @@ class ReceiptForm extends Component {
                   <Field
                         name="deliveryTime"
                         type="time"
+                        viewMode={receipt.status === "PENDING_DELIVERY"? false: true}
                         disabled={receipt.status === "PENDING_DELIVERY"? false: true}
                         component={renderField}
                         />

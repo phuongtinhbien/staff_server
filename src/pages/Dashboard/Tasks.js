@@ -18,7 +18,7 @@ class Tasks extends Component {
         </div>
         <div className="content">
           <form>
-          {resultSearch?resultSearch.map(todo => (
+          {resultSearch && resultSearch.length>0?resultSearch.map(todo => (
             <div className={"todo-item"} key={todo.id}>
               <div className="todo-item-wrapper">
                 <div className="todo-content">

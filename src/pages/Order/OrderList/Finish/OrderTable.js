@@ -156,6 +156,7 @@ class OrderTable extends Component {
                   <TableHeaderColumn
                     dataField='branch'
                     width="20%"
+                    hidden
                     dataSort>
                     Branch
                   </TableHeaderColumn>

@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import generateData from '../generateData';
 import { Link, withRouter } from 'react-router-dom';
 import gql from 'graphql-tag';
-import { Mutation } from 'react-apollo';
+import moment from 'moment';
 import assign from './AssignToWash/assign';
 
 const AUTO_ASSIGN = gql `mutation autoAssignToWash ($brId: BigFloat!, $currUser: BigFloat!){
@@ -35,8 +35,8 @@ class TableWithLinks extends Component {
   }
 
   render() {
-    let { items, isShowingAlert,errorContent,successContent } = this.state;
-    let {assignWork, history} = this.props;
+    let { items, isShowingAlert,errorContent,successContent, } = this.state;
+    let {assignWork, history,noWasher} = this.props;
     let CURRENT_USER = JSON.parse(localStorage.getItem("luandryStaffPage.curr_staff_desc"));
     return (
       <div className="card">
@@ -52,10 +52,15 @@ class TableWithLinks extends Component {
          {
           CURRENT_USER.staffType.staffCode ==='STAFF_01' &&<button 
           type="button"
+          disabled={!noWasher}
           className="btn btn-warning btn-fill btn-wd"
           data-original-title="View Profile"
-          onClick = {e => {assign(CURRENT_USER.branch.id, CURRENT_USER.id);
-          window.location.reload();
+          onClick = {e => {
+            if (!noWasher){
+              assign(CURRENT_USER.branch.id, CURRENT_USER.id);
+              window.location.reload();
+            }
+           
           }}
           >
           Phân công
@@ -73,7 +78,15 @@ class TableWithLinks extends Component {
               </tr>
             </thead>
             <tbody>
-              {assignWork.length>0?assignWork.map((item,index) => (
+              {assignWork.length>0?assignWork.sort(function(a, b) {
+  if (moment(a.deliveryDate).isBefore(moment(b.deliveryDate))) {
+    return -1;
+  }
+  if (moment(a.deliveryDate).isAfter(moment(b.deliveryDate))) {
+    return 1;
+  }
+  return 0;
+}).map((item,index) => (
                 <tr key={index}>
                   <td>{index+1}</td>
                   <td>{item.customerName +" - " +item.customerOrderId}</td>
@@ -97,12 +110,14 @@ class TableWithLinks extends Component {
                   }
                   {item.washbag>0 && (!item.isAssignToWash?
                     <Link rel="tooltip"
+                      disabled={!noWasher}
                       className="btn btn-warning btn-simple btn-xs"
                       data-original-title="View Profile"
                       to={"/order/assign-work/assigntoWash/"+ item.nodeId}
                      >
                         Phân công
                     </Link>:<Link rel="tooltip"
+                     disabled={!noWasher}
                       className="btn btn-info btn-simple btn-xs"
                       data-original-title="View Profile"
                       to={"/order/assign-work/assigntoWash/"+ item.nodeId}

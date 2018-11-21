@@ -20,6 +20,11 @@ const ORDER_DETAIL = gql`query getCustomerOrderByNodeId ($nodeId: ID!){  custome
         staffByCurrentStaff{
           id
           fullName
+          staffTypeByStaffTypeId{
+            staffCode
+            id
+            nodeId
+          }
         }
       }
     }

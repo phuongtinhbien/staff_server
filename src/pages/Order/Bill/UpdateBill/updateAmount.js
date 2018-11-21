@@ -60,7 +60,7 @@ const sum = (tableData) => {
 const required = value => (value ? undefined : 'Bắt buộc')
 const number = value =>
   value && isNaN(Number(value)) ? 'Nhập vào một số' : undefined
-export const maxValue = max => value =>
+const maxValue = max => value =>
   value && value > max ? `Không vượt quá số lượng/khối lượng đã nhận` : undefined
 
 const renderItemBill = ({ fields,billDetail,   meta: { error, submitFailed } }) =>(
@@ -118,7 +118,7 @@ const renderItemBill = ({ fields,billDetail,   meta: { error, submitFailed } }) 
                                 type="text"
                                 placeholder="Số lượng đồ giao"
                                 inputClassName ="text-right"
-                                validate={[required, number, maxValue(value.receivedAmount)]}
+                                validate={[required, number]}
                                 component={renderField}
                             />
                           </td>

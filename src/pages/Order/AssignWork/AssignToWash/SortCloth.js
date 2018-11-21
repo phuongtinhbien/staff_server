@@ -18,7 +18,7 @@ const SortCloth = ({ fields,  meta: { error, submitFailed } }) =>(
 
               <tr>
                 <th style={{width:"5%"}}>STT</th>
-                <th style={{width:"15%"}}>túi giặt</th>
+                <th style={{width:"15%"}}>Túi giặt</th>
                 <th>Loại DV</th>
                 <th style={{width:"15%"}}>Nhóm màu</th>
                 <th style={{width:"20%"}}>Quần áo</th>
@@ -104,21 +104,21 @@ const SortCloth = ({ fields,  meta: { error, submitFailed } }) =>(
                         />
                     </td>
                     <td>
-                      <span><strong>- Label : </strong><Field
+                      <span><strong>- Nhãn hiệu : </strong><Field
                           name={`${item}.labelName`}
                           type="text"
                           disabled="true"
                           viewMode ={true}
                           component={renderField}
                         /></span>
-                      <span><strong>- Material :</strong>  <Field
+                      <span><strong>- Chất liệu :</strong>  <Field
                           name={`${item}.materialName`}
                           type="text"
                           disabled="true"
                           viewMode ={true}
                           component={renderField}
                         /></span>
-                      <span><strong>- ColorName :</strong>  <Field
+                      <span><strong>- Màu sắc :</strong>  <Field
                           name={`${item}.colorName`}
                           type="text"
                           disabled="true"

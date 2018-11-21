@@ -67,7 +67,12 @@ const ASSIGN_WORK = gql`query assignWork($branch: BigFloat!) {
       }
     }
   }
-  
+  allWashingMachines(condition:{
+    status:"ACTIVE",
+    branchId: $branch
+  }){
+    totalCount
+  }
 
 
 }
@@ -196,7 +201,7 @@ const AssignWork = ({CURRENT_USER= JSON.parse(localStorage.getItem("luandryStaff
       }
       if (data != null){
       return (
-        <TableWithLinks  assignWork ={processPendingServing(data)}/>
+        <TableWithLinks noWasher={data.allWashingMachines.totalCount>0?true:false}  assignWork ={processPendingServing(data)}/>
       );
       }
     }}

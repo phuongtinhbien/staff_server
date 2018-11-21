@@ -4,6 +4,7 @@ import { Query } from 'react-apollo';
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 import { withRouter } from 'react-router-dom';
 import OrderTable from './OrderTable';
+import Error from '../../../Error';
 const ORDER_QUERY = gql`
 query getCustomerOrder($taskType: String!, $status: [String!], $branch: BigFloat!) {
   allTasks(filter: {taskType: {equalTo: $taskType}, currentStatus: {in: $status},previousTask: {
@@ -91,6 +92,7 @@ class OrderProcessing extends Component {
         console.log(refetch);
       }
       if (error){
+        return <Error errorContent= {error.message}></Error>
       }
       if (data != null){
       return (

@@ -93,7 +93,7 @@ class AssignForm extends Component {
 
       return(
             <fieldset>
-              <legend>Phân loại</legend>
+              <legend>Phân công</legend>
               <div className="col-sm-12">
               <form className="form-horizontal" onSubmit={handleSubmit} >
     <div className="row">

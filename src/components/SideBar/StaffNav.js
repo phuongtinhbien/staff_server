@@ -95,11 +95,11 @@ class StaffNav extends Component {
             </div>
           </Collapse>
         </li> */}
-        <li className={this.isPathActive('/charts') ? 'active' : null}>
-          {/* <Link to="/charts">
-            <i className="pe-7s-help1"></i>
-            <p>Help</p>
-          </Link> */}
+        <li className={this.isPathActive('/order/washer') ? 'active' : null}>
+          <Link to="/order/washer">
+            <i className="pe-7s-config"></i>
+            <p>Máy giặt</p>
+          </Link>
         </li>
       </ul>
     );

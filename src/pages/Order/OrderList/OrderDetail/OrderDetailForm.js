@@ -90,7 +90,7 @@ class OrderDetailForm extends Component {
               
               <legend>
               <div style={{justifyContent: "space-between"}}>
-                <span>Thông tin đơn hàng - {customerOrder&& customerOrder.id} <span className="badge badge-warning">{customerOrder && status(customerOrder.status)} {customerOrder && customerOrder.tasksByCustomerOrder.nodes[0] && " - " + customerOrder.tasksByCustomerOrder.nodes[0].staffByCurrentStaff.fullName}</span> &nbsp;&nbsp;&nbsp;</span>
+                <span>Thông tin đơn hàng - {customerOrder&& customerOrder.id} <span className="badge badge-warning">{customerOrder && status(customerOrder.status)} {customerOrder && customerOrder.tasksByCustomerOrder.nodes[0] && customerOrder.tasksByCustomerOrder.nodes[0].staffByCurrentStaff.staffTypeByStaffTypeId.staffCode === 'STAFF_02' && " - " + customerOrder.tasksByCustomerOrder.nodes[0].staffByCurrentStaff.fullName}</span> &nbsp;&nbsp;&nbsp;</span>
                 {customerOrder.receiptsByOrderId.nodes[0] && <Link className="btn btn-warning btn-sm" to={"/order/reciept-list/view/"+customerOrder.receiptsByOrderId.nodes[0].nodeId}>Xem biên nhận</Link>}
               </div>
               </legend>
@@ -210,7 +210,8 @@ class OrderDetailForm extends Component {
                   mutation={GENERATE_BILL}
                   onCompleted={data=> {
                   
-                    this.showNotification("Tạo hóa đơn thành công") 
+                    this.showNotification("Tạo hóa đơn thành công", "success") 
+                    window.location.reload();
                    }}
                    onError={error => this.showNotification(error.message, "error")}
                 >

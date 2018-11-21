@@ -16,7 +16,8 @@ const renderItemOrderDetail = ({ fields, product,service,status,  meta: { error,
                 <th style={{width:"5%"}}>STT</th>
                 <th style={{width:"20%"}}>Loại dịch vụ</th>
                 <th style={{width:"25%"}}>Quần áo</th>
-                <th style={{width:"15%"}}>Số lượng</th>
+                <th style={{width:"7%"}}>SL</th>
+                <th style={{width:"7%"}}>ĐVT</th>
                 <th style={{width:"20%"}}>SL đã nhận</th>
                 <th style={{width:"20%"}}>SL đã trả</th>
               </tr>
@@ -39,6 +40,7 @@ const renderItemOrderDetail = ({ fields, product,service,status,  meta: { error,
                         name={`${orderDetail}.serviceName`}
                         type="text"
                         disabled="true"
+                        viewMode="true"
                         options={service}
                         component={renderField}
                         />
@@ -49,6 +51,7 @@ const renderItemOrderDetail = ({ fields, product,service,status,  meta: { error,
                         type="text"
                         disabled="true"
                         options={product}
+                        viewMode="true"
                         component={renderField}
                         />
                   </td>
@@ -61,13 +64,17 @@ const renderItemOrderDetail = ({ fields, product,service,status,  meta: { error,
                         name={`${orderDetail}.amount`}
                         type="text"
                         disabled="true"
+                        viewMode="true"
                         placeholder={"amount/weight"}
                         component={renderField}
                         />
+                        </td>
+                        <td>
                         <Field
                             name={`${orderDetail}.unit`}
                             type="text"
                             disabled="true"
+                            viewMode="true"
                             component={renderField}
                             />
                     </td>
@@ -78,7 +85,8 @@ const renderItemOrderDetail = ({ fields, product,service,status,  meta: { error,
                         type="text"
                         className="form-control"
                         disabled = {!(status === 'PENDING')}
-                        placeholder = "Nhập số lượng lấy"
+                        viewMode = {!(status === 'PENDING')}
+                        placeholder = "Nhập SL lấy"
                         component={renderField}
                         />
                     </td>
@@ -88,8 +96,9 @@ const renderItemOrderDetail = ({ fields, product,service,status,  meta: { error,
                         name={`${orderDetail}.deliveryAmount`}
                         type="text"
                         disabled = {!(status === "PENDING_DELIVERY")}
+                        viewMode = {!(status === "PENDING_DELIVERY")}
                         className="form-control"
-                        placeholder = "Nhập số lượng trả"
+                        placeholder = "Nhập SL trả"
                         component={renderField}
                         />
                     </td>
