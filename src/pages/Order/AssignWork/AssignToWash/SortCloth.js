@@ -13,6 +13,7 @@ const SortCloth = ({ fields,  meta: { error, submitFailed } }) =>(
          
         </span>}
             {/* <span className="title"> Kết quả phân loại </span> */}
+            <div className="content table-responsive table-full-width">
           <table className="table table-hover table-striped">
             <thead>
 
@@ -158,6 +159,7 @@ const SortCloth = ({ fields,  meta: { error, submitFailed } }) =>(
               )): <tr><td colSpan="15" className="text-center">Không có dữ liệu</td></tr>}
             </tbody>
             </table>
+            </div>
             </div>
   )
 export default (SortCloth)

@@ -1,8 +1,8 @@
 {
-  "name": "crystal-dashboard",
+  "name": "laundry-dashboard",
   "version": "0.1.0",
   "private": true,
-  "homepage": "https://jslancerteam.github.io/crystal-dashboard",
+  "homepage": "#",
   "dependencies": {
     "animate.css": "^3.5.2",
     "apollo-boost": "^0.1.16",

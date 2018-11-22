@@ -159,7 +159,7 @@ const processAllWash = (data)=>{
 const processChart = (data)=>{
     let total = data.length;
     let chart = {
-        label:[data.filter(value => value.status === 'PENDING_SERVING').length * 100 /total + "%",data.filter(value => value.status === 'FINISHED_SERVING').length*100/total + "%"],
+        label:[data.filter(value => value.status === 'PENDING_SERVING').length,data.filter(value => value.status === 'FINISHED_SERVING').length],
         series: [data.filter(value => value.status === 'PENDING_SERVING').length *100/total, data.filter(value => value.status === 'FINISHED_SERVING').length*100/total]
     }
     return chart;

@@ -11,7 +11,14 @@ const Header = ({
 }) => (
 
     <Navbar fluid={true}>
-
+ <Navbar.Header>
+        <button type="button" className="navbar-toggle" data-toggle="collapse" onClick={toggleMobileNavVisibility}>
+          <span className="sr-only">Toggle navigation</span>
+          <span className="icon-bar"></span>
+          <span className="icon-bar"></span>
+          <span className="icon-bar"></span>
+        </button>
+      </Navbar.Header>
       <Navbar.Collapse>
 
         {/* <Nav>

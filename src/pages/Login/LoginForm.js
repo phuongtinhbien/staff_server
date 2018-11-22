@@ -30,7 +30,7 @@ const LoginForm = ({
     <div className="content">
     
       <form onSubmit={handleSubmit}>
-     { errorContent &&<label className="error">{errorContent}</label>}
+     { errorContent &&<label className="error" style={{color:"red",fontSize:11, fontWeight:"normal"}}>{errorContent}</label>}
         <div className="form-group">
           <label className="control-label">Email</label>
           <Field

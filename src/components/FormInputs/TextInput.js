@@ -26,7 +26,7 @@ const TextInput = ({
       }
       {viewMode && <span>{input.value}</span>}
     { touched && error &&
-      <label className="error" style={{color:"red",fontSize:10, fontWeight:"normal"}} htmlFor={input.name}>{error}</label>
+      <label className="error" style={{color:"red",fontSize:11, fontWeight:"normal"}} htmlFor={input.name}>{error}</label>
     }
 
     { helpText &&
