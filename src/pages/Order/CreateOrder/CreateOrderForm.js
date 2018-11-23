@@ -197,6 +197,10 @@ class CreateOrder extends Component {
   
   };
 
+  componentWillReceiveProps(){
+    
+  }
+
   showNotification(message, level) {
     this.notificationSystem.addNotification({
       message: message,

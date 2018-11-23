@@ -4,6 +4,7 @@ import { Link, withRouter } from 'react-router-dom';
 import gql from 'graphql-tag';
 import moment from 'moment';
 import assign from './AssignToWash/assign';
+import TablePending from './TablePending';
 
 const AUTO_ASSIGN = gql `mutation autoAssignToWash ($brId: BigFloat!, $currUser: BigFloat!){
   assignAutoToWash(input:{
@@ -66,8 +67,16 @@ class TableWithLinks extends Component {
           Phân công
           </button>
          }
-             
-          <table className="table table-hover table-striped">
+          <TablePending orderList = {assignWork.length>0 && assignWork.sort(function(a, b) {
+  if (moment(a.deliveryDate).isBefore(moment(b.deliveryDate))) {
+    return -1;
+  }
+  if (moment(a.deliveryDate).isAfter(moment(b.deliveryDate))) {
+    return 1;
+  }
+  return 0;
+})} noWasher={noWasher}/>
+          {/* <table className="table table-hover table-striped">
             <thead>
               <tr>
                 <th>STT</th>
@@ -129,7 +138,7 @@ class TableWithLinks extends Component {
                 </tr>
               )): <tr><td colSpan="15" className="text-center" >Không có dữ liệu</td></tr>}
             </tbody>
-          </table>
+          </table> */}
          
         </div>
       </div>

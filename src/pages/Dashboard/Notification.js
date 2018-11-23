@@ -3,19 +3,34 @@ import cx from 'classnames';
 import uncheckImage from 'assets/images/checkbox-uncheck.svg';
 import checkImage from 'assets/images/checkbox-check.svg';
 import qrScan from "./qr-scan.png";
-import { Field, reduxForm } from 'redux-form';
+import { Field, reduxForm,initialize } from 'redux-form';
 import renderField from 'components/FormInputs/renderField';
 import QrScan from './QrScan';
 
 
 class SearchOrder extends Component {
   state = {
-    startScan: false
+    startScan: false,
+    result: ''
   }
   
   render() {
     let {handleSubmit} = this.props;
     let {startScan} = this.state;
+    let dataScan;
+    let handleScan = (data)=>{
+
+      if (data){
+        dataScan = data
+        console.log(dataScan)
+        this.setState({startScan:false})
+        this.props.dispatch(initialize('SearchOrder',{
+          orderCode: data
+        },{keepValues: false}));
+      }
+      
+    }
+  
     return (
       <div className="card ">
         <div className="header">
@@ -24,8 +39,8 @@ class SearchOrder extends Component {
         </div>
         <div className="content">
           <div className="text-center" style={{margin:"20px"}} >
-          <img src={qrScan} style={{justifyItems:"right", width:"80px"}} onClick={e=>{this.setState({startScan: !startScan})}}></img>
-          {startScan &&<QrScan/>}
+          <img src={qrScan} style={{justifyItems:"right", width:"80px"}} onClick={e=>{dataScan =null; this.setState({startScan: !startScan})}}></img>
+          {startScan &&<QrScan handleScan={handleScan}/>}
           </div>
           <form className="form-horizontal" onSubmit={handleSubmit}>
             

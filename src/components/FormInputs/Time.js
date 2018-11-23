@@ -10,6 +10,7 @@ const TimeInput = ({
   placeholder,
   helpText,
   disabled,
+  viewMode,
   hidden
 }) => (
   <div>

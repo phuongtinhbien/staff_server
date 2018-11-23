@@ -2,7 +2,7 @@
   "name": "laundry-dashboard",
   "version": "0.1.0",
   "private": true,
-  "homepage": "#",
+  "homepage": "localhost:3000/laundry/",
   "dependencies": {
     "animate.css": "^3.5.2",
     "apollo-boost": "^0.1.16",
@@ -39,6 +39,7 @@
     "graphql-tag": "^2.10.0",
     "html-webpack-plugin": "2.29.0",
     "jest": "20.0.4",
+    "khong-dau": "^2.0.0",
     "moment": "^2.18.1",
     "object-assign": "4.1.1",
     "pe7-icon": "^1.0.4",

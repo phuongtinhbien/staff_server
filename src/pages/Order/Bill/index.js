@@ -140,13 +140,14 @@ class Billing extends Component {
           
               content={() => this.componentRef}
           />} &nbsp;
-            <Link
+            
+            {CURRENT_USER.staffType.staffCode ==='STAFF_01' &&<Link
             to={"/order/bill/edit/"+match.params.nodeId}
               type="button"
               className="btn btn-fill btn-warning"
             >
               Cập nhật hóa đơn
-            </Link>
+            </Link>}
           </div>
       </div>
       

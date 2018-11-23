@@ -74,6 +74,7 @@ const RECEIPT_DETAIL = gql`query getCustomerReceiptByNodeId($nodeId: ID!) {
         nodeId
         recievedAmount
         status
+        deliveryAmount
         amount
         productByProductId{
             id
@@ -553,8 +554,8 @@ class ReceiptPending extends Component {
                       <button
                         type="submit"
                         className="btn btn-fill btn-info"
-                        disabled={!((data.receipt.status ==="PENDING") && (data.receipt.staffByStaffPickUp))}
-                        className={(data.receipt.status ==="PENDING") && (data.receipt.staffByStaffPickUp)? "btn btn-fill btn-info ": "btn btn-fill btn-info hidden"}
+                        disabled={!((data.receipt.status ==="PENDING") && (data.receipt.staffByStaffPickUp.id  === CURRENT_USER.id))}
+                        className={(data.receipt.status ==="PENDING") && (data.receipt.staffByStaffPickUp.id  === CURRENT_USER.id)? "btn btn-fill btn-info ": "btn btn-fill btn-info hidden"}
                         onClick={e => {
                           e.preventDefault();
                           this.setState({approve: true, decline: false});
@@ -568,8 +569,8 @@ class ReceiptPending extends Component {
                       <button
                         type="submit"
                         className="btn btn-fill btn-info"
-                        disabled={!((data.receipt.status ==="PENDING_DELIVERY") && (data.receipt.staffByStaffDelivery))}
-                        className={((data.receipt.status ==="PENDING_DELIVERY") && (data.receipt.staffByStaffDelivery))? "btn btn-fill btn-info ": "hidden btn btn-fill btn-info"}
+                        disabled={!((data.receipt.status ==="PENDING_DELIVERY") && (data.receipt.staffByStaffDelivery.id === CURRENT_USER.id))}
+                        className={((data.receipt.status ==="PENDING_DELIVERY") && (data.receipt.staffByStaffDelivery.id  === CURRENT_USER.id ))? "btn btn-fill btn-info ": "hidden btn btn-fill btn-info"}
                         onClick={e => {
                           e.preventDefault();
                           this.setState({approve: true, decline: false});

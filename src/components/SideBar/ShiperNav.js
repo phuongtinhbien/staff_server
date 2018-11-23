@@ -17,6 +17,12 @@ class ShipperNav extends Component {
             <p>Tổng quan</p>
           </Link>
         </li>
+        <li className={this.isPathActive('/order/staff-task') ? 'active' : null}>
+          <Link to="/order/staff-task">
+            <i className="pe-7s-note2"></i>
+            <p>Công việc của bạn</p>
+          </Link>
+        </li>
         {/* <li className={this.isPathActive('/order/create-order') ? 'active' : null}>
           <Link to="/order/create-order">
             <i className="pe-7s-plus"></i>

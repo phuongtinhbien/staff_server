@@ -9,18 +9,18 @@ const validate = values => {
   const errors = {};
 
   if (!values.pickUpDate){
-    errors.pickUpDate = 'Pick up date is required';
+    errors.pickUpDate = 'Bắt buộc';
   }
   if (!values.deliveryDate){
-    errors.deliveryDate = 'Delivery date is required';
+    errors.deliveryDate = 'Bắt buộc';
   }
  
-  // if (!values.pickUpTime){
-  //   errors.pickUpTime = 'Pick up time is required';
-  // }
-  // if (!values.deliveryTime){
-  //   errors.deliveryTime = 'Delivery time is required';
-  // }
+  if (!values.pickUpTime){
+    errors.pickUpTime = 'Bắt buộc';
+  }
+  if ( values.status === 'PENDING_DELIVERY' && !values.deliveryTime){
+    errors.deliveryTime = 'Bắt buộc';
+   }
 
   
   if (!values.receiptDetailsByReceiptId || !values.receiptDetailsByReceiptId.length) {
@@ -32,38 +32,44 @@ const validate = values => {
       const itemErrors = {}
 
       if (!item || !item.amount) {
-        itemErrors.amount = 'Required'
+        itemErrors.amount = 'Bắt buộc'
         receiptDetailsByReceiptIdArrayErrors[itemIndex] = itemErrors
       }
       else if (item.amount && _.isNaN(item.amount)) {
-        itemErrors.amount = 'Please enter a number';
+        itemErrors.amount = 'Nhập vào một số';
         receiptDetailsByReceiptIdArrayErrors[itemIndex] = itemErrors
       }
+      if (item && item.status === 'PENDING'){
+        if (!item || !item.receivedAmount){
+          itemErrors.receivedAmount = 'Bắt buộc'
+          receiptDetailsByReceiptIdArrayErrors[itemIndex] = itemErrors
+        }
+        else if (item.receivedAmount && _.isNaN(item.receivedAmount)) {
+          itemErrors.receivedAmount = 'Nhập vào một số';
+          receiptDetailsByReceiptIdArrayErrors[itemIndex] = itemErrors
+        }
+        else if (item.receivedAmount && (item.receivedAmount> item.amount)) {
+          itemErrors.receivedAmount = 'Thấp hơn hoặc bằng SL gốc';
+          receiptDetailsByReceiptIdArrayErrors[itemIndex] = itemErrors
+        }
+      }
+      else if (item && item.status === 'PENDING_DELIVERY'){
+        if (!item || !item.deliveryAmount){
+          itemErrors.deliveryAmount = 'Bắt buộc'
+          receiptDetailsByReceiptIdArrayErrors[itemIndex] = itemErrors
+        }
+        else if (item.deliveryAmount && _.isNaN(item.deliveryAmount)) {
+          itemErrors.deliveryAmount = 'Nhập vào một số';
+          receiptDetailsByReceiptIdArrayErrors[itemIndex] = itemErrors
+        }
+        else if (item.deliveryAmount && (item.deliveryAmount> item.amount)) {
+          itemErrors.deliveryAmount = 'Thấp hơn hoặc bằng SL gốc';
+          receiptDetailsByReceiptIdArrayErrors[itemIndex] = itemErrors
+        }
+      }
+      
 
-      if (!item || !item.receivedAmount){
-        itemErrors.receivedAmount = 'Required'
-        receiptDetailsByReceiptIdArrayErrors[itemIndex] = itemErrors
-      }
-      else if (item.receivedAmount && _.isNaN(item.receivedAmount)) {
-        itemErrors.receivedAmount = 'Please enter a number';
-        receiptDetailsByReceiptIdArrayErrors[itemIndex] = itemErrors
-      }
-      else if (item.receivedAmount && (item.receivedAmount> item.amount)) {
-        itemErrors.receivedAmount = 'Must less than or equal amount';
-        receiptDetailsByReceiptIdArrayErrors[itemIndex] = itemErrors
-      }
-      // if (!item || !item.deliveryAmount){
-      //   itemErrors.deliveryAmount = 'Required'
-      //   receiptDetailsByReceiptIdArrayErrors[itemIndex] = itemErrors
-      // }
-      // else if (item.deliveryAmount && _.isNaN(item.deliveryAmount)) {
-      //   itemErrors.deliveryAmount = 'Please enter a number';
-      //   receiptDetailsByReceiptIdArrayErrors[itemIndex] = itemErrors
-      // }
-      // else if (item.deliveryAmount && (item.deliveryAmount> item.amount)) {
-      //   itemErrors.deliveryAmount = 'Must less than or equal amount';
-      //   receiptDetailsByReceiptIdArrayErrors[itemIndex] = itemErrors
-      // }
+      
 
     })
     if (receiptDetailsByReceiptIdArrayErrors.length) {
@@ -116,18 +122,23 @@ const proccessData = (data)=>{
 
 
 class ReceiptForm extends Component {
-
-  render () {
-    
-    let {receipt,handleSubmit, submitting} = this.props;
+  componentDidMount(){
+    let {receipt} = this.props;
     this.props.dispatch(initialize('ReceiptEditForm',{
       id: receipt.id,
+      status: receipt.status,
       pickUpTime: receipt.pickUpTime,
       deliveryTime: receipt.deliveryTime,
       pickUpDate: receipt.pickUpDate?receipt.pickUpDate:receipt.customerOrderByOrderId.pickUpDate,
       deliveryDate: receipt.deliveryDate?receipt.deliveryDate:receipt.customerOrderByOrderId.deliveryDate,
       receiptDetailsByReceiptId: proccessData(receipt.receiptDetailsByReceiptId.nodes)
     },{keepValues: true}));
+  }
+
+  render () {
+    
+    let {receipt,handleSubmit, submitting} = this.props;
+    
       return(
 
           <form className="form-horizontal" onSubmit={handleSubmit} >
@@ -182,6 +193,7 @@ class ReceiptForm extends Component {
                     <Field
                         name="pickUpDate"
                         type="date"
+                        viewMode={receipt.status === "PENDING"? false: true}
                         disabled={receipt.status === "PENDING"? false: true}
                         component={renderField}
                         />
@@ -192,6 +204,7 @@ class ReceiptForm extends Component {
                         name="pickUpTime"
                         type="time"
                         id= "pickUpTime"
+                        viewMode={receipt.status === "PENDING"? false: true}
                         disabled={receipt.status === "PENDING"? false: true}
                         component={renderField}
                         />

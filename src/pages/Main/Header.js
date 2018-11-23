@@ -13,7 +13,7 @@ const Header = ({
     <Navbar fluid={true}>
  <Navbar.Header>
         <button type="button" className="navbar-toggle" data-toggle="collapse" onClick={toggleMobileNavVisibility}>
-          <span className="sr-only">Toggle navigation</span>
+          <span className="sr-only">Menu</span>
           <span className="icon-bar"></span>
           <span className="icon-bar"></span>
           <span className="icon-bar"></span>
@@ -37,7 +37,7 @@ const Header = ({
         <Nav pullRight>
           <NavItem><strong>{CURRENT_USER.branch.branchName+" - "+CURRENT_USER.branch.id}</strong></NavItem>
           <NavItem><strong>{CURRENT_USER.staffType.staffType}</strong></NavItem>
-          <NavItem onClick={e=>{e.preventDefault(); localStorage.clear(); history.push("/")}}><i className="pe-7s-back-2"></i> &nbsp;Đăng xuất</NavItem>
+          <NavItem onClick={e=>{e.preventDefault(); localStorage.clear(); history.push("/")}}><i className="pe-7s-back-2"></i> &nbsp;<span color="red">ĐĂNG XUẤT</span></NavItem>
         </Nav>
       </Navbar.Collapse>
     </Navbar>

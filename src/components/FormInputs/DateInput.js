@@ -10,6 +10,7 @@ const DateInput = ({
   placeholder,
   helpText,
   disabled,
+  viewMode,
   hidden
 }) => (
   <div>

@@ -152,9 +152,6 @@ const SortCloth = ({ fields,  meta: { error, submitFailed } }) =>(
                         component={renderField}
                         />
                     </td>
-
-                  
-                  
                 </tr>
               )): <tr><td colSpan="15" className="text-center">Không có dữ liệu</td></tr>}
             </tbody>

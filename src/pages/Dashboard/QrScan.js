@@ -9,12 +9,6 @@ class QrScan extends Component {
       result: 'No result',
     }
  
-    this.handleScan = this.handleScan.bind(this)
-  }
-  handleScan(data){
-    this.setState({
-      result: data,
-    })
   }
   handleError(err){
     console.error(err)
@@ -25,17 +19,16 @@ class QrScan extends Component {
       width: 320,
       align: 'center',
     }
- 
+    let {handleScan} = this.props;
     return(
       <div className="text-center">
         <QrReader
           delay={this.state.delay}
           style={previewStyle}
           onError={this.handleError}
-          onScan={this.handleScan}
+          onScan={handleScan}
           
           />
-        <p>{this.state.result}</p>
       </div>
     )
   }

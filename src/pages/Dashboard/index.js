@@ -1,12 +1,9 @@
-import React from 'react';
-import EmailChart from './EmailChart';
-import SalesChart from './SalesChart';
-import UserBehaviorChart from './UserBehaviorChart';
-import Tasks from './Tasks';
-import Notification from './Notification';
 import gql from 'graphql-tag';
-import { Query, Mutation } from 'react-apollo';
-
+import React from 'react';
+import { Mutation } from 'react-apollo';
+import Notification from './Notification';
+import Tasks from './Tasks';
+import KhongDau from 'khong-dau';
 
 
 const SEARCH_ORDER = gql `mutation searchCustomerOrder($customerName: String, $customerOrder: BigFloat, $branch: BigFloat!) {
@@ -31,6 +28,7 @@ let result;
 
 
 const handleSubmit =(searchcustomerorders, values, branch) =>{
+  console.log(KhongDau(values.customerName))
   searchcustomerorders({variables:{customerName: values.customerName, customerOrder: values.orderCode, branch}})
 }
 

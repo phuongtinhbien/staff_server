@@ -71,6 +71,7 @@ const RECEIPT_DETAIL = gql`query getCustomerReceiptByNodeId($nodeId: ID!) {
         id
         nodeId
         recievedAmount
+        deliveryAmount
         status
         amount
         productByProductId{
@@ -173,6 +174,7 @@ const UPDATE_RECEIPT_MUT= gql`mutation updatereceiptanddetail($pRe: ReceiptInput
             nodeId
             recievedAmount
             status
+            deliveryAmount
             amount
             productByProductId {
               id
