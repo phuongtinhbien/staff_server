@@ -249,7 +249,7 @@ class BillingForm extends Component {
                   {updateBill => (
                      <div >
                     {CURRENT_USER.staffType.staffCode ==='STAFF_01' &&
-                  <OrderDetailForm  onSubmit={values=>handleSubmit(values,updateBill, data.bill, CURRENT_USER)}
+                  <OrderDetailForm history={history}  onSubmit={values=>handleSubmit(values,updateBill, data.bill, CURRENT_USER)}
                   bill={data.bill} ref={el => (this.componentRef = el) }></OrderDetailForm>
                   }
                    </div>

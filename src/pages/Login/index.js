@@ -17,16 +17,17 @@ import {
 
 import background from 'assets/bg_login.jpg';
 import { onError } from 'apollo-link-error';
+import LoginFormAdmin from './LoginFormAdmin';
 
 const client = new ApolloClient({ uri: 'http://192.168.1.7:5000/graphql' ,
 cache: new InMemoryCache(),
 
 });
-const AUTH_MUT = gql `mutation authenticcation ($email: String!, $password:String!){
+const AUTH_MUT = gql `mutation authenticcation ($email: String!, $password:String!, $userType: String!){
   authenticate(input:{
     email:$email,
     password: $password,
-    userType:"staff_type"
+    userType:$userType
   }){
   jwt
 }
@@ -38,22 +39,27 @@ const AUTH_MUT = gql `mutation authenticcation ($email: String!, $password:Strin
 
 
 
-const handleOnCompleted = (data,history)=>{
+const handleOnCompleted = (data,history,LoginAdmin)=>{
   
   console.log(data);
   if (data != null && data.authenticate.jwt!= null){
     localStorage.setItem("luandryStaffPage.staff_key", data.authenticate.jwt);
+    localStorage.setItem("luandryStaffPage.admin_toggle", LoginAdmin);
     history.push("/");
   }
+
+
 }
 class  Login extends Component { 
 
   state={
     errorContent: null,
+    LoginAdmin: false,
+    loginNext: "Đăng nhập trang quản trị"
   }
   render(){
     let {history} = this.props;
-    let{errorContent} = this.state;
+    let{errorContent,LoginAdmin,loginNext} = this.state;
   console.log(this.props)
   if (!localStorage.getItem("luandryStaffPage.staff_key"))
     return (
@@ -65,9 +71,12 @@ class  Login extends Component {
       </div>
         <div className="col-md-4 ">
         <div className="text-center"><img src={ic} style={{height:"150px"}}/> <h3>Quản lí đơn hàng</h3></div>
+        <div className="card">
+        <div className="content">
+       
         <Mutation
                     mutation={AUTH_MUT}
-                    onCompleted={data=> {handleOnCompleted(data,history);
+                    onCompleted={data=> {handleOnCompleted(data,history,LoginAdmin);
                   
                       this.setState({errorContent: data.authenticate.jwt? null: "Tài khoản không tồn tại"})
                      }}
@@ -80,15 +89,22 @@ class  Login extends Component {
                   {
                     (authenticate) =>(
                     <div>
-                      {/* <label className="error"> {this.state.errorContent}</label> */}
-                      <LoginForm errorContent={errorContent}  onSubmit={values => {authenticate({variables:values});
-                     }} />
-                      
+                      {!LoginAdmin && <LoginForm errorContent={errorContent}  onSubmit={values => {authenticate({variables:{userType: "staff_type",...values}});
+                     }} /> }
+                     {LoginAdmin && <LoginFormAdmin errorContent={errorContent}  onSubmit={values => {authenticate({variables:{userType: "admin",...values}});
+                    }} /> }
+                      <span rel="tooltip"
+                        className="btn btn-warning btn-simple btn-xs" 
+                        onClick={e =>{ e.preventDefault(); 
+                        this.setState({LoginAdmin: !LoginAdmin, loginNext: !LoginAdmin?"Đăng nhập trang quản trị":"Đăng nhập  tài khoản nhân viên"});
+                        }}>{loginNext} </span>
                     </div>
                     )
                   }
           
           </Mutation>
+          </div>
+          </div>
         </div>
         <div className="col-md-4">
         </div>

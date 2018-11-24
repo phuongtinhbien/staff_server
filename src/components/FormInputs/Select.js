@@ -2,7 +2,7 @@ import React from 'react';
 import Select from 'react-select';
 
 
-const CustomSelect = ({input, options,placeholder, name, id,helpText, meta: { touched, error, warning },}) => (
+const CustomSelect = ({input, options,placeholder,isMulti, name, id,helpText, meta: { touched, error, warning },}) => (
 
     <div>
     <Select 
@@ -10,6 +10,7 @@ const CustomSelect = ({input, options,placeholder, name, id,helpText, meta: { to
          id={id} 
          name={name} 
          options={options}
+         isMulti={isMulti}
          value={input.value}
           placeholder ={placeholder}
          clearable={false}

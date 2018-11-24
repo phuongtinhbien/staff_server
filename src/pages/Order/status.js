@@ -50,6 +50,12 @@ function main (status){
     else if (status === INACTIVE){
         return "Ngưng hoạt động";
     }
+    else if (status === true){
+        return "Hoạt động";
+    }
+    else if (status === false){
+        return "Không hoạt động";
+    }
 }
 
 export default main;

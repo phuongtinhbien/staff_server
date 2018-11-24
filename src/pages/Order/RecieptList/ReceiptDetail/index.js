@@ -66,6 +66,7 @@ const RECEIPT_DETAIL = gql`query getCustomerReceiptByNodeId($nodeId: ID!) {
         id
         promotionName
         promotionCode
+        sale
       }
     }
     receiptDetailsByReceiptId{
@@ -177,6 +178,7 @@ mutation updateReceipt ($id: BigFloat!, $pickUp: BigFloat!, $updateDate:Datetime
         id
         promotionName
         promotionCode
+        sale
       }
     }
     receiptDetailsByReceiptId{

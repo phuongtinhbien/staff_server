@@ -5,6 +5,7 @@ import React, { Component } from 'react';
 import { reduxForm } from 'redux-form';
 import OrderDetailTable from './OrderDetailTable';
 import status from './../../status';
+import { Link } from 'react-router-dom';
 
 
 const resultDetail = (data) =>{
@@ -67,7 +68,10 @@ class ReceiptForm extends Component {
               
               <legend>
               <div style={{justifyContent: "space-between"}}>
-                <span>Thông tin biên nhận - {receipt.id} - {receipt.customerOrderByOrderId.id} <span className="badge badge-warning">{status(receipt.status)}</span> </span>
+                <span>Thông tin biên nhận - {receipt.id} - {receipt.customerOrderByOrderId.id} <span className="badge badge-warning">{status(receipt.status)}</span> 
+                &nbsp;
+                {receipt.customerOrderByOrderId && <Link className="btn btn-warning btn-sm" to={"/order/order-list/view/"+receipt.customerOrderByOrderId.nodeId}>Xem đơn hàng</Link>}
+                </span>
                 
               </div>
               </legend>
@@ -187,7 +191,8 @@ class ReceiptForm extends Component {
             <fieldset>
               <legend>Chi tiết biên nhận</legend>
               <div className="col-sm-12">
-                 <OrderDetailTable orderDetailList={proccessData(receipt.receiptDetailsByReceiptId.nodes)}></OrderDetailTable>
+                 <OrderDetailTable promotion= {receipt.customerOrderByOrderId.promotionByPromotionId} 
+                 orderDetailList={proccessData(receipt.receiptDetailsByReceiptId.nodes)}></OrderDetailTable>
               </div>
             </fieldset>
           

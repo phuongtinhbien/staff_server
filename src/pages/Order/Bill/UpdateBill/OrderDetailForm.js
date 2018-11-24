@@ -22,7 +22,7 @@ class BillForm extends Component {
   };
   render () {
     
-    let {bill,handleSubmit} = this.props;
+    let {bill,handleSubmit,history} = this.props;
     const CURRENT_USER = JSON.parse(localStorage.getItem("luandryStaffPage.curr_staff_desc"));
       return(
 
@@ -107,6 +107,18 @@ class BillForm extends Component {
                       }}
                     >
                       Cập nhật hóa đơn
+                    </button>
+                    &nbsp; &nbsp;
+                    <button
+                      type="button"
+                      className="btn btn-danger btn-fill btn-info"
+                     
+                      onClick={e => {
+                        
+                        history.goBack();
+                      }}
+                    >
+                      Trở lại
                     </button>
                     </div>
         </form>

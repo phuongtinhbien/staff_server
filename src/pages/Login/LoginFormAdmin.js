@@ -6,12 +6,10 @@ const validate = values => {
   const errors = {};
   if (!values.email) {
     errors.email = 'Bắt buộc';
-  } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(values.email)) {
-    errors.email = 'Email chưa đúng'
-  }
+  } 
   if (!values.password) {
     errors.password = 'Bắt buộc';
-  } else if (values.password.length < 6) {
+  } else if (values.password.length < 4) {
     errors.password = 'Mật khẩu phải từ 6 kí tự trở lên';
   }
   return errors;
@@ -23,19 +21,19 @@ const LoginForm = ({
   submitForm,
   errorContent
 }) => (
-  <div >
+  <div>
     <div className="header">
-      <h4>Đăng nhập</h4>
+      <h4>Đăng nhập (ADMIN)</h4>
     </div>
     <div >
     
       <form onSubmit={handleSubmit}>
      { errorContent &&<label className="error" style={{color:"red",fontSize:11, fontWeight:"normal"}}>{errorContent}</label>}
         <div className="form-group">
-          <label className="control-label">Email</label>
+          <label className="control-label">Tên đăng nhập</label>
           <Field
             name="email"
-            type="email"
+            type="text"
             component={renderField} />
         </div>
 
@@ -57,6 +55,6 @@ const LoginForm = ({
 );
 
 export default reduxForm({
-  form: 'loginForm',
+  form: 'loginFormAdmin',
   validate
 })(LoginForm)

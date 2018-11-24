@@ -1,22 +1,17 @@
-import React from 'react';
-import TableWithSwitch from './TableWithSwitch';
 import gql from 'graphql-tag';
+import React from 'react';
 import { Query } from 'react-apollo';
 import TableDetail from './TableDetail';
-
-const ALL_WASHER = gql`query allWash ($brId: BigFloat!){
-  allWashingMachines(condition:{
-    branchId: $brId
-  })
-  {
-    totalCount
+const ALL_BRANCH = gql`query allPromotion{
+  allPromotions{
     nodes{
-      id
       nodeId
-      washerCode
-      createDate
+      id
+      promotionName
+      promotionCode
       status
-      capacity
+      dateStart
+      dateEnd
     }
   }
 }
@@ -26,9 +21,8 @@ const ExtendedTables = ({CURRENT_USER = JSON.parse(localStorage.getItem("luandry
     <div className="row">
       <div className="col-md-12">
       <Query
-      query={ALL_WASHER}
+      query={ALL_BRANCH}
       fetchPolicy={"network-only"}
-      variables = {{ brId: CURRENT_USER.branch.id }}
  
     >{({ loading, error, data, refetch, }) => {
       if (loading) return null;
@@ -39,7 +33,10 @@ const ExtendedTables = ({CURRENT_USER = JSON.parse(localStorage.getItem("luandry
       }
       if (data != null){
       return (
-        <TableDetail data = {data.allWashingMachines.nodes} />
+      
+        <TableDetail data = {data.allPromotions.nodes} />
+
+        
       );
       }
     }}

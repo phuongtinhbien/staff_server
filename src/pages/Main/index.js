@@ -23,6 +23,7 @@ import UserProfile from '../UserProfile';
 // import { ApolloClient } from 'apollo-client';
 // import { ApolloProvider } from 'react-apollo';
 import Header from './Header';
+import Admin from '../Admin';
 
 // First way to import
 
@@ -225,13 +226,95 @@ const PrivateMain = ({mobileNavVisibility,
   
 
 );
+const PrivateMain2 = ({mobileNavVisibility,
+  hideMobileMenu,
+  history}) => (
+  <frameElement>
+    {localStorage.getItem("luandryStaffPage.staff_key") && !localStorage.getItem("luandryStaffPage.curr_staff_id")
+    && !localStorage.getItem("luandryStaffPage.curr_staff_desc")?<Query query={CURR_USER}
+  >
+          {({loading, error,data, refetch,stopPolling, networkStatus}) => {
+            if (loading) return null;
+            if (error) {
+            stopPolling();
+            return <Redirect to={{
+                    pathname: '/login',
+                    
+                  }} />
+           
+            }
+          
+            if (data){
+                localStorage.setItem("luandryStaffPage.curr_staff_id",data.currentUser.id);
+
+                localStorage.setItem("luandryStaffPage.curr_staff_desc",JSON.stringify({
+                  branch: {branchName: "QUẢN TRỊ HỆ THỐNG",id: ''},
+                  name : data.currentUser.lastName + " "+ data.currentUser.firstName,
+                  staffType:{staffCode: "ADMIN", staffType: "ADMIN"},...data}));
+                return (
+                  <frameElement>
+                    <SideBar  />
+                          <div className="main-panel">
+                          <Header history={history} />
+                              <PrivateRoute  exact path="/" component={Dashboard} />
+                              <PrivateRoute  path="/components" component={Components} />
+                              <PrivateRoute  path="/profile" component={UserProfile} />
+                              <PrivateRoute  path="/forms" component={Forms} />
+                              <PrivateRoute  path="/tables" component={Tables} />
+                  
+                              {/* <PrivateRoute  path="/charts" component={Charts} /> */}
+                              {/* <PrivateRoute  path="/calendar" component={Calendar} /> */}
+                              <PrivateRoute  path="/userProfile" component={UserProfile} />
+                              <PrivateRoute  path="/admin" component={Admin} />
+  
+                          </div>
+                       </frameElement>
+                );
+                
+              }
+            }}
+
+
+          </Query>: <frameElement>
+                  {localStorage.getItem("luandryStaffPage.staff_key") && localStorage.getItem("luandryStaffPage.curr_staff_id")
+    && localStorage.getItem("luandryStaffPage.curr_staff_desc")?
+      <frameElement>
+                  <SideBar  />
+                    
+                        <div className="main-panel">
+                        <Header history={history} />
+                            <PrivateRoute  exact path="/" component={Dashboard} />
+                            <PrivateRoute  path="/components" component={Components} />
+                            <PrivateRoute  path="/profile" component={UserProfile} />
+                            <PrivateRoute  path="/forms" component={Forms} />
+                            <PrivateRoute  path="/tables" component={Tables} />
+                
+                            {/* <PrivateRoute  path="/charts" component={Charts} />
+                            <PrivateRoute  path="/calendar" component={Calendar} /> */}
+                            <PrivateRoute  path="/userProfile" component={UserProfile} />
+                            <PrivateRoute  path="/admin" component={Admin} />
+                                
+                            
+                        </div>
+                        
+                    
+                 </frameElement>:<Redirect to={{
+                    pathname: '/login',
+                    
+                  }} />  }
+                      </frameElement>}
+                      </frameElement>
+  
+
+);
 
 
 const Main = ({
   mobileNavVisibility,
   hideMobileMenu,
   history,
-  isLogined
+  isLogined,
+  admin_toggle = JSON.parse(localStorage.getItem("luandryStaffPage.admin_toggle"))
 }) => {
   history.listen(() => {
     if (mobileNavVisibility === true) {
@@ -255,7 +338,8 @@ const Main = ({
     <ApolloProvider client={client}  >
     <div className="wrapper">
     <div className="close-layer" onClick={hideMobileMenu}></div>
-    <PrivateMain history={history} />
+    {/* <PrivateMain history={history} /> */}
+     {!admin_toggle? <PrivateMain history={history} />:<PrivateMain2 history={history} />}
     </div>
     
     </ApolloProvider>

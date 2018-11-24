@@ -34,7 +34,7 @@ class OrderDetailTable extends Component {
     }
   
   render() {
-    const { orderDetailList } = this.props;
+    const { orderDetailList,promotion } = this.props;
     console.log(orderDetailList);
  
     function checkNull (cell, row){
@@ -52,19 +52,19 @@ class OrderDetailTable extends Component {
 
     function currencyFormatter (cell, row){
         let amountMoney = 0;
-        if (row.unit === 'Cái')
+        // if (row.unit === 'Cái')
           amountMoney = row.amount*row.unitPrice;
         return (
-            <p>
+            <span>
            {amountMoney.toLocaleString('vi-VI', { style: 'currency', currency: 'VND' })}
-            </p>
+            </span>
         );
     }
 
     const footerData = [
       [
         {
-          label: 'Tổng tiền',
+          label: 'Tổng tạm',
           columnIndex: 3
         },
         {
@@ -75,6 +75,7 @@ class OrderDetailTable extends Component {
           formatter: (tableData) => {
             let label = 0;
             let serviceName = {};
+
             for (let i = 0, tableDataLen = tableData.length; i < tableDataLen; i++) {
               if (!serviceName[tableData[i].serviceName] && tableData[i].unit === "Kg"){
                   let subList = tableData.filter(value => value.serviceName === tableData[i].serviceName && tableData[i].unit === "Kg");
@@ -86,6 +87,71 @@ class OrderDetailTable extends Component {
               }
             
             }
+           
+            return (
+              <strong>{ label.toLocaleString('vi-VI', { style: 'currency', currency: 'VND' }) }</strong>
+            );
+          }
+        }
+      ],
+      [
+        {
+          label: 'Khuyến mãi',
+          columnIndex: 3
+        },
+        {
+          label: 'Total value',
+          columnIndex: 7,
+          align: 'right',
+        
+          formatter: (tableData) => {
+            let label = 0;
+            let code = '';
+            let sale = 0;
+            if (promotion){
+                code = promotion.promotionCode;
+                sale = promotion.sale
+            }
+           
+            return (
+              <span>{ code + " - "}{sale} %</span>
+            );
+          }
+        }
+      ],
+      [
+        {
+          label: 'Tổng cộng',
+          columnIndex: 3
+        },
+        {
+          label: 'Total value',
+          columnIndex: 7,
+          align: 'right',
+        
+          formatter: (tableData) => {
+            let code = '';
+            let sale = 0;
+            let label = 0;
+            let serviceName = {};
+
+            for (let i = 0, tableDataLen = tableData.length; i < tableDataLen; i++) {
+              if (!serviceName[tableData[i].serviceName] && tableData[i].unit === "Kg"){
+                  let subList = tableData.filter(value => value.serviceName === tableData[i].serviceName && tableData[i].unit === "Kg");
+                  label += tableData[i].unitPrice*tableData[i].amount;
+                  serviceName[tableData[i].serviceName] = tableData[i].serviceName;
+              }
+              else{
+                label += tableData[i].unitPrice*tableData[i].amount;
+              }
+            
+            }
+            if (promotion){
+                code = promotion.promotionCode;
+                sale = promotion.sale;
+                label = label - label*sale/100;
+            }
+           
             return (
               <strong>{ label.toLocaleString('vi-VI', { style: 'currency', currency: 'VND' }) }</strong>
             );
@@ -173,9 +239,10 @@ class OrderDetailTable extends Component {
                   <TableHeaderColumn
                     dataField='total'
                     width="25%"
+                    tdStyle={{textAlign:"right"}}
                     dataFormat={currencyFormatter}
                     dataSort>
-                    Tổng cộng
+                    Tổng tạm
                   </TableHeaderColumn>
                  
                   <TableHeaderColumn

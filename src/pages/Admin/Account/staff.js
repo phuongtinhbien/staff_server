@@ -1,0 +1,122 @@
+import React, { Component } from 'react';
+import { BootstrapTable, ClearSearchButton, TableHeaderColumn } from 'react-bootstrap-table';
+import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
+import status from '../../Order/status';
+class TableDetail extends Component {
+
+  state = {
+    column: [],
+    tableName: "Máy giặt của chi nhánh",
+    tableDesc: "Xem thông tin các máy ở các chi nhánh",
+    data: this.props.orderList
+  };
+
+
+    createCustomClearButton = (onClick) => {
+      return (
+        <ClearSearchButton
+          btnText='Xóa'
+          btnContextual='btn-warning btn-fill'
+          onClick={ e => this.handleClearButtonClick(onClick) }/>
+      );
+    }
+  
+  render() {
+    const { data } = this.props;
+    const tableName = this.state.tableName;
+    const tableDesc = this.state.tableDesc;
+    console.log(data);
+    
+   
+    function branchFormat(cell, row){
+      return (<span>{row.branchByBranchId && row.branchByBranchId.branchName}</span>);
+    };
+    function staffTypeFormat(cell, row){
+      return (<span>{row.staffTypeByStaffTypeId && row.staffTypeByStaffTypeId.staffTypeName}</span>);
+    };
+
+
+    function statusFormat(cell, row){
+        return (<span>{status(cell)}</span>)
+    }
+
+    function indexN(cell, row, enumObject, index) {
+      return (<div>{index+1}</div>) 
+  }
+
+    const options = {
+      sizePerPage: 10,
+      prePage: 'Trước',
+      nextPage: 'Tiếp',
+      firstPage: 'Đầu tiên',
+      lastPage: 'Cuối cùng',
+      noDataText: "Không có dữ liệu",
+      hideSizePerPage: true,
+      clearSearch: true,
+      clearSearchBtn: this.createCustomClearButton,
+    };
+
+    return (
+
+                <BootstrapTable
+                  data={data}
+                  bordered={false}
+                  striped
+                  tableName={tableName}
+                  tableDesc ={tableDesc}
+                  insertRow
+                  search={ true } multiColumnSearch={ true }
+                  searchPlaceholder="Tìm kiếm"
+                  pagination={true}
+                  options={options}>
+
+                  <TableHeaderColumn
+                    dataField='sn'
+                    width="5%"
+                    dataFormat={indexN}
+                    isKey
+                   >
+                    STT
+                  </TableHeaderColumn>
+                  <TableHeaderColumn
+                    dataField='id'
+                    width="10%"
+                    dataFormat={indexN}
+                    hidden
+                   >
+                    ID
+                  </TableHeaderColumn>
+                  <TableHeaderColumn
+                    dataField='branch'
+                    width="25%"
+                    dataFormat={branchFormat}
+                   >
+                    Chi nhánh
+                  </TableHeaderColumn>
+                  <TableHeaderColumn
+                    dataField='fullName'
+                    width="25%"
+                    
+                   >
+                    Họ tên
+                  </TableHeaderColumn>
+                  <TableHeaderColumn
+                    dataField='staffType'
+                    width="25%"
+                    dataFormat={staffTypeFormat}
+                   >
+                    Chức vụ
+                  </TableHeaderColumn>
+                  
+                  <TableHeaderColumn
+                    dataField='status'
+                    width="20%" 
+                    dataFormat={statusFormat}
+                    dataSort>
+                   Trạng thái
+                  </TableHeaderColumn>
+                  </BootstrapTable>
+    );
+  }
+}
+export default TableDetail;

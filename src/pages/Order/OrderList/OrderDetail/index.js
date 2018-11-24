@@ -85,6 +85,7 @@ const ORDER_DETAIL = gql`query getCustomerOrderByNodeId ($nodeId: ID!){  custome
     id
     promotionName
     promotionCode
+    sale
   }
   orderDetailsByOrderId{
     nodes{
@@ -205,6 +206,7 @@ const UPDATE_ORDER_MUT = gql`mutation updateCustomerOrder( $coId: BigFloat!,  $p
     id
     promotionName
     promotionCode
+    sale
   }
   orderDetailsByOrderId{
     nodes{

@@ -1,10 +1,8 @@
+import cx from 'classnames';
 import React, { Component } from 'react';
 import { Collapse } from 'react-bootstrap';
-import { Link, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
-import cx from 'classnames';
-import { Query, Mutation } from 'react-apollo';
-import gql  from "graphql-tag";
+import { Link } from 'react-router-dom';
 
 
 
@@ -28,7 +26,7 @@ class UserInfo extends Component {
      
       
       <div className="user">
-        <img src={staffInfo.image} alt={staffInfo.name} className="photo" />
+        <img src={staffInfo.image ? staffInfo.image:"https://cdn.iconscout.com/icon/free/png-256/avatar-372-456324.png"} alt={staffInfo.name} className="photo" />
         <div className="userinfo">
           <div className="username">
             {staffInfo.name}

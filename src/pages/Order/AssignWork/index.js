@@ -231,10 +231,10 @@ const AssignWork = ({CURRENT_USER= JSON.parse(localStorage.getItem("luandryStaff
         console.log(data)
       return (
         <BigTable  washer = {data.allWashingMachines.nodes.sort(function(a, b) {
-          if (a.washesByWashingMachineId.totalCount <b.washesByWashingMachineId.totalCount) {
+          if (a.washesByWashingMachineId.totalCount >b.washesByWashingMachineId.totalCount) {
             return 1;
           }
-          if (a.washesByWashingMachineId.totalCount > b.washesByWashingMachineId.totalCount) {
+          if (a.washesByWashingMachineId.totalCount < b.washesByWashingMachineId.totalCount) {
             return -1;
           }
           return 0;

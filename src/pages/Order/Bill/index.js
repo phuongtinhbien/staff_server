@@ -14,11 +14,11 @@ const BILL_DETAIL = gql`query billDetail($nodeId: ID!) {
     id
     createDate
     status
-    staffByCreateBy{
-        nodeId
-        fullName
-        id
-      }
+    staffByCreateBy {
+      nodeId
+      fullName
+      id
+    }
     receiptByReceiptId {
       nodeId
       id
@@ -31,15 +31,20 @@ const BILL_DETAIL = gql`query billDetail($nodeId: ID!) {
           phone
           email
         }
+        promotionByPromotionId{
+          nodeId
+          id
+          promotionCode
+          sale
+        }
         pickUpPlace
         deliveryPlace
-        branchByBranchId{
+        branchByBranchId {
           id
           branchName
           address
         }
       }
-
     }
     billDetailsByBillId {
       nodes {
@@ -90,7 +95,8 @@ const BILL_DETAIL = gql`query billDetail($nodeId: ID!) {
       }
     }
   }
-}`;
+}
+`;
 
  
 

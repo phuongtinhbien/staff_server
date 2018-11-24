@@ -250,7 +250,7 @@ class OrderDetailForm extends Component {
             <fieldset>
               <legend>Chi tiết đơn hàng</legend>
               <div className="col-sm-12">
-                <OrderDetailTable orderDetailList={proccessData(customerOrder.orderDetailsByOrderId.nodes)}></OrderDetailTable>
+                <OrderDetailTable promotion= {customerOrder.promotionByPromotionId} orderDetailList={proccessData(customerOrder.orderDetailsByOrderId.nodes)}></OrderDetailTable>
               </div>
             </fieldset>
             <NotificationSystem

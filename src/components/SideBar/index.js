@@ -6,6 +6,7 @@ import UserInfo from './UserInfo';
 import Nav from './Nav';
 import ShipperNav from'./ShiperNav';
 import StaffNav from './StaffNav';
+import NavAdmin from './Nav_admin';
 const defaultUserInfo = {
   name: 'Demo User',
   image: 'https://cdn.iconscout.com/icon/free/png-256/avatar-372-456324.png',
@@ -51,6 +52,7 @@ class SideBar extends Component {
           {CURRENT_USER.staffType.staffCode=== "STAFF_01"?<Nav />:null}
           {CURRENT_USER.staffType.staffCode === "STAFF_02"?<StaffNav />:null}
           {CURRENT_USER.staffType.staffCode === "STAFF_03"?<ShipperNav />: null}
+          {CURRENT_USER.staffType.staffCode === "ADMIN"?<NavAdmin />: null}
         </div>
         <div
           className="sidebar-background"

@@ -181,9 +181,24 @@ class OrderDetailForm extends Component {
                         ))
                       }
                       <tr>
-                    <td colSpan="7" className="text-right"><h5> Tổng tiền: &nbsp;</h5></td>
-                      <td  className="text-right"><h5> {sum(proccessData(bill.billDetailsByBillId.nodes))}</h5></td>
+                    <td colSpan="7" className="text-right">Tổng: &nbsp;
+                     <br></br>
+                     Khuyến mãi: &nbsp;
+                     <br></br>
+                     <h5> Tổng tiền: &nbsp;</h5>
+                     </td>
+                      <td  className="text-right">{sum(proccessData(bill.billDetailsByBillId.nodes))}
+                      <br></br>
+                      
+                      {bill.receiptByReceiptId.customerOrderByOrderId.promotionByPromotionId&&bill.receiptByReceiptId.customerOrderByOrderId.promotionByPromotionId.promotionCode}
+                      - {bill.receiptByReceiptId.customerOrderByOrderId.promotionByPromotionId && bill.receiptByReceiptId.customerOrderByOrderId.promotionByPromotionId.sale}
+                      %
+                      <br></br>
+                      <h5> 
+                      {bill.receiptByReceiptId.customerOrderByOrderId.promotionByPromotionId? (sum(proccessData(bill.billDetailsByBillId.nodes)) - bill.receiptByReceiptId.customerOrderByOrderId.promotionByPromotionId.sale * sum(proccessData(bill.billDetailsByBillId.nodes))/100):sum(proccessData(bill.billDetailsByBillId.nodes))}</h5>
+                      </td>
                     </tr>
+                   
 
                     </tbody>
                     </table>
