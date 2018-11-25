@@ -12,6 +12,47 @@ const options = [
 
 const required = value => (value ? undefined : 'Bắt buộc')
 
+const processOption1 =  (data, type)=>{
+  let res=[];
+  if (data!= null){
+    for (let i = 0; i<data.length;i++){
+        res.push({value: data[i].id, label: data[i].fullName + "("+data[i].email+")", type: data[i].staffTypeByStaffTypeId && data[i].staffTypeByStaffTypeId.staffCode});
+      
+    }
+  }
+  return res;
+  
+}
+
+const optionValue = (val,lab )=>{
+  return {value: val,label: lab};
+}
+
+const processOption =  (data, type)=>{
+let res=[];
+if (data!= null){
+  for (let i = 0; i<data.length;i++){
+    if (data[i])
+      res.push(optionValue(data[i].serviceTypeByServiceTypeId.id, data[i].serviceTypeByServiceTypeId.serviceTypeName));
+    
+  }
+}
+return res;
+
+}
+
+const processOption2 =  (data, type)=>{
+  let res=[];
+  if (data!= null){
+    for (let i = 0; i<data.length;i++){
+      if (data[i])
+        res.push({value: data[i].promotionByPromotionId.id, label: data[i].promotionByPromotionId.promotionName});
+      
+    }
+  }
+  return res;
+  
+}
 class  BranchForm extends Component{
 
   state = {
@@ -31,7 +72,31 @@ class  BranchForm extends Component{
   componentDidMount() {
     window.addEventListener('resize', this._resize);
     this._resize();
+    let {branch} = this.props;
+    let staffOne = [];
+    let staffTwo = [];
+    let staffThree= [];
+    let staff = processOption1(branch.staffByBranchId.nodes);
+    console.log(staff)
+    staffOne.push(staff.filter(value => value.type ==="STAFF_01"))
+    staffTwo.push(staff.filter(value => value.type ==="STAFF_02"))
+    staffThree.push(staff.filter(value => value.type ==="STAFF_03"))
+    this.setState({center:[branch.longtidute,branch.latidute]})
+    this.props.dispatch(initialize('BranchForm',{
+      id: branch.id,
+      branchName: branch.branchName,
+      address: branch.address,
+      status: branch.status === "ACTIVE"?true: false,
+      staffOne: staffOne.pop(),
+      staffTwo: staffTwo.pop(),
+      staffThree: staffThree.pop(),
+      serviceType: processOption(branch.serviceTypeBranchesByBranchId.nodes),
+      promotion: processOption2(branch.promotionBranchesByBranchId.nodes)
+
+    },{keepValues: true}));
   }
+
+  
 
   componentWillUnmount() {
     window.removeEventListener('resize', this._resize);
@@ -52,13 +117,13 @@ class  BranchForm extends Component{
   _onViewportChange = viewport => this.setState({viewport});
 
   render(){
-    let {handleSubmit,allService,allStaff} = this.props;
+    let {handleSubmit,allService,allStaff, allPromotion, history} = this.props;
     let { width, height } = this.state;
     return (
     
       <div className="card">
         <div className="header">
-          <h4>Thêm chi nhánh mới</h4>
+          <h4>Cập nhật chi nhánh</h4>
         </div>
         <div className="content">
           <form className="form-horizontal" onSubmit={handleSubmit} >
@@ -99,8 +164,7 @@ class  BranchForm extends Component{
                   validate={required}
                   options={allService}
                   placeholder="Chọn các dịch vụ hỗ trợ"
-                  hidden="true"
-                  className="form-control-hidden"
+  
                   component={renderField} />
                    
               </div>       
@@ -158,35 +222,49 @@ class  BranchForm extends Component{
             </div>
             
             <div className="form-group">
-              <label className="control-label col-md-3">Vị trí chi nhánh</label>
+              <label className="control-label col-md-3">Khuyến mãi</label>
+              
+              <div className="col-md-9 ">
+                <Field
+                  name="promotion"
+                  type="select"
+                  isMulti={true}
+                  options={allPromotion}
+                  placeholder="Chọn khuyến mãi"
+                 
+                  component={renderField} />
+                   
+              </div>       
+            </div>
+            <div className="form-group">
+              <label className="control-label col-md-3">Địa chỉ chi nhánh</label>
               <div className="col-md-9 ">
               <Field
                   name="address"
                   type="text"
                   placeholder="Địa chỉ chi nhánh"
                   validate={required}
-                  className="form-control-hidden"
+                  className="form-control"
                   component={renderField} />
                   <br></br>
                 <Field
                   name="latitude"
                   type="text"
                   placeholder=""
-                  hidden="true"
-                  className="form-control-hidden"
-                  component="input" />
+
+                  inputClassName ="hidden"
+                  component={renderField} />
                    <Field
                   name="longtitude"
                   type="text"
-                  hidden="true"
-                  className="form-control-hidden"
-                  component="input" />
+                  inputClassName ="hidden"
+                  component={renderField} />
                  <div
                   className="card"
                   style={{ width: width, height: height, boxSizing: 'border-box' }}
                   ref={container => this.container = container}>
                   <div className="content">
-                    {this.state.center === null?
+                   
                     <ReactMapGL
                     
                     mapboxApiAccessToken={"pk.eyJ1IjoicGh1b25ndGluaGJpZW4iLCJhIjoiY2pvd2RpeGk2MGd5MzNybDhweHJuaGplYSJ9.hnV7tfyYfaGe7XF5I0lAfQ"}
@@ -196,36 +274,16 @@ class  BranchForm extends Component{
                       onClick ={e=>{console.log(e);
                         this.setState({center:e.lngLat });
                         this.props.dispatch(initialize('BranchForm',{
-                          latitude: e.lngLat[1],
-                          longtitude: e.lngLat[0]
-                        },{keepValues: true}));
+                          latitude: this.state.center[1],
+                          longtitude: this.state.center[0]
+                        },{keepValues: true,}));
                       }} >
-                    
-                      </ReactMapGL>:<ReactMapGL
-                    
-                    mapboxApiAccessToken={"pk.eyJ1IjoicGh1b25ndGluaGJpZW4iLCJhIjoiY2pvd2RpeGk2MGd5MzNybDhweHJuaGplYSJ9.hnV7tfyYfaGe7XF5I0lAfQ"}
-                      {...this.state.viewport} 
-                      mapStyle={"mapbox://styles/mapbox/streets-v10"}
-                      onViewportChange={this._onViewportChange}
-                      onClick ={e=>{console.log(e);
-                        this.setState({center:e.lngLat });
-                        this.props.dispatch(initialize('BranchForm',{
-                          latitude: e.lngLat[1],
-                          longtitude: e.lngLat[0]
-                        },{keepValues: true}));
-                      }} >
-                      <Marker  latitude={this.state.center[1]} longitude={this.state.center[0]} offsetLeft={-20} offsetTop={-10}>
+                       {this.state.center &&<Marker  latitude={this.state.center[1]} longitude={this.state.center[0]} offsetLeft={-20} offsetTop={-10}>
                         <div>
-                        <img src={chilli} width="32" height="32" /></div>
+                        <img src={chilli} width="48" height="48" /></div>
                       </Marker>
-                      {/* <Marker
-                          coordinates={this.state.center}
-                          anchor="bottom"
-                          
-                        >
-                        <img src={chilli} width="32" height="32" />
-                        </Marker> */}
-                      </ReactMapGL>}
+                     }
+                      </ReactMapGL>
                   </div>
                 </div>
               </div>       
@@ -236,9 +294,9 @@ class  BranchForm extends Component{
                         <button type="submit" className="btn btn-fill btn-info" >Lưu lại</button>
                         &nbsp;
                         &nbsp;
-                        {/* <Link className="btn btn-fill btn-danger" to="/admin/branch-management">
+                        <button className="btn btn-fill btn-danger" onClick={e=>history.goBack()}>
                         Hủy
-                        </Link> */}
+                        </button>
                 </div>
             </div>
           </form>
@@ -249,6 +307,5 @@ class  BranchForm extends Component{
   }
 BranchForm = reduxForm({
   form: 'BranchForm',
-  enableReinitialize : false,
 })(BranchForm)
   export default BranchForm;

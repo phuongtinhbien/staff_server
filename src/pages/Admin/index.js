@@ -8,6 +8,11 @@ import Promotion from './Promotion';
 import Account from './Account';
 import Cloth from './ClothCategory';
 import CreateBranch from './CreateNewBranch';
+import CreateStaff from './Account/CreateStaff';
+import EditBranch from './Branch/EditBranch';
+import CreateCloth from './ClothCategory/CreateCloth';
+import UnitPrice from './Price';
+import CreateUnitPrice from './Price/CreateCloth';
 const Admin = ({match}) => (
     <div className="content">
     
@@ -16,9 +21,14 @@ const Admin = ({match}) => (
         <Route  path={`${match.url}/branch`} component={Branch} />
         <Route  path={`${match.url}/service`} component={Service} />
         <Route  path={`${match.url}/promotion`} component={Promotion} />
-        <Route  path={`${match.url}/account`} component={Account} />
+        <Route exact path={`${match.url}/account`} component={Account} />
         <Route  path={`${match.url}/cloth`} component={Cloth} />
         <Route  path={`${match.url}/new`} component={CreateBranch} />
+        <Route  path={`${match.url}/createStaff`} component={CreateStaff} />
+        <Route  path={`${match.url}/createCloth`} component={CreateCloth} />
+        <Route  path={`${match.url}/createUnitPrice`} component={CreateUnitPrice} />
+        <Route  path={`${match.url}/price`} component={UnitPrice} />
+        <Route  path={`${match.url}/editBranch/:nodeId`} component={EditBranch} />
     </div>
     
 );

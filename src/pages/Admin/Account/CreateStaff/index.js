@@ -1,32 +1,12 @@
 import gql from 'graphql-tag';
 import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom';
-import BranchForm from './branchForm';
-import Error from '../../Error';
+import StaffForm from './CreateStaffForm';
+import Error from '../../../Error';
 import { Query, Mutation } from 'react-apollo';
 import NotificationSystem from 'react-notification-system';
 const SERVICE_QUERY = gql`query allService {
-    allServiceTypes(condition:{status: "ACTIVE"}){
-      nodes{
-        nodeId
-        serviceTypeName
-        id
-      }
-    }
-    allStaff(condition:{status: true}){
-    nodes{
-      nodeId
-      id
-      fullName
-      email
-      staffTypeByStaffTypeId{
-        staffCode
-        id
-        nodeId
-        staffTypeName
-      }
-    }
-  }
+   
   allStaffTypes(condition:{status:"ACTIVE"}){
     nodes{
       nodeId
@@ -86,20 +66,9 @@ const getId = (arr)=>{
   return a;
 }
 
-const handleSubmit = (value, mutation, currUser) =>{
+const handleSubmit = (value, mutation) =>{
   console.log(value);
-  let serviceType = getId(value.serviceType);
-  let staffOne = getId(value.staffOne);
-  let staffTwo = getId(value.staffTwo);
-  let staffThree = getId(value.staffThree);
-  let status = value.status?"ACTIVE": "INACTIVE";
-  let branch = {storeId: 1,branchName: value.branchName,
-     status : status, createBy:currUser, 
-     updateBy:currUser, address: value.address,
-     latidute: value.latitude,
-     longtidute: value.longtitude};
-
-  mutation({variables:{branch:branch,serviceType:serviceType,staffOne:staffOne,staffTwo:staffTwo,staffThree:staffThree}});
+  mutation({variables:{name:value.fullName,email: value.email,password: value.password}});
 
 }
 
@@ -109,28 +78,52 @@ const handleOnCompleted = (data,history)=>{
       }
 }
 
-const CREATE_BRANCH = gql`mutation createNewBranch ($branch: BranchInput!, 
-  $serviceType: [BigFloat!], $staffOne: [BigFloat!], 
-  $staffTwo: [BigFloat], $staffThree: [BigFloat]){
-    createNewBranch (input:{
-      b: $branch,
-      serviceType: $serviceType,
-      staffOne:$staffOne,
-      staffTwo:$staffTwo,
-      staffThree: $staffThree
+const handleUpdate = (data,mutation, info)=>{
+    console.log(data);
+    let staff = {
+        staffTypeId: info.staffType.value,
+        fullName: info.fullName,
+        address: info.address,
+        phone: info.phone,
+        status: info.status
+    }
+    mutation({variables:{id: data.registerUser.user.id, staff: staff}});
+}
+
+const UPDATE_STAFF = gql`mutation updateStaff ($id: BigFloat!,$staff: StaffPatch!){
+    updateStaffById (input:{
+      id: $id,
+      staffPatch: $staff
     }){
-      branch{
-        id
+      staff{
         nodeId
-        branchName
+        id
+        fullName
       }
     }
   }`;
 
+const REGISTER_STAFF =gql `mutation registerStaff ($name: String!, $email: String!, $password: String!){
+    registerUser(input:{
+      firstName: $name,
+      lastName: "",
+      email: $email,
+      password: $password,
+      userType: "staff_type"
+    }){
+      user{
+        id
+        firstName
+        userType
+        nodeId
+      }
+    }
+  }`
 
 
 
-class EditBranch extends Component {
+
+class CreateStaff extends Component {
     state = {
         data: this.props,
         show: true,
@@ -149,6 +142,7 @@ class EditBranch extends Component {
       
       render(){
         let {match,data,history} = this.props;
+        let info;
         const CURRENT_USER = JSON.parse(localStorage.getItem("luandryStaffPage.curr_staff_desc"));
           return(
            
@@ -163,18 +157,38 @@ class EditBranch extends Component {
                     console.log(data);
                     return  (
                        <Mutation
-                                mutation={CREATE_BRANCH}
+                                mutation={UPDATE_STAFF}
                                 onCompleted={data=> {
                   
-                                  this.showNotification("Tạo chi nhánh mới thành công", "success") 
+                                  this.showNotification("Thêm nhân viên mới thành công", "success") 
                                   handleOnCompleted(data,history)
                                  }}
                                 onError={error => this.showNotification(error.message, "error")}
                               >
                               {
-                                (createNewBranch) =>(
+                                (updateStaff) =>(
                                 <div>
-                    <BranchForm onSubmit={value => handleSubmit(value,createNewBranch, CURRENT_USER.currentUser.id)} allStaffType= {processOption2(data.allStaffTypes.nodes)} allStaff = {processOption1(data.allStaff.nodes)} allService = {processOption(data.allServiceTypes.nodes)}></BranchForm>
+                                <Mutation
+                                mutation={REGISTER_STAFF}
+                                onCompleted={data=> {
+                  
+                                    
+                                  handleUpdate(data,updateStaff, info)
+                                 }}
+                                onError={error => this.showNotification(error.message, "error")}
+                              >
+                              {
+                                (registerUser) =>(
+                                <div>
+                                <StaffForm onSubmit={value => handleSubmit(info = value,registerUser)} 
+                                allStaffType= {processOption2(data.allStaffTypes.nodes)} ></StaffForm>
+                                
+                                  
+                                 </div>
+                                )
+                              }
+                      
+                      </Mutation>
                                 
                                   
                                  </div>
@@ -197,4 +211,4 @@ class EditBranch extends Component {
       }
 }
 
-export default withRouter(EditBranch);
+export default withRouter(CreateStaff);

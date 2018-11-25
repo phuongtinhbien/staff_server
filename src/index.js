@@ -6,7 +6,6 @@ import './assets/styles/base.scss';
 import 'sweetalert/dist/sweetalert.css';
 import Main from './pages/Main';
 
-import Login from './pages/Login';
 import configureStore from './config/configureStore';
 import { Provider } from 'react-redux';
 

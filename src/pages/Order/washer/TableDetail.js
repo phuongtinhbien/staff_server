@@ -100,6 +100,7 @@ class TableDetail extends Component {
         
       );
     }
+
     handleModalClose(closeModal) {
       // Custom your onCloseModal event here,
       // it's not necessary to implement this function if you have no any process before modal close
@@ -168,12 +169,13 @@ class TableDetail extends Component {
           data => {
             console.log(data)
               if (data){
-                this.showNotification("Thêm thành công " + data.data.createWashingMachine.washingMachine.washerCode, "success") ;
+              showNotification("Thêm thành công " + data.data.createWashingMachine.washingMachine.washerCode, "success") ;
               }
           }
         ).catch(
           error=>{
             console.log(error.message)
+            showNotification("Thêm bị lỗi ", "error") ;
           }
         )
       
@@ -248,7 +250,7 @@ class TableDetail extends Component {
                   data={data}
                   bordered={false}
                   striped
-                  insertRow
+                  insertRow={CURRENT_USER.staffType.staffCode==="STAFF_01"}
                 
                   search={ true } multiColumnSearch={ true }
                   searchPlaceholder="Tìm kiếm"

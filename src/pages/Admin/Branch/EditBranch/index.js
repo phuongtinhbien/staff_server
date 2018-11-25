@@ -2,18 +2,56 @@ import gql from 'graphql-tag';
 import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom';
 import BranchForm from './branchForm';
-import Error from '../../Error';
+import Error from '../../../Error';
 import { Query, Mutation } from 'react-apollo';
 import NotificationSystem from 'react-notification-system';
-const SERVICE_QUERY = gql`query allService {
-    allServiceTypes(condition:{status: "ACTIVE"}){
+const SERVICE_QUERY = gql`query branchInfo ($nodeId: ID!){
+  branch(nodeId: $nodeId){
+    id
+    address
+    latidute
+    longtidute
+    branchName
+    status
+    staffByBranchId{
+      nodes{
+        fullName
+        email
+        id
+        staffTypeByStaffTypeId{
+          staffCode
+          staffTypeName
+          id
+        }
+      }
+    }
+    promotionBranchesByBranchId(condition:{status:"ACTIVE"}){
+      nodes{
+        promotionByPromotionId{
+          promotionName
+          promotionCode
+          id
+        }
+      }
+    }
+    serviceTypeBranchesByBranchId(condition:{status:"ACTIVE"}){
+      nodes{
+        serviceTypeByServiceTypeId{
+          serviceTypeName
+          id
+        }
+      }
+    }
+  }
+  
+   allServiceTypes(condition:{status: "ACTIVE"}){
       nodes{
         nodeId
         serviceTypeName
         id
       }
     }
-    allStaff(condition:{status: true}){
+    allStaff(condition:{branchId:null,status: true}){
     nodes{
       nodeId
       id
@@ -33,6 +71,13 @@ const SERVICE_QUERY = gql`query allService {
       id
       staffCode
       staffTypeName
+    }
+  }
+  allPromotions(condition:{status: "ACTIVE"}){
+    nodes{
+      nodeId
+      id
+      promotionName
     }
   }
 }`;
@@ -76,6 +121,18 @@ const processOption2 =  (data, type)=>{
   
 }
 
+const processOption3 =  (data, type)=>{
+  let res=[];
+  if (data!= null){
+    for (let i = 0; i<data.length;i++){
+        res.push({value: data[i].id, label: data[i].promotionName});
+      
+    }
+  }
+  return res;
+  
+}
+
 const getId = (arr)=>{
 
   let a = []
@@ -88,18 +145,24 @@ const getId = (arr)=>{
 
 const handleSubmit = (value, mutation, currUser) =>{
   console.log(value);
+  
   let serviceType = getId(value.serviceType);
   let staffOne = getId(value.staffOne);
   let staffTwo = getId(value.staffTwo);
   let staffThree = getId(value.staffThree);
+  let pro = getId(value.promotion);
   let status = value.status?"ACTIVE": "INACTIVE";
-  let branch = {storeId: 1,branchName: value.branchName,
-     status : status, createBy:currUser, 
-     updateBy:currUser, address: value.address,
+  let branch = {storeId: 1,
+     branchName: value.branchName,
+     status : status, 
+     updateBy:currUser, 
+     updateBy:currUser, 
+     address: value.address,
      latidute: value.latitude,
      longtidute: value.longtitude};
 
-  mutation({variables:{branch:branch,serviceType:serviceType,staffOne:staffOne,staffTwo:staffTwo,staffThree:staffThree}});
+  console.log({brId: value.id, branch:branch,pro: pro,serviceType:serviceType,staffOne:staffOne,staffTwo:staffTwo,staffThree:staffThree})
+  mutation({variables:{brId: value.id, branch:branch,pro: pro,serviceType:serviceType,staffOne:staffOne,staffTwo:staffTwo,staffThree:staffThree}});
 
 }
 
@@ -109,19 +172,30 @@ const handleOnCompleted = (data,history)=>{
       }
 }
 
-const CREATE_BRANCH = gql`mutation createNewBranch ($branch: BranchInput!, 
-  $serviceType: [BigFloat!], $staffOne: [BigFloat!], 
-  $staffTwo: [BigFloat], $staffThree: [BigFloat]){
-    createNewBranch (input:{
-      b: $branch,
+const UPDATE_BRANCH = gql`mutation updateBranch ($brId: BigFloat!,$branch: BranchPatch!, $serviceType: [BigFloat],
+  $pro: [BigFloat],$staffOne: [BigFloat!], $staffTwo: [BigFloat!],
+  $staffThree:[BigFloat!]){
+    updateBranchById(input:{
+      id: $brId,
+      branchPatch:$branch
+    }){
+      branch{
+        nodeId
+        id
+        branchName
+      }
+    }
+    updateInfoBranch(input:{
+      b: $brId,
       serviceType: $serviceType,
-      staffOne:$staffOne,
-      staffTwo:$staffTwo,
+      pro: $pro,
+      staffOne: $staffOne,
+      staffTwo: $staffTwo,
       staffThree: $staffThree
     }){
       branch{
-        id
         nodeId
+        id
         branchName
       }
     }
@@ -153,7 +227,9 @@ class EditBranch extends Component {
           return(
            
             <div className="container-fluid">
-              <Query query={SERVICE_QUERY} >
+              <Query query={SERVICE_QUERY}
+              fetchPolicy={"network-only"}
+              variables = {{nodeId:match.params.nodeId }}>
                 {({loading, error,data, refetch}) => {
                   if (loading) return null;
                   if (error){
@@ -163,10 +239,10 @@ class EditBranch extends Component {
                     console.log(data);
                     return  (
                        <Mutation
-                                mutation={CREATE_BRANCH}
+                                mutation={UPDATE_BRANCH}
                                 onCompleted={data=> {
                   
-                                  this.showNotification("Tạo chi nhánh mới thành công", "success") 
+                                  this.showNotification("Cập nhật chi nhánh thành công", "success") 
                                   handleOnCompleted(data,history)
                                  }}
                                 onError={error => this.showNotification(error.message, "error")}
@@ -174,7 +250,11 @@ class EditBranch extends Component {
                               {
                                 (createNewBranch) =>(
                                 <div>
-                    <BranchForm onSubmit={value => handleSubmit(value,createNewBranch, CURRENT_USER.currentUser.id)} allStaffType= {processOption2(data.allStaffTypes.nodes)} allStaff = {processOption1(data.allStaff.nodes)} allService = {processOption(data.allServiceTypes.nodes)}></BranchForm>
+                    <BranchForm history={history} branch= {data.branch} onSubmit={value => handleSubmit(value,createNewBranch, CURRENT_USER.currentUser.id)} 
+                    allStaffType= {processOption2(data.allStaffTypes.nodes)} 
+                    allStaff = {processOption1(data.allStaff.nodes)} 
+                    allService = {processOption(data.allServiceTypes.nodes)}
+                    allPromotion = {processOption3(data.allPromotions.nodes)}></BranchForm>
                                 
                                   
                                  </div>

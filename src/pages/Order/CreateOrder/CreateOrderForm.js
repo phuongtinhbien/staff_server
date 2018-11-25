@@ -109,7 +109,8 @@ const validate = values => {
 
 const SERVICE_TYPE_QUERY = gql`query getServiceType ($branch: BigFloat!){
   allServiceTypeBranches(condition:{
-    branchId: $branch
+    branchId: $branch,
+    status: "ACTIVE"
   }){
     nodes{
       id

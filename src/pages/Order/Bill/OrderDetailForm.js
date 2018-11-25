@@ -185,7 +185,7 @@ class OrderDetailForm extends Component {
                      <br></br>
                      Khuyến mãi: &nbsp;
                      <br></br>
-                     <h5> Tổng tiền: &nbsp;</h5>
+                     <h5><strong>Tổng tiền: &nbsp;</strong> </h5>
                      </td>
                       <td  className="text-right">{sum(proccessData(bill.billDetailsByBillId.nodes))}
                       <br></br>

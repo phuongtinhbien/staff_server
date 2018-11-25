@@ -41,13 +41,13 @@ let client = new ApolloClient({
 
 });
 
-const ADD_WASHER = gql`
-mutation addOption ($colorName: String!, $status: String!,
+const ADD_OPTION = gql`
+mutation addOption ($keyName: String!, $status: String!,
   $colorGroupId: BigFloat!,
   $currUser: BigFloat!){
   createColor (input:{
     color:{
-      colorName: $colorName,
+      colorName: $keyName,
       status: $status,
       createBy: $currUser,
       colorGroupId: $colorGroupId
@@ -73,8 +73,7 @@ const processOption =  (data)=>{
 let res=[];
 if (data!= null){
   for (let i = 0; i<data.length;i++){
-      res.push( data[i].colorGroupName));
-    
+      res.push( data[i].colorGroupName);
   }
 }
 return res;
@@ -174,18 +173,17 @@ class TableDetail extends Component {
       });
     }
 
-
     function onAfterInsertRow(row) {
       let newRowStr = '';
       console.log(row);
+      console.log(colorGroup.filter(value =>{value.colorGroupName === row.colorGroupName})) ;
       if (row)
-      client.mutate({mutation: ADD_WASHER,
-        variables:{washerCode: row['washerCode'],currUser: CURRENT_USER.id, status: row['status'],
-         branch: CURRENT_USER.branch.id}}).then(
+      client.mutate({mutation: ADD_OPTION,
+        variables:{keyName: row.colorName, currUser: CURRENT_USER.id, status: row.status }}).then(
           data => {
             console.log(data)
               if (data){
-                this.showNotification("Thêm thành công " + data.data.createWashingMachine.washingMachine.washerCode, "success") ;
+                this.showNotification("Thêm thành công " + data.data.createColor.color.colorName, "success") ;
               }
           }
         ).catch(
@@ -247,7 +245,8 @@ class TableDetail extends Component {
                     dataField='sn'
                     width="10%"
                     dataFormat={indexN}
-                    isKey
+                   
+                    autovalue={true}
                     hiddenOnInsert
                    >
                     STT
@@ -256,26 +255,18 @@ class TableDetail extends Component {
                     dataField='colorGroupName'
                     width="20%"
                     
-                    editable={ { type: 'select', options: {values:processOption(colorGroup) } }}
+                    colorGroupFormat
                   
                    >
                     Nhóm màu
                   </TableHeaderColumn>
                   
-                  <TableHeaderColumn
-                    dataField='nof'
-                    width="20%"
-                    dataFormat={colorGroupFormat}
-                    editable={ { type: 'select', options: { values:processOption(colorGroup) } }}
-                    hiddenOnInsert
-                   >
-                    Nhóm màu
-                  </TableHeaderColumn>
+                 
                   
                   <TableHeaderColumn
                     dataField='colorName'
                     width="20%"
-                  
+                    isKey
                  
                    >
                     Màu sắc

@@ -19,6 +19,18 @@ const ExtendedTables = ({CURRENT_USER = JSON.parse(localStorage.getItem("luandry
   <div className="container-fluid">
     <div className="row">
       <div className="col-md-12">
+      <div className="container-fluid"></div>
+     
+      <div className="row">
+        <div className="col-md-12">
+          <div className="card">
+            <div className="header">
+              <h4>Dịch vụ</h4>
+              <p>Các dịch vụ hệ thống hỗ trợ</p>
+            </div>
+            
+            
+            <div className="content">
       <Query
       query={ALL_BRANCH}
       fetchPolicy={"network-only"}
@@ -40,7 +52,10 @@ const ExtendedTables = ({CURRENT_USER = JSON.parse(localStorage.getItem("luandry
       }
     }}
     </Query>
-       
+    </div>
+          </div>
+        </div>
+      </div>
       </div>
     </div>
   </div>

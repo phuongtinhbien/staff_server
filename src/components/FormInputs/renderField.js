@@ -11,6 +11,7 @@ const renderField = (props) => (
     { (props.type === 'email' ||
        props.type === 'password' ||
        props.type === 'text' ||
+       props.type === 'file' ||
        props.type === 'number') &&
       <TextInput {...props} />
     }

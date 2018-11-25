@@ -11,12 +11,12 @@ class Nav extends Component {
     let { location } = this.props;
     return (
       <ul className="nav">
-        <li className={location.pathname === '/' ? 'active' : null}>
+        {/* <li className={location.pathname === '/' ? 'active' : null}>
           <Link to="/">
             <i className="pe-7s-graph"></i>
             <p>Tổng quan</p>
           </Link>
-        </li>
+        </li> */}
         <li className={location.pathname === '/admin/new' ? 'active' : null}>
           <Link to="/admin/new">
             <i className="pe-7s-graph"></i>

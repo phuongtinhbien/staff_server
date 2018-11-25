@@ -11,6 +11,7 @@ const ACCOUNT = gql `query allAccount{
       id
       fullName
       status
+      email
       branchByBranchId{
         branchName
         id 

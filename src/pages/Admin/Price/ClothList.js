@@ -10,16 +10,29 @@ import NotificationSystem from 'react-notification-system';
 import ApolloClient from 'apollo-boost';
 import { InMemoryCache } from 'apollo-cache-inmemory';
 const UPDATE_WASHER_STATUS = gql `mutation updateOptionList($id: BigFloat!, $status: String!, $currUser: BigFloat!) {
-  updateUnitById(input: {id: $id, unitPatch: {status: $status, updateBy: $currUser}}) {
-    unit {
+  updateUnitPriceById(input: {id: $id, unitPricePatch: {status: $status, updateBy: $currUser}}) {
+    unitPrice {
       nodeId
       id
-      unitName
+     
       status
     }
   }
 }
 
+`;
+
+const DELETE = gql `mutation delete ($id: BigFloat!){
+  deleteUnitPriceById(input:{
+    id:$id
+  }){
+    unitPrice{
+      nodeId
+  
+      id
+    }
+  }
+}
 `;
 
 
@@ -34,24 +47,7 @@ let client = new ApolloClient({
 
 });
 
-const ADD_OPTION = gql`
-mutation addOption ($keyName: String!, $status: String!,
-  $currUser: BigFloat!){
-  createUnit (input:{
-    unit:{
-      unitName: $keyName,
-      status: $status,
-      createBy: $currUser,
-    }
-  }){
-    unit{
-      id
-      unitName
-      status
-    }
-  }
-}
-`;
+
 const optionValue = (val,lab )=>{
   return {value: val,label: lab};
 }
@@ -67,18 +63,6 @@ return res;
 
 }
 
-const DELETE = gql `mutation delete ($id: BigFloat!){
-  deleteUnitById(input:{
-    id:$id
-  }){
-    unit{
-      nodeId
-      unitName
-      id
-    }
-  }
-}
-`;
 
 class TableDetail extends Component {
 
@@ -104,17 +88,24 @@ class TableDetail extends Component {
     );
   }
 
-    createCustomInsertButton = (openModal) => {
-      return (
-      <button type="button" className="btn btn-primary btn-fill btn-wd" onClick={e=> {openModal()}} >
-          <span className="btn-label">
-            <i className="pe-7s-plus"></i> &nbsp;
-            Thêm mới
-          </span> 
-      </button>
-        
-      );
+  customConfirm(next, dropRowKeys) {
+    const dropRowKeysStr = dropRowKeys.join(',');
+    if (window.confirm(`Bạn có chắc muốn xóa ${dropRowKeysStr}?`)) {
+      next();
     }
+  }
+  
+  createCustomInsertButton = (openModal) => {
+    return (
+    <Link type="button" className="btn btn-primary btn-fill btn-wd" to={"/admin/createUnitPrice"} >
+        <span className="btn-label">
+          <i className="pe-7s-plus"></i> &nbsp;
+          Thêm mới
+        </span> 
+    </Link>
+      
+    );
+  }
     handleModalClose(closeModal) {
       // Custom your onCloseModal event here,
       // it's not necessary to implement this function if you have no any process before modal close
@@ -122,6 +113,19 @@ class TableDetail extends Component {
       closeModal();
     }
     
+    createCustomDeleteButton = (onClick) => {
+      return (
+      <button type="button" className="btn btn-danger btn-fill btn-wd" 
+            onClick={onClick}>
+            <span className="btn-label">
+              <i className="pe-7s-close-circle"></i> &nbsp;
+              Xóa
+            </span> 
+         
+          </button>
+          
+      );
+    }
 
     createCustomModalHeader = (closeModal, save) => {
       return (
@@ -149,25 +153,6 @@ class TableDetail extends Component {
       );
     }
     
-    customConfirm(next, dropRowKeys) {
-      const dropRowKeysStr = dropRowKeys.join(',');
-      if (window.confirm(`Bạn có chắc muốn xóa ${dropRowKeysStr}?`)) {
-        next();
-      }
-    }
-    createCustomDeleteButton = (onClick) => {
-      return (
-      <button type="button" className="btn btn-danger btn-fill btn-wd" 
-            onClick={onClick}>
-            <span className="btn-label">
-              <i className="pe-7s-close-circle"></i> &nbsp;
-              Xóa
-            </span> 
-         
-          </button>
-          
-      );
-    }
   
   render() {
     const { data } = this.props;
@@ -191,26 +176,7 @@ class TableDetail extends Component {
       });
     }
 
-    function onAfterInsertRow(row) {
-      let newRowStr = '';
-      console.log(row);
-      if (row)
-      client.mutate({mutation: ADD_OPTION,
-        variables:{keyName: row.unitName, currUser: CURRENT_USER.currentUser.id, status: row.status }}).then(
-          data => {
-            console.log(data)
-              if (data){
-                showNotification("Thêm thành công ", "success") ;
-              }
-          }
-        ).catch(
-          error=>{
-            console.log(error.message);
-            showNotification("Thêm thất bại ", "error") ;
-          }
-        )
-      
-    }
+    
    
     
 
@@ -223,35 +189,38 @@ class TableDetail extends Component {
       return (<div>{index+1}</div>) 
   }
 
-    function colorGroupFormat (cell, row){
-      return (<span>{row && row.colorGroupByColorGroupId.colorGroupName}</span>)
-    }
     function toolFormat (cell, row){
       return (
-       <Mutation
-       mutation={UPDATE_WASHER_STATUS}
-       onCompleted={data=> {
-         
-        
-         showNotification("Cập nhật thành công ", "success") ;
-         
-        }}
-       onError={error => showNotification(error.message, "error")}
-     >
-     {
-       (updateStatusWasher) =>(
-       <div>
- 
-         <Switch value={row.status==="ACTIVE"?true: false}   onChange={() => {updateStatusWasher({variables:{id:row.id,currUser: CURRENT_USER.currentUser.id, status: row.status ==="ACTIVE"?"INACTIVE":"ACTIVE" }});
-        }} />
-         
-       </div>
-       )
-     }
- 
- </Mutation>
+        <div>
+            <Mutation
+                  mutation={UPDATE_WASHER_STATUS}
+                  onCompleted={data=> {
+                    
+                    
+                    showNotification("Cập nhật thành công ", "success") ;
+                    
+                    }}
+                  onError={error => showNotification(error.message, "error")}
+                >
+                {
+                  (updateStatusWasher) =>(
+                  <div>
+            
+                    <Switch value={row.status==="ACTIVE"?true: false}   onChange={() => {updateStatusWasher({variables:{id:row.id,currUser: CURRENT_USER.currentUser.id, status: row.status ==="ACTIVE"?"INACTIVE":"ACTIVE" }});
+                    }} />
+                    
+                  </div>
+                  )
+                }
+            
+            </Mutation>
+        </div>
+       
       )
     }
+
+    
+  
     function onAfterDeleteRow(rowKeys) {
       client.mutate({mutation: DELETE,
         variables:{id: rowKeys}}).then(
@@ -283,7 +252,6 @@ class TableDetail extends Component {
       hideSizePerPage: true,
       clearSearch: true,
       afterDeleteRow: onAfterDeleteRow,
-      afterInsertRow: onAfterInsertRow,
       clearSearchBtn: this.createCustomClearButton,
       insertBtn: this.createCustomInsertButton,
       insertModalHeader: this.createCustomModalHeader,
@@ -313,7 +281,7 @@ class TableDetail extends Component {
                     dataField='sn'
                     width="10%"
                     dataFormat={indexN}
-                    
+                   
                     autovalue={true}
                     hiddenOnInsert
                    >
@@ -325,17 +293,39 @@ class TableDetail extends Component {
                     width="20%"
                     isKey
                     hidden
-                    hiddenOnInsert
                     autoValue={true}
+                    hiddenOnInsert
                    >
-                    id
+                    ID
+                  </TableHeaderColumn>
+                  <TableHeaderColumn
+                    dataField='serviceType'
+                    width="20%"
+                 
+                   >
+                    Dịch vụ
                   </TableHeaderColumn>
                   <TableHeaderColumn
                     dataField='unitName'
                     width="20%"
-                    
+                   
                    >
                     Đơn vị tính
+                  </TableHeaderColumn>
+                  
+                  <TableHeaderColumn
+                    dataField='productName'
+                    width="20%"
+                    
+                   >
+                    Quần áo
+                  </TableHeaderColumn>
+                  <TableHeaderColumn
+                    dataField='price'
+                    width="20%"
+                    
+                   >
+                    Giá
                   </TableHeaderColumn>
                   
                  
@@ -355,10 +345,13 @@ class TableDetail extends Component {
                   dataField=''
                   width="25%" 
                   dataFormat={toolFormat}
-                  dataSort>
+                 >
                  Chức năng
                 </TableHeaderColumn>
+              
                 }
+                  
+                
                   
                   </BootstrapTable>
                   

@@ -28,7 +28,7 @@ class TableDetail extends Component {
     console.log(orderList);
     
     function branchFormat(cell, row){
-      return (<span>{row.branchByBranchId.branchName}</span>);
+      return (<span>{row.branchByBranchId&&row.branchByBranchId.branchName}</span>);
     };
 
     function washerFormat (cell,row){
