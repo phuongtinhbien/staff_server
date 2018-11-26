@@ -147,7 +147,7 @@ class Billing extends Component {
               content={() => this.componentRef}
           />} &nbsp;
             
-            {CURRENT_USER.staffType.staffCode ==='STAFF_01' &&<Link
+            {CURRENT_USER.staffType.staffCode ==='STAFF_01' && data.bill.status !== "PAID"  &&<Link
             to={"/order/bill/edit/"+match.params.nodeId}
               type="button"
               className="btn btn-fill btn-warning"

@@ -79,17 +79,21 @@ class AssignForm extends Component {
     sortedCloth: null
   
   };
-  render () {
-    
+  componentDidMount(){
     let {receipt, washer,handleSubmit, history} = this.props;
 
-    let {sortedCloth} = this.state;
     
     this.props.dispatch(initialize('AssignToWashForm',{
       receiptId: receipt.id,
       resultSortedCloth: proccessData(receipt.washBagsByReceiptId.nodes)
     },{keepValues: true}));
     console.log(sortedCloth)
+  }
+  render () {
+    
+    let {receipt, washer,handleSubmit, history} = this.props;
+
+    let {sortedCloth} = this.state;
 
       return(
             <fieldset>
