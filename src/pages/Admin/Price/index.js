@@ -36,7 +36,7 @@ const proccessData = (data)=>{
 
       res.push({
         id: element.id,
-        productName: element.productByProductId.productName,
+        productName: element.productByProductId && element.productByProductId.productName,
       serviceType: element.serviceTypeByServiceTypeId.serviceTypeName,
       unitName: element.unitByUnitId.unitName,
     status: element.status,

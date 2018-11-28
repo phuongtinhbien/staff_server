@@ -5,6 +5,7 @@ import BranchForm from './branchForm';
 import Error from '../../../Error';
 import { Query, Mutation } from 'react-apollo';
 import NotificationSystem from 'react-notification-system';
+import moment from 'moment';
 const SERVICE_QUERY = gql`query option{
   allProducts(condition: {status: "ACTIVE"}){
     nodes{
@@ -84,23 +85,18 @@ const getId = (arr)=>{
 const handleSubmit = (value, mutation, currUser) =>{
   console.log(value);
   
-  let serviceType = getId(value.serviceType);
-  let staffOne = getId(value.staffOne);
-  let staffTwo = getId(value.staffTwo);
-  let staffThree = getId(value.staffThree);
-  let pro = getId(value.promotion);
-  let status = value.status?"ACTIVE": "INACTIVE";
-  let branch = {storeId: 1,
-     branchName: value.branchName,
-     status : status, 
-     updateBy:currUser, 
-     updateBy:currUser, 
-     address: value.address,
-     latidute: value.latitude,
-     longtidute: value.longtitude};
+  let UnitPriceInput = {
+    productId: value.product && value.product.value,
+    serviceTypeId: value.serviceType && value.serviceType.value,
+    unitId: value.unit.value,
+    price: value.price,
+    applyDate: moment(),
+    createBy: currUser,
+    updateBy: currUser,
+    status: "ACTIVE"
+  }
 
-  console.log({brId: value.id, branch:branch,pro: pro,serviceType:serviceType,staffOne:staffOne,staffTwo:staffTwo,staffThree:staffThree})
-  mutation({variables:{brId: value.id, branch:branch,pro: pro,serviceType:serviceType,staffOne:staffOne,staffTwo:staffTwo,staffThree:staffThree}});
+  mutation({variables:{unitPrice: UnitPriceInput}});
 
 }
 
@@ -110,25 +106,18 @@ const handleOnCompleted = (data,history)=>{
       }
 }
 
-const CREATE_CLOTH = gql`mutation createCloth ($productName: String!, $productType: BigFloat!, 
-  $productImage: Int, $currUser: BigFloat!){
-  createProduct(input:{
-    product:{
-      productName: $productName,
-      productAvatar: $productImage,
-      productTypeId: $productType,
-      status: "ACTIVE",
-      createBy: $currUser,
-      updateBy:$currUser
-    }
-  }){
-    product{
+const CREATE_CLOTH = gql`mutation createClothPrice($unitPrice: UnitPriceInput!) {
+  createUnitPrice(input: {unitPrice: $unitPrice}) {
+    unitPrice {
       nodeId
       id
-      productName
+      price
     }
   }
-}`;
+}
+`;
+
+
 
 
 
@@ -149,6 +138,7 @@ class EditBranch extends Component {
         });
       }
 
+     
       
       render(){
         let {match,data,history} = this.props;
@@ -171,7 +161,7 @@ class EditBranch extends Component {
                                 mutation={CREATE_CLOTH}
                                 onCompleted={data=> {
                   
-                                  this.showNotification("Cập nhật chi nhánh thành công", "success") 
+                                  this.showNotification("Thêm đơn giá thành công", "success") 
                                   handleOnCompleted(data,history)
                                  }}
                                 onError={error => this.showNotification(error.message, "error")}

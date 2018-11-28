@@ -70,7 +70,8 @@ class TableDetail extends Component {
     column: [],
     tableName: "Máy giặt của chi nhánh",
     tableDesc: "Quản lí trạng thái máy giặt. Thay đổi khi có vấn đề với máy giặt",
-    data: this.props.orderList
+    data: this.props.orderList,
+    notification: null
   };
 
   
@@ -88,6 +89,7 @@ class TableDetail extends Component {
     );
   }
 
+
   customConfirm(next, dropRowKeys) {
     const dropRowKeysStr = dropRowKeys.join(',');
     if (window.confirm(`Bạn có chắc muốn xóa ${dropRowKeysStr}?`)) {
@@ -97,7 +99,7 @@ class TableDetail extends Component {
   
   createCustomInsertButton = (openModal) => {
     return (
-    <Link type="button" className="btn btn-primary btn-fill btn-wd" to={"/admin/createUnitPrice"} >
+    <Link type="button" className="btn btn-primary btn-fill btn-wd" to={"/admin/price/createUnitPrice"} >
         <span className="btn-label">
           <i className="pe-7s-plus"></i> &nbsp;
           Thêm mới
@@ -156,17 +158,8 @@ class TableDetail extends Component {
   
   render() {
     const { data } = this.props;
-    const tableName = this.state.tableName;
-    const tableDesc = this.state.tableDesc;
     let notificationSystem = this.notificationSystem;
     let CURRENT_USER = JSON.parse(localStorage.getItem("luandryStaffPage.curr_staff_desc"));
-
-    function washerFormat (cell,row){
-        return (<Link rel="tooltip"
-        className="btn btn-success btn-fill btn-sm btn-xs"
-        data-original-title="View Profile" to={"assign-work/assignWorkDetail/"+row.washerCode}><strong>{row.washerCode}</strong> </Link>)
-    }
-
     function showNotification(message, level) {
       notificationSystem.addNotification({
         message: message,
@@ -222,18 +215,19 @@ class TableDetail extends Component {
     
   
     function onAfterDeleteRow(rowKeys) {
+      let showNotification1 = showNotification;
       client.mutate({mutation: DELETE,
         variables:{id: rowKeys}}).then(
           data => {
             console.log(data)
               if (data){
-                showNotification("Xóa thành công ", "success") ;
+                // showNotification1("Xóa thành công ", "success") ;
               }
           }
         ).catch(
           error=>{
             console.log(error.message)
-            showNotification("Xóa bị lỗi", "error") ;
+            // showNotification1("Xóa bị lỗi", "error") ;
           }
         )
     }

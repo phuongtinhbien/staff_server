@@ -132,7 +132,8 @@ class Billing extends Component {
           <OrderDetailForm  bill={data.bill} ref={el => (this.componentRef = el)}></OrderDetailForm>
            <div className="text-center">
            {CURRENT_USER.staffType.staffCode ==='STAFF_01' &&<ReactToPrint
-              pageStyle={"margin:'20px'"}
+              pageStyle={"margin:'10px'"}
+
               trigger={() => 
               
               

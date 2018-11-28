@@ -114,7 +114,7 @@ class TableDetail extends Component {
   
   createCustomInsertButton = (openModal) => {
     return (
-    <Link type="button" className="btn btn-primary btn-fill btn-wd" to={"/admin/createCloth"} >
+    <Link type="button" className="btn btn-primary btn-fill btn-wd" to={"/admin/cloth/createCloth"} >
         <span className="btn-label">
           <i className="pe-7s-plus"></i> &nbsp;
           Thêm mới

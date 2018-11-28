@@ -53,11 +53,11 @@ class TableWithLinks extends Component {
          {
           CURRENT_USER.staffType.staffCode ==='STAFF_01' &&<button 
           type="button"
-          disabled={!noWasher}
+          disabled={!noWasher || !(assignWork.length>0 )}
           className="btn btn-warning btn-fill btn-wd"
           data-original-title="View Profile"
           onClick = {e => {
-            if (!noWasher){
+            if (noWasher){
               assign(CURRENT_USER.branch.id, CURRENT_USER.id);
               window.location.reload();
             }

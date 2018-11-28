@@ -235,7 +235,7 @@ const handleUpdateReceipt = ( updateReceipt,values, errorCreate, success)=>{
         ReceiptDetailInputs.push(ReceiptDetailInput)
     }
     updateReceipt({variables:{pRe:ReceiptInput, rd: ReceiptDetailInputs }});
-    alert(JSON.stringify({pRe:ReceiptInput, rd: ReceiptDetailInputs }));
+    // alert(JSON.stringify({pRe:ReceiptInput, rd: ReceiptDetailInputs }));
   
   }
 const handleOnCompleted = (data,history)=>{

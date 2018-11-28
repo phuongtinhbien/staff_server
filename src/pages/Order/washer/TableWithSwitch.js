@@ -88,7 +88,7 @@ class TableWithSwitch extends Component {
                     onCompleted={data=> {
                       
                       this.showNotification("Cập nhật thành công " + data.updateWashingMachineById.washingMachine.washerCode, "success") ;
-                      assign(CURRENT_USER.branch.id, CURRENT_USER.id)
+                      assign(CURRENT_USER.branch.id, CURRENT_USER.id);
                       this.showNotification("Phân công xử lí đã thay đổi với " + data.updateWashingMachineById.washingMachine.washerCode, "info") ;
                      }}
                     onError={error => this.showNotification(error.message, "error")}

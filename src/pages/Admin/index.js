@@ -1,5 +1,5 @@
 import React from 'react';
-import { Route } from 'react-router-dom';
+import { Route,Switch } from 'react-router-dom';
 import Washer from './Washer';
 import Other from './Other';
 import Branch from './Branch';
@@ -22,12 +22,14 @@ const Admin = ({match}) => (
         <Route  path={`${match.url}/service`} component={Service} />
         <Route  path={`${match.url}/promotion`} component={Promotion} />
         <Route exact path={`${match.url}/account`} component={Account} />
-        <Route  path={`${match.url}/cloth`} component={Cloth} />
+        <Route exact path={`${match.url}/cloth`} component={Cloth} />
         <Route  path={`${match.url}/new`} component={CreateBranch} />
         <Route  path={`${match.url}/createStaff`} component={CreateStaff} />
-        <Route  path={`${match.url}/createCloth`} component={CreateCloth} />
-        <Route  path={`${match.url}/createUnitPrice`} component={CreateUnitPrice} />
-        <Route  path={`${match.url}/price`} component={UnitPrice} />
+        <Route  path={`${match.url}/cloth/createCloth`} component={CreateCloth} />
+        <Switch>
+        <Route  path={`${match.url}/price/createUnitPrice`} component={CreateUnitPrice} />
+        <Route exact path={`${match.url}/price`} component={UnitPrice} />
+        </Switch>
         <Route  path={`${match.url}/editBranch/:nodeId`} component={EditBranch} />
     </div>
     

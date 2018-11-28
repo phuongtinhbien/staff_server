@@ -10,6 +10,7 @@ const DECLINED = "DECLINED";
 const DRAFT = "DRAFT";
 const ACTIVE = "ACTIVE";
 const INACTIVE = "INACTIVE";
+const DELIVERIED = "DELIVERIED";
 
 
 
@@ -55,6 +56,9 @@ function main (status){
     }
     else if (status === false){
         return "Không hoạt động";
+    }
+    else if (status ===DELIVERIED){
+        return "Đã trả đồ"
     }
 }
 

@@ -19,7 +19,7 @@ import background from 'assets/bg_login.jpg';
 import { onError } from 'apollo-link-error';
 import LoginFormAdmin from './LoginFormAdmin';
 
-const client = new ApolloClient({ uri: 'http://192.168.1.7:5000/graphql' ,
+const client = new ApolloClient({ uri: 'http://localhost:5000/graphql' ,
 cache: new InMemoryCache(),
 
 });

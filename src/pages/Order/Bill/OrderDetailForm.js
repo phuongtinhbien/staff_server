@@ -41,7 +41,7 @@ const proccessData = (data)=>{
   return result;
 };
 
-const sum = (tableData) => {
+const sum = (tableData,sale) => {
   let label = 0;
   let serviceName = {};
   for (let i = 0, tableDataLen = tableData.length; i < tableDataLen; i++) {
@@ -53,7 +53,9 @@ const sum = (tableData) => {
     else{
       label += tableData[i].unitPrice*tableData[i].amount;
     }
-  
+  }
+  if (sale){
+    label = label - label * sale/100;
   }
   return (
     <strong>{ label.toLocaleString('vi-VI', { style: 'currency', currency: 'VND' }) }</strong>
@@ -144,8 +146,8 @@ class OrderDetailForm extends Component {
                       <th>Quần áo</th>
                       <th className="text-right">ĐVT</th>
                       <th className="text-right">Đơn giá</th>
-                      <th className="text-right">Số lượng/ Khối lượng đã nhận</th>
-                      <th className="text-right">Số lượng/ Khối lượng giao</th>
+                      <th className="text-right">SL/KL đã nhận</th>
+                      <th className="text-right">SL/KL giao</th>
                       <th className="text-right">Tổng tạm</th>
                     </thead>
                     <tbody>
@@ -191,11 +193,14 @@ class OrderDetailForm extends Component {
                       <br></br>
                       
                       {bill.receiptByReceiptId.customerOrderByOrderId.promotionByPromotionId&&bill.receiptByReceiptId.customerOrderByOrderId.promotionByPromotionId.promotionCode}
-                      - {bill.receiptByReceiptId.customerOrderByOrderId.promotionByPromotionId && bill.receiptByReceiptId.customerOrderByOrderId.promotionByPromotionId.sale}
+                       - {bill.receiptByReceiptId.customerOrderByOrderId.promotionByPromotionId && bill.receiptByReceiptId.customerOrderByOrderId.promotionByPromotionId.sale}
                       %
                       <br></br>
                       <h5> 
-                      {bill.receiptByReceiptId.customerOrderByOrderId.promotionByPromotionId? (sum(proccessData(bill.billDetailsByBillId.nodes)) - bill.receiptByReceiptId.customerOrderByOrderId.promotionByPromotionId.sale * sum(proccessData(bill.billDetailsByBillId.nodes))/100):sum(proccessData(bill.billDetailsByBillId.nodes))}</h5>
+                      {bill.receiptByReceiptId.customerOrderByOrderId.promotionByPromotionId? 
+                        (sum(proccessData(bill.billDetailsByBillId.nodes),bill.receiptByReceiptId.customerOrderByOrderId.promotionByPromotionId.sale))
+                      
+                        :sum(proccessData(bill.billDetailsByBillId.nodes))}</h5>
                       </td>
                     </tr>
                    
@@ -213,7 +218,7 @@ class OrderDetailForm extends Component {
                <br></br>
                <br></br>
                <br></br>
-               <br></br>
+              
                <strong>{bill.staffByCreateBy.fullName}</strong>
                </td>
                <td className="text-center"><strong>Khách hàng</strong>
@@ -223,7 +228,7 @@ class OrderDetailForm extends Component {
                <br></br>
                <br></br>
                <br></br>
-               <br></br>
+              
                <strong>{bill.receiptByReceiptId.customerOrderByOrderId.customerByCustomerId.fullName}</strong>
                </td>
                </tr>

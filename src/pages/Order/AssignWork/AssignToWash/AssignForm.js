@@ -87,7 +87,6 @@ class AssignForm extends Component {
       receiptId: receipt.id,
       resultSortedCloth: proccessData(receipt.washBagsByReceiptId.nodes)
     },{keepValues: true}));
-    console.log(sortedCloth)
   }
   render () {
     

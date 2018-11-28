@@ -216,7 +216,7 @@ const AssignWork = ({CURRENT_USER= JSON.parse(localStorage.getItem("luandryStaff
       <div className="col-md-12">
       <Query
       query={ALL_WASH}
-      
+      fetchPolicy={"network-only"}
       variables = {{brId: CURRENT_USER.branch.id }}
  
     >{({ loading, error, data, refetch, }) => {
@@ -231,10 +231,10 @@ const AssignWork = ({CURRENT_USER= JSON.parse(localStorage.getItem("luandryStaff
         console.log(data)
       return (
         <BigTable  washer = {data.allWashingMachines.nodes.sort(function(a, b) {
-          if (a.washesByWashingMachineId.totalCount >b.washesByWashingMachineId.totalCount) {
+          if (a.washesByWashingMachineId.totalCount <b.washesByWashingMachineId.totalCount) {
             return 1;
           }
-          if (a.washesByWashingMachineId.totalCount < b.washesByWashingMachineId.totalCount) {
+          if (a.washesByWashingMachineId.totalCount > b.washesByWashingMachineId.totalCount) {
             return -1;
           }
           return 0;

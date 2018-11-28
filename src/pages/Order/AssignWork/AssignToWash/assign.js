@@ -2,18 +2,6 @@ import ApolloClient from 'apollo-boost';
 import { InMemoryCache } from 'apollo-cache-inmemory';
 import gql from "graphql-tag";
 
-
-let client = new ApolloClient({
-  uri: 'http://localhost:5000/graphql',
-  headers: {
-    authorization: "BEARER " + localStorage.getItem("luandryStaffPage.staff_key"),
-  },
-  cache: new InMemoryCache(),
-
-});
-
-
-
 const SORTED_ORDER_LIST = gql `query sortedOrderList($brId: BigFloat!) {
     sortedOrderList(brId: $brId) {
       totalCount
@@ -95,7 +83,7 @@ Array.prototype.hasMin = function(attrib) {
 
 
 
-const getSortedOrderList = (branch) => {
+const getSortedOrderList = (client,branch) => {
  
       return client.query({
         query: SORTED_ORDER_LIST,
@@ -125,7 +113,7 @@ function findMinWasher (washerInfoList){
 }
 
 
-function assignWorkTypeOne(orderList, washerInfoList, curr_user) {
+function assignWorkTypeOne(client,orderList, washerInfoList, curr_user) {
   // itemResul = {
   //   sn,
   //   re_id,
@@ -170,17 +158,25 @@ function assignWorkTypeOne(orderList, washerInfoList, curr_user) {
 function main(branch, curr) {
   let orderList;
   let washInfo;
+  let client = new ApolloClient({
+    uri: 'http://localhost:5000/graphql',
+    headers: {
+      authorization: "BEARER " + localStorage.getItem("luandryStaffPage.staff_key"),
+    },
+    cache: new InMemoryCache(),
+  
+  });
   client.mutate({mutation: CLARIFY, variables:{
     brId: branch,
     currUser: curr,
   }}).then(data=>{
     if (data)
-  getSortedOrderList(branch).then(
+  getSortedOrderList(client,branch).then(
     data => {
       if (data.data) {
         orderList = data.data.sortedOrderList.nodes;
         washInfo = data.data.getInfoWasher.nodes;
-        assignWorkTypeOne(orderList, washInfo, curr);
+        assignWorkTypeOne(client,orderList, washInfo, curr);
       } else if (!data.data || data.errors) {
         console.log(data.errors.toString);
       }
