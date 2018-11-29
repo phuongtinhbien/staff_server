@@ -1,11 +1,8 @@
 import renderField from 'components/FormInputs/renderField';
 import React, { Component } from 'react';
 import { Field, reduxForm } from 'redux-form';
-const options = [
-  { value: 'chocolate', label: 'Chocolate' },
-  { value: 'strawberry', label: 'Strawberry' },
-  { value: 'vanilla', label: 'Vanilla' }
-];
+
+
 
 const required = value => (value ? undefined : 'Bắt buộc')
 
@@ -16,6 +13,7 @@ class  ClothForm extends Component{
 
   render(){
     let {handleSubmit,allProductType, history} = this.props;
+    console.log(this.state)
     return (
     
       <div className="card">
@@ -29,7 +27,7 @@ class  ClothForm extends Component{
               <label className="control-label col-md-3">Quần áo</label>
               <div className="col-md-9">
                 <Field
-                  name="branchName"
+                  name="productName"
                   type="text"
                   value=""
                   validate={required}
@@ -46,7 +44,7 @@ class  ClothForm extends Component{
                 <Field
                   name="productType"
                   type="select"
-                  isMulti={true}
+
                   validate={required}
                   options={allProductType}
                   placeholder="Chọn nhóm quần áo"
@@ -61,8 +59,8 @@ class  ClothForm extends Component{
                 <Field
                   name="productAvatar"
                   type="file"
-                  value=""
-                  validate={required}
+                  folder="product"
+                
                   placeholder ="Thêm hình ảnh"
                   component={renderField}
                  />

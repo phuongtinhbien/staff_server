@@ -99,7 +99,7 @@ componentDidMount(){
               <Field
                   name="serviceTypeAvatar"
                   type="file"
-      
+                  folder="service"
                   validate={required}
                   className="form-control"
                   placeholder="Nhập hình ảnh dịch vụ"

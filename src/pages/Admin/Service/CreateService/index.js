@@ -6,6 +6,7 @@ import Error from '../../../Error';
 import { Query, Mutation } from 'react-apollo';
 import NotificationSystem from 'react-notification-system';
 import moment from 'moment';
+import khongDau from 'khong-dau';
 const SERVICE_QUERY = gql`query option{
   allProducts(condition: {status: "ACTIVE"}){
     nodes{
@@ -84,6 +85,16 @@ const getId = (arr)=>{
 
 const handleSubmit = (value, mutation, currUser) =>{
   console.log(value);
+  
+  mutation({variables:{name: khongDau(value.serviceTypeName).replace(" ","_"),
+  link: value.serviceTypeAvatar
+}})
+
+}
+
+
+const handleOnCompleted = (value, mutation, data,history, currUser) =>{
+  console.log(value);
   let UnitPriceInputArr=[];
   let status =  value.status?"ACTIVE":"INACTIVE";
   value.serviceCloth.forEach(element => {
@@ -111,7 +122,8 @@ const handleSubmit = (value, mutation, currUser) =>{
     serviceTypeDesc: value.serviceTypeDesc,
     createBy: currUser,
     updateBy: currUser,
-    status: status
+    status: status,
+    serviceTypeAvatar: data.createPost.post.id
   }
  
 
@@ -119,11 +131,6 @@ const handleSubmit = (value, mutation, currUser) =>{
 
 }
 
-const handleOnCompleted = (data,history)=>{
-      if (data){
-        console.log("success");
-      }
-}
 
 const CREATE_CLOTH = gql`mutation createServiceType ($s:ServiceTypeInput!, $u: [UnitPriceInput!]) {
   createServiceTypeAndUnitPrice(input:{
@@ -138,6 +145,25 @@ const CREATE_CLOTH = gql`mutation createServiceType ($s:ServiceTypeInput!, $u: [
   }
 }
 `;
+
+const CREATE_POST = gql `
+mutation createPost ($name: String!, $link: String!){
+  createPost(input:{
+    post:{
+      headline: $name,
+      body: "product",
+      headerImageFile: $link
+    }
+  }){
+    post{
+      id
+      nodeId
+      headerImageFile
+    }
+  }
+}
+`;
+
 
 
 
@@ -164,6 +190,7 @@ class EditBranch extends Component {
       
       render(){
         let {match,data,history} = this.props;
+        let val;
         const CURRENT_USER = JSON.parse(localStorage.getItem("luandryStaffPage.curr_staff_desc"));
           return(
            
@@ -184,18 +211,35 @@ class EditBranch extends Component {
                                 onCompleted={data=> {
                   
                                   this.showNotification("Thêm dịch vụ thành công", "success") 
-                                  handleOnCompleted(data,history)
+                                  
                                  }}
                                 onError={error => this.showNotification(error.message, "error")}
                               >
                               {
                                 (createNewBranch) =>(
                                 <div>
-                    <BranchForm history={history} allProduct= {data.allProducts} onSubmit={value => handleSubmit(value,createNewBranch, CURRENT_USER.currentUser.id)} 
+                                    <Mutation
+                                mutation={CREATE_POST}
+                                onCompleted={data=> {
+                  
+                                  if (data)
+                                  handleOnCompleted(val,createNewBranch,data,history, CURRENT_USER.currentUser.id)
+                              
+                                 }}
+                                onError={error => this.showNotification(error.message, "error")}
+                              >
+                              {
+                                (createPost) =>(
+                              <BranchForm history={history} allProduct= {data.allProducts} onSubmit={value => handleSubmit(val = value,createPost, CURRENT_USER.currentUser.id)} 
                               allProduct = {processOption(data.allProducts.nodes)}
                               allUnit = {processOption1(data.allUnits.nodes)}
-                              allServiceType = {processOption2(data.allServiceTypes.nodes)}
-                              ></BranchForm>
+                              allServiceType = {processOption2(data.allServiceTypes.nodes)}></BranchForm>
+                                
+                                    )
+                                  }
+                          
+                          </Mutation>
+                    
                                 
                                   
                                  </div>

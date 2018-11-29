@@ -5,16 +5,18 @@ import Radio from './Radio';
 import CustomSelect from './Select';
 import DateInput from './DateInput';
 import TimeInput from './Time';
+import File from'./File';
 
 const renderField = (props) => (
   <div>
     { (props.type === 'email' ||
        props.type === 'password' ||
        props.type === 'text' ||
-       props.type === 'file' ||
+       
        props.type === 'number') &&
       <TextInput {...props} />
     }
+    {props.type === 'file'  && <File {...props}/> }
     { props.type === 'checkbox' && <Checkbox {...props} /> }
     { props.type === 'radio' && <Radio {...props} /> }
     { props.type === 'select' && <CustomSelect {...props} /> }

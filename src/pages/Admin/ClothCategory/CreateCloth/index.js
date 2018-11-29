@@ -5,6 +5,7 @@ import BranchForm from './branchForm';
 import Error from '../../../Error';
 import { Query, Mutation } from 'react-apollo';
 import NotificationSystem from 'react-notification-system';
+import khongDau from 'khong-dau';
 const SERVICE_QUERY = gql`query Cloth{
   allProducts{
     nodes{
@@ -55,29 +56,20 @@ const getId = (arr)=>{
 const handleSubmit = (value, mutation, currUser) =>{
   console.log(value);
   
-  let serviceType = getId(value.serviceType);
-  let staffOne = getId(value.staffOne);
-  let staffTwo = getId(value.staffTwo);
-  let staffThree = getId(value.staffThree);
-  let pro = getId(value.promotion);
-  let status = value.status?"ACTIVE": "INACTIVE";
-  let branch = {storeId: 1,
-     branchName: value.branchName,
-     status : status, 
-     updateBy:currUser, 
-     updateBy:currUser, 
-     address: value.address,
-     latidute: value.latitude,
-     longtidute: value.longtitude};
-
-  console.log({brId: value.id, branch:branch,pro: pro,serviceType:serviceType,staffOne:staffOne,staffTwo:staffTwo,staffThree:staffThree})
-  mutation({variables:{brId: value.id, branch:branch,pro: pro,serviceType:serviceType,staffOne:staffOne,staffTwo:staffTwo,staffThree:staffThree}});
+  mutation({variables:{name: khongDau(value.productName).replace(" ","_"),
+  link: value.productAvatar
+}})
 
 }
 
-const handleOnCompleted = (data,history)=>{
+const handleOnCompleted = (val, createCloth, data,history,currUser)=>{
       if (data){
-        console.log("success");
+        createCloth({variables:{
+          productName: val.productName,
+          productType: val.productType.value,
+          productImage: data.createPost.post.id,
+          currUser: currUser
+        }})
       }
 }
 
@@ -101,6 +93,24 @@ const CREATE_CLOTH = gql`mutation createCloth ($productName: String!, $productTy
   }
 }`;
 
+const CREATE_POST = gql `
+mutation createPost ($name: String!, $link: String!){
+  createPost(input:{
+    post:{
+      headline: $name,
+      body: "product",
+      headerImageFile: $link
+    }
+  }){
+    post{
+      id
+      nodeId
+      headerImageFile
+    }
+  }
+}
+`;
+
 
 
 
@@ -123,6 +133,7 @@ class EditBranch extends Component {
       
       render(){
         let {match,data,history} = this.props;
+        let val;
         const CURRENT_USER = JSON.parse(localStorage.getItem("luandryStaffPage.curr_staff_desc"));
           return(
            
@@ -142,18 +153,33 @@ class EditBranch extends Component {
                                 mutation={CREATE_CLOTH}
                                 onCompleted={data=> {
                   
-                                  this.showNotification("Cập nhật chi nhánh thành công", "success") 
-                                  handleOnCompleted(data,history)
+                                  if (data)
+                                  this.showNotification("Thêm quần áo thành công", "success") 
+                              
                                  }}
                                 onError={error => this.showNotification(error.message, "error")}
                               >
                               {
-                                (createNewBranch) =>(
+                                (createCloth) =>(
                                 <div>
-                    <BranchForm history={history} allProduct= {data.allProducts} onSubmit={value => handleSubmit(value,createNewBranch, CURRENT_USER.currentUser.id)} 
+                                   <Mutation
+                                mutation={CREATE_POST}
+                                onCompleted={data=> {
+                  
+                                  if (data)
+                                  handleOnCompleted(val,createCloth,data,history, CURRENT_USER.currentUser.id)
+                                 }}
+                                onError={error => this.showNotification(error.message, "error")}
+                              >
+                              {
+                                (createPost) =>(
+                              <BranchForm history={history} allProduct= {data.allProducts} onSubmit={value => handleSubmit(val = value,createPost, CURRENT_USER.currentUser.id)} 
                               allProductType = {processOption(data.allProductTypes.nodes)}></BranchForm>
                                 
-                                  
+                                    )
+                                  }
+                          
+                          </Mutation>
                                  </div>
                                 )
                               }
