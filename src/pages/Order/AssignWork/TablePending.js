@@ -55,6 +55,15 @@ class TableDetail extends Component {
     function tool (cell, row){
       return (
         <span>
+          {row.washbag<=0 && !row.isAssignToWash &&
+                    <Link rel="tooltip"
+                      className="btn btn-warning btn-simple btn-xs"
+                      data-original-title="View Profile"
+                      to={"/order/assign-work/assign/"+ row.nodeId}
+                     >
+                        Phân loại
+                    </Link>
+                  }
           {row.washbag>0 && (!row.isAssignToWash?
                     <Link rel="tooltip"
                       disabled={!noWasher}

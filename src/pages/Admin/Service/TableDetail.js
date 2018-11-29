@@ -113,17 +113,17 @@ class TableDetail extends Component {
     }
   }
   
-    createCustomInsertButton = (openModal) => {
-      return (
-      <button type="button" className="btn btn-primary btn-fill btn-wd" onClick={e=> {openModal()}} >
-          <span className="btn-label">
-            <i className="pe-7s-plus"></i> &nbsp;
-            Thêm mới
-          </span> 
-      </button>
-        
-      );
-    }
+  createCustomInsertButton = (openModal) => {
+    return (
+    <Link type="button" className="btn btn-primary btn-fill btn-wd" to={"/admin/service/createService"} >
+        <span className="btn-label">
+          <i className="pe-7s-plus"></i> &nbsp;
+          Thêm mới
+        </span> 
+    </Link>
+      
+    );
+  }
     handleModalClose(closeModal) {
       // Custom your onCloseModal event here,
       // it's not necessary to implement this function if you have no any process before modal close
@@ -179,10 +179,10 @@ class TableDetail extends Component {
     let notificationSystem = this.notificationSystem;
     let CURRENT_USER = JSON.parse(localStorage.getItem("luandryStaffPage.curr_staff_desc"));
 
-    function washerFormat (cell,row){
+    function serviceFormat (cell,row){
         return (<Link rel="tooltip"
         className="btn btn-success btn-fill btn-sm btn-xs"
-        data-original-title="View Profile" to={"assign-work/assignWorkDetail/"+row.washerCode}><strong>{row.washerCode}</strong> </Link>)
+        data-original-title="View Profile" to={"/admin/service/updateService/"+row.id}><strong>{row.serviceTypeName}</strong> </Link>)
     }
 
     function showNotification(message, level) {
@@ -341,7 +341,7 @@ class TableDetail extends Component {
                   <TableHeaderColumn
                     dataField='serviceTypeName'
                     width="20%"
-                    
+                    dataFormat={serviceFormat}
                    >
                     Loại Dịch Vụ
                   </TableHeaderColumn>

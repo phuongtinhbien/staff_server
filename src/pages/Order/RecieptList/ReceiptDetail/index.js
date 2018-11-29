@@ -547,7 +547,7 @@ class ReceiptPending extends Component {
                           to={"/order/reciept-list/edit/"+match.params.nodeId}
                         
                           disabled={!(((data.receipt.status ==="PENDING") ||(data.receipt.status ==="PENDING_DELIVERY")) && (data.receipt.staffByStaffPickUp))}
-                          className={((data.receipt.status ==="PENDING") || (data.receipt.status ==="PENDING_DELIVERY")) && (data.receipt.staffByStaffPickUp)? "btn btn-fill btn-warning ": "btn btn-fill btn-warning hidden"}
+                          className={(((data.receipt.status ==="PENDING")&& (data.receipt.staffByStaffPickUp)) || ((data.receipt.status ==="PENDING_DELIVERY")  && data.receipt.staffByStaffDelivery)) ? "btn btn-fill btn-warning ": "btn btn-fill btn-warning hidden"}
                           
                         >
                           Cập nhật biên nhận

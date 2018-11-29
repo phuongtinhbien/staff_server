@@ -69,18 +69,7 @@ componentDidMount(){
   
                   component={renderField} />
               </div>
-            </div>:<div className="form-group">
-              <label className="control-label col-md-3">Quần áo</label>
-              <div className="col-md-9">
-              <Field
-                  name="product"
-                  type="select"
-                  options={allProduct}
-                  placeholder="Chọn quần áo"
-  
-                  component={renderField} />
-              </div>
-            </div> }
+            </div>:null }
            
            
               

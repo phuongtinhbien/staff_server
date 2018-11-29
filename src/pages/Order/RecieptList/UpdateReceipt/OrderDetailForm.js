@@ -31,11 +31,8 @@ const validate = values => {
     values.receiptDetailsByReceiptId.forEach((item, itemIndex) => {
       const itemErrors = {}
 
-      if (!item || !item.amount) {
-        itemErrors.amount = 'Bắt buộc'
-        receiptDetailsByReceiptIdArrayErrors[itemIndex] = itemErrors
-      }
-      else if (item.amount && _.isNaN(item.amount)) {
+
+       if (item.amount && _.isNaN(item.amount)) {
         itemErrors.amount = 'Nhập vào một số';
         receiptDetailsByReceiptIdArrayErrors[itemIndex] = itemErrors
       }
@@ -48,7 +45,7 @@ const validate = values => {
           itemErrors.receivedAmount = 'Nhập vào một số';
           receiptDetailsByReceiptIdArrayErrors[itemIndex] = itemErrors
         }
-        else if (item.receivedAmount && (item.receivedAmount> item.amount)) {
+        else if (item.unit && item.unit.toLowerCase() !== "kg" && item.receivedAmount && (item.receivedAmount> item.amount)) {
           itemErrors.receivedAmount = 'Thấp hơn hoặc bằng SL gốc';
           receiptDetailsByReceiptIdArrayErrors[itemIndex] = itemErrors
         }
@@ -62,8 +59,8 @@ const validate = values => {
           itemErrors.deliveryAmount = 'Nhập vào một số';
           receiptDetailsByReceiptIdArrayErrors[itemIndex] = itemErrors
         }
-        else if (item.deliveryAmount && (item.deliveryAmount> item.amount)) {
-          itemErrors.deliveryAmount = 'Thấp hơn hoặc bằng SL gốc';
+        else if (item.deliveryAmount && (item.deliveryAmount> item.receivedAmount)) {
+          itemErrors.deliveryAmount = 'Thấp hơn hoặc bằng SL đã nhận';
           receiptDetailsByReceiptIdArrayErrors[itemIndex] = itemErrors
         }
       }

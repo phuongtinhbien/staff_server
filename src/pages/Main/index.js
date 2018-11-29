@@ -36,7 +36,7 @@ import Admin from '../Admin';
 //   cache: new InMemoryCache(),
 // });
 
-let client = new ApolloClient({ uri: 'http://localhost:5000/graphql' ,
+let client = new ApolloClient({ uri: 'http://192.168.1.12:5000/graphql' ,
 headers:{
   authorization: "BEARER "+localStorage.getItem("luandryStaffPage.staff_key")
 },
