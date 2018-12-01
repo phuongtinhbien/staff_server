@@ -48,17 +48,17 @@ query getCustomerOrder($taskType: String!, $status: [String!], $branch: BigFloat
 }`;
 
 const RECEIPT_QUERY = gql`
-query getReceiptShipper ($current_staff: BigFloat!){
-  allReceipts(filter:{
-    staffPickUp: {equalTo:$current_staff},
-    status: {in:["PENDING", "PENDING_DELIVERY"]}
-    or:{staffDelivery: {equalTo: $current_staff}}
-    }){
-    nodes{
+query getReceiptShipper($current_staff: BigFloat!) {
+  allReceipts(filter: {or: 
+    [{staffDelivery: {equalTo: $current_staff}, status: {equalTo: "PENDING_DELIVERY"}},
+      {staffPickUp: {equalTo: $current_staff}, status: {equalTo: "PENDING"}}]}) {
+    nodes {
       nodeId
-        id
-        status
-        customerOrderByOrderId {
+      id
+      status
+      staffPickUp
+      staffDelivery
+      customerOrderByOrderId {
         nodeId
         id
         customerByCustomerId {
@@ -77,10 +77,12 @@ query getReceiptShipper ($current_staff: BigFloat!){
           timeStart
           timeEnd
         }
+      }
     }
   }
-  }
-}`;
+}
+
+`;
 
 const proccessData = (pdata)=>{
   let result = [];
@@ -137,7 +139,7 @@ class OrderProcessing extends Component {
 
   render() {
     let {match,data} = this.props;
-    const CURRENT_USER = JSON.parse(localStorage.getItem("luandryStaffPage.curr_staff_desc"));
+    let CURRENT_USER = JSON.parse(localStorage.getItem("luandryStaffPage.curr_staff_desc"));
     return (
       <div>
       {CURRENT_USER.staffType.staffCode === "STAFF_02" &&  <Query

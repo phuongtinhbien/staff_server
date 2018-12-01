@@ -1,6 +1,7 @@
 import ApolloClient from 'apollo-boost';
 import { InMemoryCache } from 'apollo-cache-inmemory';
 import gql from "graphql-tag";
+require('dotenv').config();
 
 const SORTED_ORDER_LIST = gql `query sortedOrderList($brId: BigFloat!) {
     sortedOrderList(brId: $brId) {
@@ -159,7 +160,7 @@ function main(branch, curr) {
   let orderList;
   let washInfo;
   let client = new ApolloClient({
-    uri: 'http://localhost:5000/graphql',
+    uri: 'http://192.168.1.6:5000/graphql',
     headers: {
       authorization: "BEARER " + localStorage.getItem("luandryStaffPage.staff_key"),
     },

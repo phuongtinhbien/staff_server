@@ -1,7 +1,7 @@
 import React from 'react';
 
-import err from './icon-error.png';
-
+import err from './icons_denied.png';
+import { Redirect, Route, withRouter,Link } from 'react-router-dom';
 
 const Error = (props) => (
 <div className="container-fluid"  style={{ height:"100%"}}>
@@ -17,6 +17,8 @@ const Error = (props) => (
                 
                 &nbsp;
                 <p>{props.errorContent}</p>
+                <br></br>
+                <Link to="/login" className="btn btn-fill btn-info">Quay lại trang đăng nhập</Link>
               </div>
               </div>
            

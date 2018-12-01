@@ -18,6 +18,7 @@ const Header = ({
           <span className="icon-bar"></span>
           <span className="icon-bar"></span>
         </button>
+        {showMobileMenu &&<span onClick={e=>{e.preventDefault(); localStorage.clear(); history.push("/")}}><i className="pe-7s-back-2"></i> &nbsp;<span color="red">ĐĂNG XUẤT</span></span>}
       </Navbar.Header>
       <Navbar.Collapse>
 

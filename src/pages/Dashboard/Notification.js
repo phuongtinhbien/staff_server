@@ -49,7 +49,7 @@ class SearchOrder extends Component {
               <div className="col-md-9">
                 <Field type="text" 
                 className={"form-control"} 
-                name="customerName" placeholder="customer's name"
+                name="customerName" placeholder="Tên khách hàng"
                 component={renderField}
                 ></Field>
               </div>
@@ -60,8 +60,8 @@ class SearchOrder extends Component {
                 <Field type="text" 
                 className={"form-control"} 
                 name="orderCode" 
-                placeholder="Order's Code"
-                helpText ="Tìm kiếm nếu không thông tin nhập"
+                placeholder="Mã số đơn hàng"
+                helpText ="Tìm kiếm tất cả nếu không thông tin nhập"
                 component={renderField}
                 ></Field>
               </div>

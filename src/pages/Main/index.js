@@ -8,8 +8,6 @@ import { connect } from 'react-redux';
 import { Redirect, Route, withRouter } from 'react-router-dom';
 import SideBar from '../../components/SideBar';
 import { setMobileNavVisibility } from '../../reducers/Layout';
-import Calendar from '../Calendar';
-import Charts from '../Charts';
 import Components from '../Components';
 /**
  * Pages
@@ -20,23 +18,12 @@ import Login from '../Login';
 import Orders from '../Order';
 import Tables from '../Tables';
 import UserProfile from '../UserProfile';
-// import { ApolloClient } from 'apollo-client';
-// import { ApolloProvider } from 'react-apollo';
+import ForbiddenAccount from '../ForbiddenAccount';
 import Header from './Header';
 import Admin from '../Admin';
+require('dotenv').config();
 
-// First way to import
-
-// const client = new ApolloClient({
-//   link: createHttpLink({ uri: 'http://localhost:5000/graphql'
-//   ,
-// headers:{
-//   authorization: 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYXV0aF9hdXRoZW50aWNhdGVkIiwidXNlcl9pZCI6NSwidXNlcl90eXBlIjoiY3VzdG9tZXJfdHlwZSIsImlhdCI6MTU0MDI2MjgxNywiZXhwIjoxNTQwMzQ5MjE3LCJhdWQiOiJwb3N0Z3JhcGhpbGUiLCJpc3MiOiJwb3N0Z3JhcGhpbGUifQ.xqJkHssJyVmtlZKHRnRdiXE17hHto44gMhFkJji6S-g'
-// } }),
-//   cache: new InMemoryCache(),
-// });
-
-let client = new ApolloClient({ uri: 'http://192.168.1.12:5000/graphql' ,
+let client = new ApolloClient({ uri: 'http://192.168.1.6:5000/graphql' ,
 headers:{
   authorization: "BEARER "+localStorage.getItem("luandryStaffPage.staff_key")
 },
@@ -92,13 +79,14 @@ const CURR_USER_INFO = gql `query currentStaff($id: BigFloat!) {
 
 
 const proccessInfoUser = (data)=>{
+  if (data.staffById.branchByBranchId)
     return {
       name: data.staffById.fullName,
       image: data.staffById.postByStaffAvatar? data.staffById.postByStaffAvatar.headerImageFile: 'https://cdn.iconscout.com/icon/free/png-256/avatar-372-456324.png',
       id: data.staffById.id,
       status: data.staffById.status,
       email: data.staffById.email,
-      gender: data.staffById.gender ==true?"Female": "Male",
+      gender: data.staffById.gender ==true?"Nữ": "Nam",
       address: data.staffById.address,
       phone: data.staffById.phone,
       staffType: {
@@ -113,6 +101,7 @@ const proccessInfoUser = (data)=>{
       }
 
     }
+  else return;
 
 }
 
@@ -163,26 +152,34 @@ const PrivateMain = ({mobileNavVisibility,
                     }} />
           }
             if (data){
-                localStorage.setItem("luandryStaffPage.curr_staff_desc",JSON.stringify(proccessInfoUser(data)));
-                return (
-                  <frameElement>
-                    <SideBar  />
-                          <div className="main-panel">
-                          <Header history={history} />
-                              <PrivateRoute  exact path="/" component={Dashboard} />
-                              <PrivateRoute  path="/components" component={Components} />
-                              <PrivateRoute  path="/profile" component={UserProfile} />
-                              <PrivateRoute  path="/forms" component={Forms} />
-                              <PrivateRoute  path="/tables" component={Tables} />
-                  
-                              {/* <PrivateRoute  path="/charts" component={Charts} /> */}
-                              {/* <PrivateRoute  path="/calendar" component={Calendar} /> */}
-                              <PrivateRoute  path="/userProfile" component={UserProfile} />
-                              <PrivateRoute  path="/order" component={Orders} />
-  
-                          </div>
-                       </frameElement>
-                );
+                let a = proccessInfoUser(data);
+                if (a){
+                  localStorage.setItem("luandryStaffPage.curr_staff_desc",JSON.stringify(a));
+                  return (
+                    <frameElement>
+                      <SideBar  />
+                            <div className="main-panel">
+                            <Header history={history} />
+                                <PrivateRoute  exact path="/" component={Dashboard} />
+                                <PrivateRoute  path="/components" component={Components} />
+                                <PrivateRoute  path="/profile" component={UserProfile} />
+                                <PrivateRoute  path="/forms" component={Forms} />
+                                <PrivateRoute  path="/tables" component={Tables} />
+                    
+                                {/* <PrivateRoute  path="/charts" component={Charts} /> */}
+                                {/* <PrivateRoute  path="/calendar" component={Calendar} /> */}
+                                <PrivateRoute  path="/userProfile" component={UserProfile} />
+                                <PrivateRoute  path="/order" component={Orders} />
+    
+                            </div>
+                         </frameElement>
+                  );
+                }
+                else {
+                  localStorage.clear();
+                  return (<ForbiddenAccount errorContent="Tài khoản chưa thể hoạt động"></ForbiddenAccount>);
+                }
+               
                 
               }
             }}
@@ -320,7 +317,7 @@ const Main = ({
     if (mobileNavVisibility === true) {
       hideMobileMenu();
     }
-    client = new ApolloClient({ uri: 'http://localhost:5000/graphql' ,
+    client = new ApolloClient({ uri: 'http://192.168.1.6:5000/graphql' ,
     headers:{
       authorization: "BEARER "+localStorage.getItem("luandryStaffPage.staff_key")
     },

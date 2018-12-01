@@ -9,6 +9,7 @@ import { Mutation } from 'react-apollo';
 import NotificationSystem from 'react-notification-system';
 import ApolloClient from 'apollo-boost';
 import { InMemoryCache } from 'apollo-cache-inmemory';
+require('dotenv').config();
 const UPDATE_WASHER_STATUS = gql `mutation updateOptionList($id: BigFloat!, $status: String!, $currUser: BigFloat!) {
   updateTimeScheduleById(input: {id: $id, timeSchedulePatch: {status: $status, updateBy: $currUser}}) {
     timeSchedule {
@@ -26,7 +27,7 @@ const UPDATE_WASHER_STATUS = gql `mutation updateOptionList($id: BigFloat!, $sta
 
 
 let client = new ApolloClient({
-  uri: 'http://localhost:5000/graphql',
+  uri: 'http://192.168.1.6:5000/graphql',
   headers: {
     authorization: "BEARER " + localStorage.getItem("luandryStaffPage.staff_key"),
   },

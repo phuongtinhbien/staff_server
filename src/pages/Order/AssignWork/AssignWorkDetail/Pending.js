@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link, withRouter } from 'react-router-dom';
 import status from '../../status';
+import TableDetail from '../TableDetail';
 const BigTable = ({allWash,washer}) => (
   <div className="card">
     <div className="header text-center">
@@ -9,7 +10,16 @@ const BigTable = ({allWash,washer}) => (
       <br />
     </div>
  <div className="content table-responsive table-full-width">
- <table className="table table-striped hover">
+ <TableDetail orderList={allWash.filter(value => value.washerCode === washer && value.status === 'PENDING_SERVING' ).sort(function(a, b) {
+  if (a.sn > b.sn) {
+    return 1;
+  }
+  if (a.sn < b.sn) {
+    return -1;
+  }
+  return 0;
+})}></TableDetail>
+ {/* <table className="table table-striped hover">
    <thead>
      <tr><th className="sn">STT</th>
        <th className="text-left ">Máy giặt</th>
@@ -20,6 +30,7 @@ const BigTable = ({allWash,washer}) => (
      </tr>
    </thead>
    <tbody>
+    
      {allWash.filter(value => value.washerCode === washer && value.status === 'PENDING_SERVING' ).length>0? allWash.filter(value => value.washerCode === washer && value.status === 'PENDING_SERVING' ).sort(function(a, b) {
   if (a.sn > b.sn) {
     return 1;
@@ -61,7 +72,7 @@ const BigTable = ({allWash,washer}) => (
     <tr ><td colSpan="15" className="text-center" >Không có dữ liệu</td></tr>
      }
    </tbody>
- </table>
+ </table> */}
 </div>
    
   </div>

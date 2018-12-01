@@ -1,3 +1,4 @@
+
 import React, {Component} from 'react';
 import LoginForm from './LoginForm';
 import ic from './ic_app.png';
@@ -7,6 +8,8 @@ import ApolloClient from 'apollo-boost';
 import { ApolloProvider, renderToStringWithData } from 'react-apollo';
 import { InMemoryCache } from 'apollo-cache-inmemory';
 import { connect } from 'react-redux';
+
+
 import {
   BrowserRouter as Router,
   Route,
@@ -18,8 +21,9 @@ import {
 import background from 'assets/bg_login.jpg';
 import { onError } from 'apollo-link-error';
 import LoginFormAdmin from './LoginFormAdmin';
+require('dotenv').config();
 
-const client = new ApolloClient({ uri: 'http://192.168.1.12:5000/graphql' ,
+const client = new ApolloClient({ uri: 'http://192.168.1.6:5000/graphql' ,
 cache: new InMemoryCache(),
 
 });
@@ -59,6 +63,7 @@ class  Login extends Component {
   }
   render(){
     let {history} = this.props;
+    console.log(this.props);
     let{errorContent,LoginAdmin,loginNext} = this.state;
   console.log(this.props)
   if (!localStorage.getItem("luandryStaffPage.staff_key"))

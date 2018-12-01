@@ -423,6 +423,15 @@ const UPDATE_RECEIPT_MUT= gql`mutation updatestatusreceipt($rId: BigFloat!, $pSt
   }
 }`;
 
+const canUpdate = (data)=>{
+    let res;
+    if (status === 'PENDING')
+      res = data.filter (value => !value.recieved_amount).length;
+    if (status === 'PENDING_DELIVERY')
+      res = data.filter (value => !value.deliveryAmount).length;
+    return res;
+}
+
 class ReceiptPending extends Component {
 
   showNotification(message, level) {
@@ -434,7 +443,7 @@ class ReceiptPending extends Component {
     });
   }
   render() {
-    let {match,data} = this.props;
+    let {match,data, history} = this.props;
     const CURRENT_USER = JSON.parse(localStorage.getItem("luandryStaffPage.curr_staff_desc"));
     console.log(this.props);
     return (
@@ -547,13 +556,14 @@ class ReceiptPending extends Component {
                           to={"/order/reciept-list/edit/"+match.params.nodeId}
                         
                           disabled={!(((data.receipt.status ==="PENDING") ||(data.receipt.status ==="PENDING_DELIVERY")) && (data.receipt.staffByStaffPickUp))}
-                          className={(((data.receipt.status ==="PENDING")&& (data.receipt.staffByStaffPickUp)) || ((data.receipt.status ==="PENDING_DELIVERY")  && data.receipt.staffByStaffDelivery)) ? "btn btn-fill btn-warning ": "btn btn-fill btn-warning hidden"}
-                          
+                          className={(((data.receipt.staffByStaffPickUp && data.receipt.staffByStaffPickUp.id=== CURRENT_USER.id)&&(data.receipt.status ==="PENDING")&& (data.receipt.staffByStaffPickUp)) || 
+                          (( data.receipt.staffByStaffDelivery && data.receipt.staffByStaffDelivery.id=== CURRENT_USER.id) && (data.receipt.status ==="PENDING_DELIVERY")  && data.receipt.staffByStaffDelivery)) 
+                          ? "btn btn-fill btn-warning ": "btn btn-fill btn-warning hidden"}
                         >
                           Cập nhật biên nhận
                   </Link>
                   &nbsp;
-                      <button
+                      {data.receipt.receiptDetailsByReceiptId.nodes.filter (value => !value.recieved_amount) && <button
                         type="submit"
                         className="btn btn-fill btn-info"
                         disabled={!((data.receipt.status ==="PENDING")&& (data.receipt.staffByStaffPickUp) && (data.receipt.staffByStaffPickUp.id  === CURRENT_USER.id))}
@@ -565,10 +575,10 @@ class ReceiptPending extends Component {
                         }}
                       >
                         Đã lấy đồ
-                      </button>
+                      </button>}
                       
                       &nbsp;
-                      <button
+                      {data.receipt.receiptDetailsByReceiptId.nodes.filter (value => !value.deliveryAmount) &&<button
                         type="submit"
                         className="btn btn-fill btn-info"
                         disabled={!((data.receipt.status ==="PENDING_DELIVERY") && (data.receipt.staffByStaffDelivery) && (data.receipt.staffByStaffDelivery.id === CURRENT_USER.id))}
@@ -580,7 +590,7 @@ class ReceiptPending extends Component {
                         }}
                       >
                         Đã giao đồ
-                      </button>
+                      </button>}
                     &nbsp;
                     
                     </div>
