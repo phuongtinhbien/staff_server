@@ -1,16 +1,16 @@
-import React, { Component } from 'react';
-import { BootstrapTable, ClearSearchButton, TableHeaderColumn,InsertModalHeader, InsertModalFooter } from 'react-bootstrap-table';
-import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
-import { Link } from 'react-router-dom';
-import Switch from 'components/Switch';
-import gql from 'graphql-tag';
-import status from '../status';
-import { Mutation } from 'react-apollo';
-import NotificationSystem from 'react-notification-system';
-
-import assign from '../AssignWork/AssignToWash/assign';
 import ApolloClient from 'apollo-boost';
 import { InMemoryCache } from 'apollo-cache-inmemory';
+import Switch from 'components/Switch';
+import gql from 'graphql-tag';
+import React, { Component } from 'react';
+import { Mutation } from 'react-apollo';
+import { BootstrapTable, ClearSearchButton, InsertModalFooter, InsertModalHeader, TableHeaderColumn } from 'react-bootstrap-table';
+import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
+import NotificationSystem from 'react-notification-system';
+import { Link } from 'react-router-dom';
+import assign from '../AssignWork/AssignToWash/assign';
+import status from '../status';
+
 require('dotenv').config();
 const UPDATE_WASHER_STATUS = gql `mutation updateStatusWasher($brId: BigFloat!, $id: BigFloat!, $status: String!, $currUser: BigFloat!) {
   updateWashingMachineById(input: {id: $id, washingMachinePatch: {status: $status, updateBy: $currUser}}) {

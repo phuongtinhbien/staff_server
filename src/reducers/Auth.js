@@ -1,9 +1,3 @@
-import { Query, Mutation } from 'react-apollo';
-import gql  from "graphql-tag";
-import ApolloClient from 'apollo-boost';
-import React from 'react';
-import { ApolloConsumer } from 'react-apollo';
-import { ApolloProvider, renderToStringWithData } from 'react-apollo';
 
 
 

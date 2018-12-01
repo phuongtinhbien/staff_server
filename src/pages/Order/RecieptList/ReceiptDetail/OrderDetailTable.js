@@ -75,11 +75,10 @@ class OrderDetailTable extends Component {
             let serviceName = {};
             for (let i = 0, tableDataLen = tableData.length; i < tableDataLen; i++) {
               if (!serviceName[tableData[i].serviceName] && tableData[i].unit === "Kg"){
-                  let subList = tableData.filter(value => value.serviceName === tableData[i].serviceName && tableData[i].unit === "Kg");
                   label += tableData[i].unitPrice*tableData[i].receivedAmount;
                   serviceName[tableData[i].serviceName] = tableData[i].serviceName;
               }
-              else{
+              else if ( tableData[i].unit !== "Kg"){
                 label += tableData[i].unitPrice*tableData[i].receivedAmount;
               }
             
@@ -136,7 +135,7 @@ class OrderDetailTable extends Component {
                   label += tableData[i].unitPrice*tableData[i].receivedAmount;
                   serviceName[tableData[i].serviceName] = tableData[i].serviceName;
               }
-              else{
+              else if ( tableData[i].unit !== "Kg"){
                 label += tableData[i].unitPrice*tableData[i].receivedAmount;
               }
             

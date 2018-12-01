@@ -3,9 +3,9 @@ import React, { Component } from 'react';
 import { Query } from 'react-apollo';
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 import { withRouter } from 'react-router-dom';
+import status from '../status';
 import OrderTable from './OrderTable';
 import ReceiptTable from './ReceiptTable';
-import status from '../status';
 const ORDER_QUERY = gql`
 query getCustomerOrder($taskType: String!, $status: [String!], $branch: BigFloat!, $current_staff: BigFloat!) {
   allTasks(filter: {taskType: {equalTo: $taskType}, currentStatus: {in: $status},previousTask: {

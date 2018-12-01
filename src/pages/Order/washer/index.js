@@ -1,6 +1,5 @@
-import React from 'react';
-import TableWithSwitch from './TableWithSwitch';
 import gql from 'graphql-tag';
+import React from 'react';
 import { Query } from 'react-apollo';
 import TableDetail from './TableDetail';
 
