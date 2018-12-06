@@ -39,9 +39,9 @@ class Nav extends Component {
                 <li className={this.isPathActive('/admin/cloth') ? 'active' : null}>
                   <Link to="/admin/cloth">Quần áo</Link>
                 </li>
-                <li className={this.isPathActive('/admin/price') ? 'active' : null}>
+                {/* <li className={this.isPathActive('/admin/price') ? 'active' : null}>
                   <Link to="/admin/price">Đơn giá</Link>
-                </li>
+                </li> */}
                 <li className={this.isPathActive('/admin/washer') ? 'active' : null}>
                   <Link to="/admin/washer">Máy giặt</Link>
                 </li>

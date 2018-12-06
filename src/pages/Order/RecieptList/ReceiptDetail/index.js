@@ -31,6 +31,13 @@ const RECEIPT_DETAIL = gql`query getCustomerReceiptByNodeId($nodeId: ID!) {
       status
       pickUpPlace
       deliveryPlace
+      tasksByCustomerOrder(condition:{previousTask:"N", currentStatus: "FINISHED_SERVING"}){
+        nodes{
+           staffByCurrentStaff{
+            id
+          }
+        }
+      }
       customerByCustomerId {
         id
         nodeId
@@ -76,6 +83,7 @@ const RECEIPT_DETAIL = gql`query getCustomerReceiptByNodeId($nodeId: ID!) {
         recievedAmount
         status
         deliveryAmount
+        processedAmount
         amount
         productByProductId{
             id
@@ -467,19 +475,26 @@ class ReceiptPending extends Component {
                  <ReceiptForm receipt={data.receipt}></ReceiptForm> 
                 <div className="row">
                 <div className="col-sm-4"></div>
-                {CURRENT_USER.staffType.staffCode ==='STAFF_03' && <div className="col-sm-4 justify-content-center">
+                {CURRENT_USER.staffType.staffCode === 'STAFF_02' && 
+                data.receipt.customerOrderByOrderId.tasksByCustomerOrder.nodes[0] && 
+                     data.receipt.customerOrderByOrderId.tasksByCustomerOrder.nodes[0].staffByCurrentStaff.id === CURRENT_USER.id &&
+                     !data.receipt.staffByStaffDelivery &&
+
+                     <div className="col-sm-4 text-center">
+                      <Link
+                      to={"/order/reciept-list/edit/"+match.params.nodeId}
+                    
+                      className =  "btn btn-fill btn-warning "
+                    >
+                      Cập nhật biên nhận
+              </Link>
+              </div>
+                  }
+                {(CURRENT_USER.staffType.staffCode ==='STAFF_03') && <div className="col-sm-4 justify-content-center">
                 <div className="col-md-12 text-center">
                 <Mutation
                   mutation={ASSIGN_PICKUP}
-                  update={(cache, { data: { receipt } }) => {
-                    const { receipt1 } = cache.readQuery({ query: RECEIPT_DETAIL });
-                    cache.writeQuery({
-                      query: RECEIPT_DETAIL,
-                      variables:{nodeId:match.params.nodeId },
-                      data: { receipt: receipt.concat(receipt1) }
-
-                    });
-                  }}
+                 
                   onCompleted={data=> {
                   
                     this.showNotification("Cập nhật thành công " +data.receipt.id+" - " + status(data.receipt.status), "success") 
@@ -515,6 +530,11 @@ class ReceiptPending extends Component {
 
                     });
                   }}
+                  onCompleted={data=> {
+                  
+                    this.showNotification("Cập nhật thành công " +data.receipt.id+" - " + status(data.receipt.status), "success") 
+                   }}
+                   onError={error => this.showNotification(error.message, "error")}
                 >
                   {assignPickUp=>(
                     <button
@@ -548,10 +568,17 @@ class ReceiptPending extends Component {
 
                     });
                   }}
+                  onCompleted={data=> {
+                  
+                    this.showNotification("Cập nhật thành công " +data.receipt.id+" - " + status(data.receipt.status), "success") 
+                   }}
+                   onError={error => this.showNotification(error.message, "error")}
                 >
                   {updatestatuscustomerorder => (
 
                     <div className="col-md-12 text-center">
+                    
+                   
                       <Link
                           to={"/order/reciept-list/edit/"+match.params.nodeId}
                         

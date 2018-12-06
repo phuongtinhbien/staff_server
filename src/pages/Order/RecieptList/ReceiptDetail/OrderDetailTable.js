@@ -36,7 +36,7 @@ class OrderDetailTable extends Component {
   render() {
     const { orderDetailList,promotion } = this.props;
     console.log(orderDetailList);
- 
+    const CURRENT_USER = JSON.parse(localStorage.getItem("luandryStaffPage.curr_staff_desc"));
     function checkNull (cell, row){
         if (cell){
             return cell;
@@ -177,6 +177,7 @@ class OrderDetailTable extends Component {
                   bordered={false}
                   striped
                   footer={true}
+                  exportCSV
                   searchPlaceholder="Tìm kiếm"
                   footerData={ footerData }
                   search={ true } multiColumnSearch={ true }
@@ -224,6 +225,8 @@ class OrderDetailTable extends Component {
                     dataSort>
                     ĐVT
                   </TableHeaderColumn>
+                 
+                 
                   <TableHeaderColumn
                     dataField='receivedAmount'
                     width="25%"
@@ -231,6 +234,15 @@ class OrderDetailTable extends Component {
                     dataSort>
                     SL đã nhận
                   </TableHeaderColumn>
+                  {CURRENT_USER.staffType.staffCode === "STAFF_02" && <TableHeaderColumn
+                    dataField='processedAmount'
+                    width="25%"
+                    tdStyle={{textAlign:"right"}}
+                    dataSort>
+                    SL xử lí hoàn tất
+                  </TableHeaderColumn>
+                 }
+                  {CURRENT_USER.staffType.staffCode === "STAFF_03" &&
                   <TableHeaderColumn
                     dataField='total'
                     width="27%"
@@ -238,14 +250,15 @@ class OrderDetailTable extends Component {
                     dataFormat={currencyFormatter}
                     dataSort>
                     Tổng tạm
-                  </TableHeaderColumn>
+                  </TableHeaderColumn>}
+                  {CURRENT_USER.staffType.staffCode === "STAFF_03" &&
                   <TableHeaderColumn
                     dataField='deliveryAmount'
                     width="25%"
                     tdStyle={{textAlign:"right"}}
                     dataSort>
                     SL đã trả
-                  </TableHeaderColumn>
+                  </TableHeaderColumn>}
                  
                   <TableHeaderColumn
                     dataField='details'

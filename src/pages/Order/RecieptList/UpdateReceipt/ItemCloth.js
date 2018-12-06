@@ -2,7 +2,9 @@ import renderField from 'components/FormInputs/renderField';
 import React from 'react';
 import { Field } from 'redux-form';
 
-const renderItemOrderDetail = ({ fields, product,service,status,  meta: { error, submitFailed } }) =>(
+const renderItemOrderDetail = ({ fields, product,service,status, 
+  CURRENT_USER = JSON.parse(localStorage.getItem("luandryStaffPage.curr_staff_desc")),
+   meta: { error, submitFailed } }) =>(
   <div>
      
       {submitFailed &&
@@ -19,7 +21,12 @@ const renderItemOrderDetail = ({ fields, product,service,status,  meta: { error,
                 <th style={{width:"7%"}}>SL</th>
                 <th style={{width:"7%"}}>ĐVT</th>
                 <th style={{width:"20%"}}>SL đã nhận</th>
+                {CURRENT_USER.staffType.staffCode === "STAFF_02" &&
+                <th style={{width:"20%"}}>SL đã xử lí</th>
+      }
+                {CURRENT_USER.staffType.staffCode === "STAFF_03" &&
                 <th style={{width:"20%"}}>SL đã trả</th>
+                }
               </tr>
             </thead>
             <tbody>
@@ -79,7 +86,7 @@ const renderItemOrderDetail = ({ fields, product,service,status,  meta: { error,
                             />
                     </td>
                     <td>
-
+                    
                     <Field
                         name={`${orderDetail}.receivedAmount`}
                         type="text"
@@ -90,6 +97,19 @@ const renderItemOrderDetail = ({ fields, product,service,status,  meta: { error,
                         component={renderField}
                         />
                     </td>
+                    {CURRENT_USER.staffType.staffCode === "STAFF_02" && 
+                    <td>
+
+                    <Field
+                        name={`${orderDetail}.processedAmount`}
+                        type="text"
+                        className="form-control"
+                        placeholder = "Nhập SL đã xử lí"
+                        component={renderField}
+                        />
+                    </td>
+                    }
+                     {CURRENT_USER.staffType.staffCode === "STAFF_03" && 
                     <td>
 
                     <Field
@@ -102,6 +122,7 @@ const renderItemOrderDetail = ({ fields, product,service,status,  meta: { error,
                         component={renderField}
                         />
                     </td>
+                     }
                 </tr>
               ))}
             </tbody>

@@ -18,7 +18,7 @@ const validate = values => {
   if (!values.pickUpTime){
     errors.pickUpTime = 'Bắt buộc';
   }
-  if ( values.status === 'PENDING_DELIVERY' && !values.deliveryTime){
+  if (values.staffCode === "STAFF_03" && values.status === 'PENDING_DELIVERY' && !values.deliveryTime){
     errors.deliveryTime = 'Bắt buộc';
    }
 
@@ -93,7 +93,7 @@ const resultDetail = (data) =>{
 }
 
 
-const proccessData = (data)=>{
+const proccessData = (data,staffCode)=>{
   let result = [];
   
   for (let i = 0;i<data.length;i++){
@@ -109,7 +109,8 @@ const proccessData = (data)=>{
         unit: data[i].unitByUnitId != null ? data[i].unitByUnitId.unitName: "_",
         unitPrice:data[i].unitPriceByUnitPrice!= null?  data[i].unitPriceByUnitPrice.price :"_",
         details: resultDetail(data),
-        status: data[i].status
+        status: data[i].status,
+        staffCode: staffCode
       }
       result.push(row);
   }
@@ -121,6 +122,7 @@ const proccessData = (data)=>{
 class ReceiptForm extends Component {
   componentDidMount(){
     let {receipt} = this.props;
+    const CURRENT_USER = JSON.parse(localStorage.getItem("luandryStaffPage.curr_staff_desc"));
     this.props.dispatch(initialize('ReceiptEditForm',{
       id: receipt.id,
       status: receipt.status,
@@ -128,14 +130,14 @@ class ReceiptForm extends Component {
       deliveryTime: receipt.deliveryTime,
       pickUpDate: receipt.pickUpDate?receipt.pickUpDate:receipt.customerOrderByOrderId.pickUpDate,
       deliveryDate: receipt.deliveryDate?receipt.deliveryDate:receipt.customerOrderByOrderId.deliveryDate,
-      receiptDetailsByReceiptId: proccessData(receipt.receiptDetailsByReceiptId.nodes)
+      receiptDetailsByReceiptId: proccessData(receipt.receiptDetailsByReceiptId.nodes,CURRENT_USER.staffType.staffCode)
     },{keepValues: true}));
   }
 
   render () {
     
     let {receipt,handleSubmit, submitting} = this.props;
-    
+    const CURRENT_USER = JSON.parse(localStorage.getItem("luandryStaffPage.curr_staff_desc"));
       return(
 
           <form className="form-horizontal" onSubmit={handleSubmit} >
@@ -190,8 +192,8 @@ class ReceiptForm extends Component {
                     <Field
                         name="pickUpDate"
                         type="date"
-                        viewMode={receipt.status === "PENDING"? false: true}
-                        disabled={receipt.status === "PENDING"? false: true}
+                        viewMode={CURRENT_USER.staffType.staffCode  === "STAFF_03"&& receipt.status === "PENDING"? false: true}
+                        disabled={CURRENT_USER.staffType.staffCode  === "STAFF_03"&&receipt.status === "PENDING"? false: true}
                         component={renderField}
                         />
                     </div>
@@ -201,8 +203,8 @@ class ReceiptForm extends Component {
                         name="pickUpTime"
                         type="time"
                         id= "pickUpTime"
-                        viewMode={receipt.status === "PENDING"? false: true}
-                        disabled={receipt.status === "PENDING"? false: true}
+                        viewMode={CURRENT_USER.staffType.staffCode  === "STAFF_03" && receipt.status === "PENDING"? false: true}
+                        disabled={CURRENT_USER.staffType.staffCode  === "STAFF_03" && receipt.status === "PENDING"? false: true}
                         component={renderField}
                         />
                     </div>
@@ -213,8 +215,8 @@ class ReceiptForm extends Component {
                     <Field
                         name="deliveryDate"
                         type="date"
-                        viewMode={receipt.status === "PENDING_DELIVERY"? false: true}
-                        disabled={receipt.status === "PENDING_DELIVERY"? false: true}
+                        viewMode={CURRENT_USER.staffType.staffCode  === "STAFF_03" && receipt.status === "PENDING_DELIVERY"? false: true}
+                        disabled={CURRENT_USER.staffType.staffCode  === "STAFF_03" && receipt.status === "PENDING_DELIVERY"? false: true}
                         component={renderField}
                         />
                     </div>
@@ -223,8 +225,8 @@ class ReceiptForm extends Component {
                   <Field
                         name="deliveryTime"
                         type="time"
-                        viewMode={receipt.status === "PENDING_DELIVERY"? false: true}
-                        disabled={receipt.status === "PENDING_DELIVERY"? false: true}
+                        viewMode={CURRENT_USER.staffType.staffCode  === "STAFF_03" && receipt.status === "PENDING_DELIVERY"? false: true}
+                        disabled={CURRENT_USER.staffType.staffCode  === "STAFF_03" && receipt.status === "PENDING_DELIVERY"? false: true}
                         component={renderField}
                         />
                   </div>

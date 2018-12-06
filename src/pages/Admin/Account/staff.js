@@ -59,12 +59,17 @@ class TableDetail extends Component {
     
    
     function branchFormat(cell, row){
-      return (<span>{row.branchByBranchId && row.branchByBranchId.branchName}</span>);
+      return (<span>{row.branchByBranchId && row.branchByBranchId.branchName.toUpperCase().replace("CHI NHÁNH","")}</span>);
     };
     function staffTypeFormat(cell, row){
       return (<span>{row.staffTypeByStaffTypeId && row.staffTypeByStaffTypeId.staffTypeName}</span>);
     };
-
+    function staffName (cell,row){
+      return (<span>
+        <img src={row.postByStaffAvatar && row.postByStaffAvatar.headerImageFile} style={{borderRadius:"50%"}} height="60px"></img>
+       &nbsp;{row.fullName && row.fullName} ({row.email}) 
+      </span>);
+    }
 
     function statusFormat(cell, row){
         return (<span>{status(cell)}</span>)
@@ -113,7 +118,7 @@ class TableDetail extends Component {
   }
 
     const options = {
-      sizePerPage: 10,
+      sizePerPage: 5,
       prePage: 'Trước',
       nextPage: 'Tiếp',
       firstPage: 'Đầu tiên',
@@ -159,40 +164,34 @@ class TableDetail extends Component {
                   </TableHeaderColumn>
                   <TableHeaderColumn
                     dataField='branch'
-                    width="25%"
+                    width="20%"
                     dataFormat={branchFormat}
                    >
                     Chi nhánh
                   </TableHeaderColumn>
                   <TableHeaderColumn
                     dataField='fullName'
-                    width="25%"
-                    
+                    width="50%"
+                    dataFormat={staffName}
                    >
                     Họ tên
                   </TableHeaderColumn>
-                  <TableHeaderColumn
-                    dataField='email'
-                    width="25%"
-                    
-                   >
-                    Email
-                  </TableHeaderColumn>
+                  
                   <TableHeaderColumn
                     dataField='staffType'
-                    width="25%"
+                    width="20%"
                     dataFormat={staffTypeFormat}
                    >
                     Chức vụ
                   </TableHeaderColumn>
                   
-                  <TableHeaderColumn
+                  {/* <TableHeaderColumn
                     dataField='status'
                     width="20%" 
                     dataFormat={statusFormat}
                     dataSort>
                    Trạng thái
-                  </TableHeaderColumn>
+                  </TableHeaderColumn> */}
                   {(CURRENT_USER.staffType.staffCode === "ADMIN" ||CURRENT_USER.staffType.staffCode === "ADMIN") && 
                   <TableHeaderColumn
                   dataField=''

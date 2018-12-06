@@ -38,6 +38,7 @@ const proccessData = (data)=>{
         amount:data[i].amount,
         receivedAmount: data[i].recievedAmount,
         deliveryAmount: data[i].deliveryAmount,
+        processedAmount : data[i].processedAmount,
         unit: data[i].unitByUnitId != null ? data[i].unitByUnitId.unitName: "_",
         unitPrice:data[i].unitPriceByUnitPrice!= null?  data[i].unitPriceByUnitPrice.price :"_",
         details: resultDetail(data[i])

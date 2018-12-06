@@ -256,7 +256,7 @@ class TableDetail extends Component {
                     dataField='colorGroupName'
                     width="20%"
                     
-                    colorGroupFormat
+                    dataFormat={colorGroupFormat}
                   
                    >
                     Nhóm màu

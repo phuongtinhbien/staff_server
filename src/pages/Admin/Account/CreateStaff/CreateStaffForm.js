@@ -134,6 +134,20 @@ class  StaffForm extends Component{
                    
               </div>       
             </div>
+            <div className="form-group">
+            <label className="control-label col-md-3">Ảnh đại diện</label>
+              <div className="col-md-9">
+              <Field
+                  name="staffAvatar"
+                  type="file"
+                  folder="staff"
+                  validate={required}
+                  className="form-control"
+                  placeholder="Ảnh đại diện"
+  
+                  component={renderField} />
+              </div>
+            </div>
             
             <div className="form-group">
                 <label className="control-label col-md-3"></label>

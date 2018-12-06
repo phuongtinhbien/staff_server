@@ -230,7 +230,8 @@ const handleUpdateReceipt = ( updateReceipt,values, errorCreate, success)=>{
             updateBy: CURRENT_USER.id,
             updateDate: moment(),
             recievedAmount: values.receiptDetailsByReceiptId[i].receivedAmount,
-            deliveryAmount: values.receiptDetailsByReceiptId[i].deliveryAmount
+            deliveryAmount: values.receiptDetailsByReceiptId[i].deliveryAmount,
+            processedAmount: values.receiptDetailsByReceiptId[i].processedAmount,
         }
         ReceiptDetailInputs.push(ReceiptDetailInput)
     }

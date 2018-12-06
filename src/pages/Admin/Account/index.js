@@ -23,6 +23,10 @@ const ACCOUNT = gql `query allAccount{
         nodeId
         staffCode
       }
+      postByStaffAvatar{
+        id
+        headerImageFile
+      }
     }
   }
   
