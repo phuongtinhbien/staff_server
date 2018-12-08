@@ -34,7 +34,7 @@ const UPDATE_WASHER_STATUS = gql `mutation updateStatusWasher($brId: BigFloat!, 
 
 
 let client = new ApolloClient({
-  uri: 'http://192.168.1.6:5000/graphql',
+  uri: 'http://192.168.1.10:5000/graphql',
   headers: {
     authorization: "BEARER " + localStorage.getItem("luandryStaffPage.staff_key"),
   },

@@ -34,6 +34,7 @@ class SideBar extends Component {
       enableBackgroundImage,
       backgroundImage
     } = this.props;
+    console.log (this.props);
     const CURRENT_USER = JSON.parse(localStorage.getItem("luandryStaffPage.curr_staff_desc"));
     return (
       <div className="sidebar" data-color={backgroundColor} data-image={backgroundImage}>

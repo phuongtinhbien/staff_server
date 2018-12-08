@@ -559,20 +559,13 @@ class ReceiptPending extends Component {
                           
                 <Mutation
                   mutation={UPDATE_RECEIPT_MUT}
-                  update={(cache, { data: { updatestatusreceipt } }) => {
-                    const { receipt } = cache.readQuery({ query: RECEIPT_DETAIL });
-                    cache.writeQuery({
-                      query: RECEIPT_DETAIL,
-                      variables:{nodeId:match.params.nodeId },
-                      data: { receipt: receipt.concat(updatestatusreceipt.receipt) }
-
-                    });
-                  }}
+                  
                   onCompleted={data=> {
                   
                     this.showNotification("Cập nhật thành công " +data.receipt.id+" - " + status(data.receipt.status), "success") 
                    }}
-                   onError={error => this.showNotification(error.message, "error")}
+                   onError={error => {this.showNotification(error.message, "error")
+                  console.log(error.graphQLErrors)}}
                 >
                   {updatestatuscustomerorder => (
 

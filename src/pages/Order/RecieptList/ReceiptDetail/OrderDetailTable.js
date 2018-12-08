@@ -177,7 +177,7 @@ class OrderDetailTable extends Component {
                   bordered={false}
                   striped
                   footer={true}
-                  exportCSV
+                 
                   searchPlaceholder="Tìm kiếm"
                   footerData={ footerData }
                   search={ true } multiColumnSearch={ true }

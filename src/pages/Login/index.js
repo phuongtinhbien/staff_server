@@ -23,7 +23,7 @@ import { onError } from 'apollo-link-error';
 import LoginFormAdmin from './LoginFormAdmin';
 require('dotenv').config();
 
-const client = new ApolloClient({ uri: 'http://192.168.1.6:5000/graphql' ,
+const client = new ApolloClient({ uri: 'http://192.168.1.10:5000/graphql' ,
 cache: new InMemoryCache(),
 
 });
@@ -101,7 +101,8 @@ class  Login extends Component {
                       <span rel="tooltip"
                         className="btn btn-warning btn-simple btn-xs" 
                         onClick={e =>{ e.preventDefault(); 
-                        this.setState({LoginAdmin: !LoginAdmin, loginNext: !LoginAdmin?"Đăng nhập trang quản trị":"Đăng nhập  tài khoản nhân viên"});
+                        this.setState({LoginAdmin: !LoginAdmin});
+                        this.setState({ loginNext: LoginAdmin?"Đăng nhập  tài khoản nhân viên":"Đăng nhập trang quản trị"});
                         }}>{loginNext} </span>
                     </div>
                     )
