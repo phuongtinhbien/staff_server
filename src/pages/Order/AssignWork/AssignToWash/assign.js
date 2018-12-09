@@ -68,9 +68,11 @@ const CLARIFY = gql`mutation clarify ($brId: BigFloat!, $currUser: BigFloat!){
 `;
 
 
-const ASSIGN_TYPE_ONE = gql`mutation assignWash ($list: [AssignWorkInput!]){
+const ASSIGN_TYPE_ONE = gql`mutation assignWash ($list: [AssignWorkInput!], $branch: BigFloat!, $pUser: BigFloat!){
   assignTypeOneToWash(input: {
-    list: $list
+    list: $list,
+    branch: $branch,
+    pUser: $pUser
   }){
     boolean
   }
@@ -114,7 +116,7 @@ function findMinWasher (washerInfoList){
 }
 
 
-function assignWorkTypeOne(client,orderList, washerInfoList, curr_user) {
+function assignWorkTypeOne(client,orderList, washerInfoList, curr_user,branch) {
   // itemResul = {
   //   sn,
   //   re_id,
@@ -143,7 +145,7 @@ function assignWorkTypeOne(client,orderList, washerInfoList, curr_user) {
   console.log(washerInfoList);
   if (result){
     client.mutate({mutation: ASSIGN_TYPE_ONE,
-    variables:{list:result}}).then(
+    variables:{list:result, pUser:curr_user, branch:branch }}).then(
         result =>{
           if (result){
             console.log("Thanh cong");
@@ -177,7 +179,7 @@ function main(branch, curr) {
       if (data.data) {
         orderList = data.data.sortedOrderList.nodes;
         washInfo = data.data.getInfoWasher.nodes;
-        assignWorkTypeOne(client,orderList, washInfo, curr);
+        assignWorkTypeOne(client,orderList, washInfo, curr, branch);
       } else if (!data.data || data.errors) {
         console.log(data.errors.toString);
       }
