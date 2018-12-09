@@ -79,6 +79,14 @@ const ASSIGN_WORK = gql`query assignWork($branch: BigFloat!) {
 `;
 
 const ALL_WASH = gql `query allWash ($brId: BigFloat!){
+   allEnvVars(condition: {
+    keyName: "AUTO_ARRANGE"
+  }){
+    nodes{
+      keyName
+      valueKey
+    }
+  }
   washSearch(brId: $brId){
     totalCount
     nodes{
@@ -158,7 +166,7 @@ const processPendingServing = (data)=>{
 }
 
 
-const processAllWash = (data)=>{
+const processAllWash = (data, type)=>{
 
       let res =[];
 
@@ -176,8 +184,14 @@ const processAllWash = (data)=>{
             res.push(row);
         }
       }
+      if (type === "TYPE_TWO"){
+        return res;
+      }
+      else{
+        return filterWashbag(res);
+      }
 
-      return res;
+      
 }
 
 
@@ -238,7 +252,7 @@ const AssignWork = ({CURRENT_USER= JSON.parse(localStorage.getItem("luandryStaff
             return -1;
           }
           return 0;
-        })}  allWash ={processAllWash(data.washSearch.nodes).filter(value => value.status != 'FINISHED_SERVING')}/>
+        })}  allWash ={processAllWash(data.washSearch.nodes, data.allEnvVars.nodes[0].valueKey).filter(value => value.status != 'FINISHED_SERVING')}/>
       );
       }
     }}
