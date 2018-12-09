@@ -39,14 +39,7 @@ const DELETE = gql `mutation delete ($id: BigFloat!){
 
 
 
-let client = new ApolloClient({
-  uri: 'http://laundryserver.eastus.cloudapp.azure.com:5000/graphql',
-  headers: {
-    authorization: "BEARER " + localStorage.getItem("luandryStaffPage.staff_key"),
-  },
-  cache: new InMemoryCache(),
 
-});
 
 const ADD_OPTION = gql`
 mutation addOption ($keyName: String!, $status: String!,
@@ -197,6 +190,14 @@ class TableDetail extends Component {
     function onAfterInsertRow(row) {
       let newRowStr = '';
       console.log(row);
+      let client = new ApolloClient({
+        uri: 'http://laundryserver.eastus.cloudapp.azure.com:5000/graphql',
+        headers: {
+          authorization: "BEARER " + localStorage.getItem("luandryStaffPage.staff_key"),
+        },
+        cache: new InMemoryCache(),
+      
+      });
       if (row)
       client.mutate({mutation: ADD_OPTION,
         variables:{keyName: row.productTypeName, currUser: CURRENT_USER.currentUser.id, status: row.status }}).then(
@@ -262,6 +263,14 @@ class TableDetail extends Component {
     
   
     function onAfterDeleteRow(rowKeys) {
+      let client = new ApolloClient({
+        uri: 'http://laundryserver.eastus.cloudapp.azure.com:5000/graphql',
+        headers: {
+          authorization: "BEARER " + localStorage.getItem("luandryStaffPage.staff_key"),
+        },
+        cache: new InMemoryCache(),
+      
+      });
       client.mutate({mutation: DELETE,
         variables:{id: rowKeys}}).then(
           data => {
