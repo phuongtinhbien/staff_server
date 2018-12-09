@@ -68,9 +68,11 @@ const CLARIFY = gql`mutation clarify ($brId: BigFloat!, $currUser: BigFloat!){
 `;
 
 
-const ASSIGN_TYPE_ONE = gql`mutation assignWash ($list: [AssignWorkInput!]){
+const ASSIGN_TYPE_ONE = gql`mutation assignWash ($list: [AssignWorkInput!], $branch: BigFloat!, $pUser: BigFloat!){
   assignTypeOneToWash(input: {
-    list: $list
+    list: $list,
+    branch: $branch,
+    pUser: $pUser
   }){
     boolean
   }
@@ -143,7 +145,7 @@ function assignWorkTypeOne(client,orderList, washerInfoList, curr_user,branch) {
   console.log(washerInfoList);
   if (result){
     client.mutate({mutation: ASSIGN_TYPE_ONE,
-    variables:{list:result, pUser:curr_user, brId:branch  }}).then(
+    variables:{list:result, pUser:curr_user, branch:branch }}).then(
         result =>{
           if (result){
             console.log("Thanh cong");
