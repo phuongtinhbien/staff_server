@@ -177,7 +177,7 @@ const processAllWash = (data)=>{
         }
       }
 
-      return filterWashbag(res);
+      return res;
 }
 
 
