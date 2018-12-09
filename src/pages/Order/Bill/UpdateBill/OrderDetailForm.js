@@ -96,30 +96,30 @@ class BillForm extends Component {
           </tbody>
         </table>
         <div className = "text-center">
+{bill.status !== "PAID"  && <button
+type="submit"
+className="btn btn-fill btn-info"
 
-        <button
-                      type="submit"
-                      className="btn btn-fill btn-info"
-                     
-                      onClick={e => {
-                        
-                      
-                      }}
-                    >
-                      Cập nhật hóa đơn
-                    </button>
-                    &nbsp; &nbsp;
-                    <button
-                      type="button"
-                      className="btn btn-danger btn-fill btn-info"
-                     
-                      onClick={e => {
-                        
-                        history.goBack();
-                      }}
-                    >
-                      Trở lại
-                    </button>
+onClick={e => {
+  
+
+}}
+>
+Cập nhật hóa đơn
+</button>}
+&nbsp; &nbsp;
+<button
+type="button"
+className="btn btn-danger btn-fill btn-info"
+
+onClick={e => {
+  
+  history.goBack();
+}}
+>
+Trở lại
+</button>
+        
                     </div>
         </form>
 

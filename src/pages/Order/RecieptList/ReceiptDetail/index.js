@@ -583,7 +583,7 @@ class ReceiptPending extends Component {
                           Cập nhật biên nhận
                   </Link>
                   &nbsp;
-                      {data.receipt.receiptDetailsByReceiptId.nodes.filter (value => !value.recieved_amount) && <button
+                      {data.receipt.receiptDetailsByReceiptId.nodes.filter (value => !value.recieved_amount).length<=0 && <button
                         type="submit"
                         className="btn btn-fill btn-info"
                         disabled={!((data.receipt.status ==="PENDING")&& (data.receipt.staffByStaffPickUp) && (data.receipt.staffByStaffPickUp.id  === CURRENT_USER.id))}
@@ -598,7 +598,7 @@ class ReceiptPending extends Component {
                       </button>}
                       
                       &nbsp;
-                      {data.receipt.receiptDetailsByReceiptId.nodes.filter (value => !value.deliveryAmount) &&<button
+                      {data.receipt.receiptDetailsByReceiptId.nodes.filter (value => !value.deliveryAmount).length<=0 &&<button
                         type="submit"
                         className="btn btn-fill btn-info"
                         disabled={!((data.receipt.status ==="PENDING_DELIVERY") && (data.receipt.staffByStaffDelivery) && (data.receipt.staffByStaffDelivery.id === CURRENT_USER.id))}

@@ -170,13 +170,13 @@ class TableDetail extends Component {
           data => {
             console.log(data)
               if (data){
-              showNotification("Thêm thành công " + data.data.createWashingMachine.washingMachine.washerCode, "success") ;
+              // showNotification("Thêm thành công " + data.data.createWashingMachine.washingMachine.washerCode, "success") ;
               }
           }
         ).catch(
           error=>{
             console.log(error.message)
-            showNotification("Thêm bị lỗi ", "error") ;
+            // showNotification("Thêm bị lỗi ", "error") ;
           }
         )
       
