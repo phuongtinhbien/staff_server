@@ -23,7 +23,7 @@ import Header from './Header';
 import Admin from '../Admin';
 require('dotenv').config();
 
-let client = new ApolloClient({ uri: 'http://192.168.1.10:5000/graphql' ,
+let client = new ApolloClient({ uri: 'http://laundryserver.eastus.cloudapp.azure.com:5000/graphql' ,
 headers:{
   authorization: "BEARER "+localStorage.getItem("luandryStaffPage.staff_key")
 },
@@ -317,7 +317,7 @@ const Main = ({
     if (mobileNavVisibility === true) {
       hideMobileMenu();
     }
-    client = new ApolloClient({ uri: 'http://192.168.1.10:5000/graphql' ,
+    client = new ApolloClient({ uri: 'http://laundryserver.eastus.cloudapp.azure.com:5000/graphql' ,
     headers:{
       authorization: "BEARER "+localStorage.getItem("luandryStaffPage.staff_key")
     },

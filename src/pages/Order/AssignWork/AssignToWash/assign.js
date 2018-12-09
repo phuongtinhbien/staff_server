@@ -160,7 +160,7 @@ function main(branch, curr) {
   let orderList;
   let washInfo;
   let client = new ApolloClient({
-    uri: 'http://192.168.1.10:5000/graphql',
+    uri: 'http://laundryserver.eastus.cloudapp.azure.com:5000/graphql',
     headers: {
       authorization: "BEARER " + localStorage.getItem("luandryStaffPage.staff_key"),
     },

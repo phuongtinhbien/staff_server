@@ -17,12 +17,12 @@ class Nav extends Component {
             <p>Tổng quan</p>
           </Link>
         </li>
-        <li className={this.isPathActive('/order/create-order') ? 'active' : null}>
+        {/* <li className={this.isPathActive('/order/create-order') ? 'active' : null}>
           <Link to="/order/create-order">
             <i className="pe-7s-plus"></i>
             <p>Tạo đơn hàng mới</p>
           </Link>
-        </li>
+        </li> */}
         <li className={this.isPathActive('/order/assign-work') ? 'active' : null}>
           <Link to="/order/assign-work">
             <i className="pe-7s-date"></i>

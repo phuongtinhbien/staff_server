@@ -23,7 +23,7 @@ import { onError } from 'apollo-link-error';
 import LoginFormAdmin from './LoginFormAdmin';
 require('dotenv').config();
 
-const client = new ApolloClient({ uri: 'http://192.168.1.10:5000/graphql' ,
+const client = new ApolloClient({ uri: 'http://laundryserver.eastus.cloudapp.azure.com:5000/graphql' ,
 cache: new InMemoryCache(),
 
 });
