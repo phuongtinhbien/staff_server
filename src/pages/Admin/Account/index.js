@@ -4,6 +4,7 @@ import { Query } from 'react-apollo';
 import { Tab, Tabs } from 'react-bootstrap';
 import Staff from './staff';
 import Customer from './customer';
+import Error from '../../Error';
 const ACCOUNT = gql `query allAccount{
   allStaff{
     nodes{
@@ -60,6 +61,7 @@ const Other = () => (
         console.log(refetch);
       }
       if (error){
+        return (<Error errorContent= {error.message}></Error>);
       }
       if (data != null){
       return (

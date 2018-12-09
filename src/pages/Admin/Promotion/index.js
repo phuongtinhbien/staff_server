@@ -2,6 +2,7 @@ import gql from 'graphql-tag';
 import React from 'react';
 import { Query } from 'react-apollo';
 import TableDetail from './TableDetail';
+import Error from '../../Error';
 const ALL_BRANCH = gql`query allPromotion{
   allPromotions{
     nodes{
@@ -30,6 +31,7 @@ const ExtendedTables = ({CURRENT_USER = JSON.parse(localStorage.getItem("luandry
         console.log(refetch);
       }
       if (error){
+        return (<Error errorContent= {error.message}></Error>);
       }
       if (data != null){
       return (

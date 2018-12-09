@@ -8,6 +8,7 @@ import Material from './Material';
 import ColorGroup from './ColorGroup';
 import TimeSchedule from './timeSchedule';
 import { Query } from 'react-apollo';
+import Error from '../../Error';
 const OPTION_QUERY = gql `query allOptionList {
     allUnits{
       nodes{
@@ -83,6 +84,7 @@ const Other = () => (
         console.log(refetch);
       }
       if (error){
+        return (<Error errorContent= {error.message}></Error>);
       }
       if (data != null){
       return (

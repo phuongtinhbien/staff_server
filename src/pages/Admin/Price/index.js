@@ -2,6 +2,7 @@ import gql from 'graphql-tag';
 import React from 'react';
 import { Query } from 'react-apollo';
 import ClothList from './ClothList';
+import Error from '../../Error';
 const OPTION_QUERY = gql `query unitPrice {
   allUnitPrices{
     nodes{
@@ -62,6 +63,7 @@ const Other = () => (
         console.log(refetch);
       }
       if (error){
+        return (<Error errorContent= {error.message}></Error>);
       }
       if (data != null){
       return (

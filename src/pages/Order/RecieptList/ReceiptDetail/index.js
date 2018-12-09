@@ -499,7 +499,7 @@ class ReceiptPending extends Component {
                   
                     this.showNotification("Cập nhật thành công " +data.receipt.id+" - " + status(data.receipt.status), "success") 
                    }}
-                   onError={error => this.showNotification(error.message, "error")}
+                   onError={error => console.log(error.graphQLErrors)}
                 >
                   {assignPickUp=>(
                     <button
@@ -534,7 +534,7 @@ class ReceiptPending extends Component {
                   
                     this.showNotification("Cập nhật thành công " +data.receipt.id+" - " + status(data.receipt.status), "success") 
                    }}
-                   onError={error => this.showNotification(error.message, "error")}
+                   onError={error => console.log(error.graphQLErrors)}
                 >
                   {assignPickUp=>(
                     <button
@@ -564,7 +564,7 @@ class ReceiptPending extends Component {
                   
                     this.showNotification("Cập nhật thành công " +data.receipt.id+" - " + status(data.receipt.status), "success") 
                    }}
-                   onError={error => {this.showNotification(error.message, "error")
+                   onError={error => {
                   console.log(error.graphQLErrors)}}
                 >
                   {updatestatuscustomerorder => (
