@@ -115,21 +115,29 @@ function removeDuplicates(arr){
 
 
 const filterWashbag = (data) =>{
-    let res = [];
-    let unique = {};
-    for (let i =0;i<data.length;i++){
-      if (!unique[data[i].orderId]) {
-        let temp = data.filter(item => item.orderId === data[i].orderId);
-        temp.forEach(el => {
-          if (!data[i].wbName.includes(el.wbName))
-            data[i].wbName = data[i].wbName.concat(el.wbName);
-        });
-        data[i].wbName = removeDuplicates(data[i].wbName);
-        res.push( data[i]);
-        unique[data[i].orderId] = data[i].orderId;
-    }
-    }
-      return res;
+  let res = [];
+  let unique = {};
+  let unique2 = {};
+  for (let i =0;i<data.length;i++){
+    if (!(unique[data[i].orderId] && unique2[data[i].washerCode])) {
+      let temp = data.filter(item => item.orderId === data[i].orderId && item.washerCode === data[i].washerCode);
+      temp.forEach(el => {
+        if (!data[i].wbName.includes(el.wbName))
+          data[i].wbName = data[i].wbName.concat(el.wbName);
+      });
+      data[i].wbName = removeDuplicates(data[i].wbName);
+      res.push( data[i]);
+      unique[data[i].orderId] = data[i].orderId;
+      unique2[data[i].washerCode] = data[i].washerCode;
+  }
+  else if (unique[data[i].orderId] && !unique2[data[i].washerCode]){
+    res.push( data[i]);
+  }
+  else if (!unique[data[i].orderId] && unique2[data[i].washerCode]){
+    res.push( data[i]);
+  }
+  }
+    return res;
 
 }
 
