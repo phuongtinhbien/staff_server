@@ -24,7 +24,7 @@ const renderItemOrderDetail = ({ fields, product,service,status,
                 {CURRENT_USER.staffType.staffCode === "STAFF_02" &&
                 <th style={{width:"20%"}}>SL đã xử lí</th>
       }
-                {CURRENT_USER.staffType.staffCode === "STAFF_03" &&
+                {CURRENT_USER.staffType.staffCode === "STAFF_03" && status ==="PENDING_DELIVERY" &&
                 <th style={{width:"20%"}}>SL đã trả</th>
                 }
               </tr>
@@ -109,7 +109,7 @@ const renderItemOrderDetail = ({ fields, product,service,status,
                         />
                     </td>
                     }
-                     {CURRENT_USER.staffType.staffCode === "STAFF_03" && 
+                     {CURRENT_USER.staffType.staffCode === "STAFF_03" && status ==="PENDING_DELIVERY" && 
                     <td>
 
                     <Field

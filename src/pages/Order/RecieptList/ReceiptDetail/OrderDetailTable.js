@@ -234,7 +234,7 @@ class OrderDetailTable extends Component {
                     dataSort>
                     SL đã nhận
                   </TableHeaderColumn>
-                  {CURRENT_USER.staffType.staffCode === "STAFF_02" && <TableHeaderColumn
+                  {(CURRENT_USER.staffType.staffCode === "STAFF_02" || CURRENT_USER.staffType.staffCode === "STAFF_01") && <TableHeaderColumn
                     dataField='processedAmount'
                     width="25%"
                     tdStyle={{textAlign:"right"}}
@@ -242,7 +242,16 @@ class OrderDetailTable extends Component {
                     SL xử lí hoàn tất
                   </TableHeaderColumn>
                  }
-                  {CURRENT_USER.staffType.staffCode === "STAFF_03" &&
+                 
+                  {(CURRENT_USER.staffType.staffCode === "STAFF_03" || CURRENT_USER.staffType.staffCode === "STAFF_01")  &&
+                  <TableHeaderColumn
+                    dataField='deliveryAmount'
+                    width="25%"
+                    tdStyle={{textAlign:"right"}}
+                    dataSort>
+                    SL đã trả
+                  </TableHeaderColumn>}
+                  {(CURRENT_USER.staffType.staffCode === "STAFF_03" || CURRENT_USER.staffType.staffCode === "STAFF_01")  &&
                   <TableHeaderColumn
                     dataField='total'
                     width="27%"
@@ -251,15 +260,6 @@ class OrderDetailTable extends Component {
                     dataSort>
                     Tổng tạm
                   </TableHeaderColumn>}
-                  {CURRENT_USER.staffType.staffCode === "STAFF_03" &&
-                  <TableHeaderColumn
-                    dataField='deliveryAmount'
-                    width="25%"
-                    tdStyle={{textAlign:"right"}}
-                    dataSort>
-                    SL đã trả
-                  </TableHeaderColumn>}
-                 
                   <TableHeaderColumn
                     dataField='details'
                     width="25%"
