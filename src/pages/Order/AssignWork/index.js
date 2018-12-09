@@ -7,6 +7,14 @@ import TableWithLinks from './TableWithLinks';
 
 
 const ASSIGN_WORK = gql`query assignWork($branch: BigFloat!) {
+  allEnvVars(condition: {
+    keyName: "AUTO_ARRANGE"
+  }){
+    nodes{
+      keyName
+      valueKey
+    }
+  }
   getprepareorderserving(brId: $branch) {
     nodes {
       nodeId

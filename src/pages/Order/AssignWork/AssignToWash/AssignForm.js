@@ -27,19 +27,19 @@ const proccessData = (values)=>{
         row = {
           washbagCode : values[a].washBagName,
           productId: data[i].productByProductId != null ?data[i].productByProductId.id: null,
-          productName: data[i].productByProductId != null ? data[i].productByProductId .productName: "undefine",
+          productName: data[i].productByProductId != null ? data[i].productByProductId .productName: "_",
           serviceTypeId: data[i].serviceTypeByServiceTypeId ?data[i].serviceTypeByServiceTypeId.id :null,
           serviceName: data[i].serviceTypeByServiceTypeId != null ? data[i].serviceTypeByServiceTypeId.serviceTypeName:"_",
           amount: data[i].amount,
           unitId: data[i].unitByUnitId.id,
           materialId: data[i].materialByMaterialId!= null?data[i].materialByMaterialId.id:null,
-          materialName: data[i].materialByMaterialId!= null?data[i].materialByMaterialId.materialName: "Undefine",
+          materialName: data[i].materialByMaterialId!= null?data[i].materialByMaterialId.materialName: "_",
           labelId: data[i].labelByLabelId!= null?data[i].labelByLabelId.id:null,
-          labelName: data[i].labelByLabelId!= null?data[i].labelByLabelId.labelName: "Undefine",
+          labelName: data[i].labelByLabelId!= null?data[i].labelByLabelId.labelName: "_",
           colorId: data[i].colorByColorId!= null?data[i].colorByColorId.id: null,
-          colorName: data[i].colorByColorId!= null?data[i].colorByColorId.colorName: "Undefine",
+          colorName: data[i].colorByColorId!= null?data[i].colorByColorId.colorName: "_",
           colorGroupId: data[i].colorByColorId!= null? data[i].colorByColorId.colorGroupByColorGroupId.id: null,
-          colorGroupName: data[i].colorByColorId!= null? data[i].colorByColorId.colorGroupByColorGroupId.colorGroupName: "undefine"
+          colorGroupName: data[i].colorByColorId!= null? data[i].colorByColorId.colorGroupByColorGroupId.colorGroupName: "_"
         }
         result.push(row);
     }
