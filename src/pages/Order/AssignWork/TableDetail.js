@@ -101,7 +101,7 @@ class TableDetail extends Component {
                     width="20%"
                     dataFormat={washerFormat}
                     isKey
-                 
+                    hidden
                    >
                     Máy giặt
                   </TableHeaderColumn>
