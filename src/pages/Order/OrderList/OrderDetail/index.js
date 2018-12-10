@@ -305,7 +305,7 @@ const  getWasherCode = (data)=>{
 const TurnOnOff = (a,b)=>{
       if (b){
         let res = true;
-        let washerCode= getWasherCode (data.customerOrder.receiptsByOrderId.nodes[0].washBagsByReceiptId.nodes);
+        let washerCode= getWasherCode (b.washBagsByReceiptId.nodes);
         a.forEach(element => {
              if (washerCode[element.washerCode] && element.washesByWashingMachineId.totalCount >0){
                  return false;
