@@ -9,6 +9,7 @@ import status from '../../status';
 import WashChart from './PublicPreference';
 
 const ASSIGN_WORK = gql`query assignWork($branch: BigFloat!) {
+ 
   getprepareorderserving(brId: $branch) {
     nodes {
       nodeId
@@ -76,6 +77,14 @@ const ASSIGN_WORK = gql`query assignWork($branch: BigFloat!) {
 `;
 
 const ALL_WASH = gql `query allWash ($brId: BigFloat!){
+  allEnvVars(condition: {
+    keyName: "AUTO_ARRANGE"
+  }){
+    nodes{
+      keyName
+      valueKey
+    }
+  }
   washSearch(brId: $brId){
     totalCount
     nodes{
@@ -115,34 +124,26 @@ function removeDuplicates(arr){
 
 
 const filterWashbag = (data) =>{
-  let res = [];
-  let unique = {};
-  let unique2 = {};
-  for (let i =0;i<data.length;i++){
-    if (!(unique[data[i].orderId] && unique2[data[i].washerCode])) {
-      let temp = data.filter(item => item.orderId === data[i].orderId && item.washerCode === data[i].washerCode);
-      temp.forEach(el => {
-        if (!data[i].wbName.includes(el.wbName))
-          data[i].wbName = data[i].wbName.concat(el.wbName);
-      });
-      data[i].wbName = removeDuplicates(data[i].wbName);
-      res.push( data[i]);
-      unique[data[i].orderId] = data[i].orderId;
-      unique2[data[i].washerCode] = data[i].washerCode;
-  }
-  else if (unique[data[i].orderId] && !unique2[data[i].washerCode]){
-    res.push( data[i]);
-  }
-  else if (!unique[data[i].orderId] && unique2[data[i].washerCode]){
-    res.push( data[i]);
-  }
-  }
-    return res;
+    let res = [];
+    let unique = {};
+    for (let i =0;i<data.length;i++){
+      if (!unique[data[i].orderId]) {
+        let temp = data.filter(item => item.orderId === data[i].orderId);
+        temp.forEach(el => {
+          if (!data[i].wbName.includes(el.wbName))
+            data[i].wbName = data[i].wbName.concat(el.wbName);
+        });
+        data[i].wbName = removeDuplicates(data[i].wbName);
+        res.push( data[i]);
+        unique[data[i].orderId] = data[i].orderId;
+    }
+    }
+      return res;
 
 }
 
 
-const processAllWash = (data)=>{
+const processAllWash = (data, type)=>{
 
       let res =[];
 
@@ -161,7 +162,12 @@ const processAllWash = (data)=>{
         }
       }
 
-      return filterWashbag(res);
+      if (type === "TYPE_TWO"){
+        return res;
+      }
+      else{
+        return filterWashbag(res);
+      }
 }
 
 const processChart = (data)=>{
@@ -195,7 +201,7 @@ const AssignWorkDetail = (props,{CURRENT_USER= JSON.parse(localStorage.getItem("
         <div>
         <div className="row">
         <div className="col-md-8">
-              <Serving  washer = {props.match.params.washerCode}  allWash ={processAllWash(data.washSearch.nodes.filter(value => value.status ==='SERVING'))}/>
+              <Serving  washer = {props.match.params.washerCode}  allWash ={processAllWash(data.washSearch.nodes.filter(value => value.status ==='SERVING'),data.allEnvVars.nodes[0].valueKey)}/>
             </div>
             <div className="col-md-4">
             <WashChart dataChart = {processChart(processAllWash(data.washSearch.nodes.filter(value => value.washerCode === props.match.params.washerCode)))}/>
@@ -205,7 +211,7 @@ const AssignWorkDetail = (props,{CURRENT_USER= JSON.parse(localStorage.getItem("
        <div className="row">
        <div className="col-md-12">
              
-           <BigTable  washer = {props.match.params.washerCode}  allWash ={processAllWash(data.washSearch.nodes)}/>
+           <BigTable  washer = {props.match.params.washerCode}  allWash ={processAllWash(data.washSearch.nodes,data.allEnvVars.nodes[0].valueKey)}/>
            </div>
            
    </div>
