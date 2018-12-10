@@ -8,29 +8,19 @@ import OrderDetailForm from './OrderDetailForm';
 import NotificationSystem from 'react-notification-system';
 import status from './../../status';
 
-const ORDER_DETAIL = gql`query getCustomerOrderByNodeId($nodeId: ID!, $brId: BigFloat!) {
-  allWashingMachines(condition: {status: "ACTIVE", branchId: $brId}) {
-    nodes {
-      washerCode
-      id
-      washesByWashingMachineId(condition: {status: "SERVING"}) {
-        totalCount
-      }
-    }
-  }
-  customerOrder(nodeId: $nodeId) {
-    nodeId
-    id
-    status
-    pickUpPlace
-    deliveryPlace
-    tasksByCustomerOrder(condition: {previousTask: "N"}) {
-      nodes {
+const ORDER_DETAIL = gql`query getCustomerOrderByNodeId ($nodeId: ID!){  customerOrder(nodeId: $nodeId){
+  nodeId 
+  id 
+  status 
+  pickUpPlace
+  deliveryPlace
+  tasksByCustomerOrder(condition:{previousTask:"N"}){
+      nodes{
         id
-        staffByCurrentStaff {
+        staffByCurrentStaff{
           id
           fullName
-          staffTypeByStaffTypeId {
+          staffTypeByStaffTypeId{
             staffCode
             id
             nodeId
@@ -38,130 +28,113 @@ const ORDER_DETAIL = gql`query getCustomerOrderByNodeId($nodeId: ID!, $brId: Big
         }
       }
     }
-    receiptsByOrderId {
-      nodes {
+  receiptsByOrderId{
+    nodes{
+      id
+      nodeId
+      staffByStaffPickUp{
         id
-        nodeId
-        staffByStaffPickUp {
-          id
-          fullName
-        }
-        staffByStaffDelivery {
-          id
-          fullName
-        }
-        billsByReceiptId {
+        fullName
+      }
+      staffByStaffDelivery{
+        id
+        fullName
+      }
+      billsByReceiptId {
           totalCount
-          nodes {
+          nodes{
             id
             nodeId
           }
         }
-        washBagsByReceiptId {
-          nodes {
-            id
-            washesByWashBagId(condition: {status: "PENDING_SERVING"}) {
-              totalCount
-              nodes {
-                id
-                washingMachineByWashingMachineId {
-                  id
-                  washerCode
-                }
-              }
-            }
-          }
+      
+    }
+  }
+  customerByCustomerId{
+    id
+    nodeId
+    fullName
+    email
+    phone
+    address
+  }
+  branchByBranchId{
+    nodeId
+    id
+    branchName
+    address
+  }
+     deliveryDate,
+  timeScheduleByDeliveryTimeId{
+    nodeId
+    id
+    timeStart,
+    timeEnd
+  },
+  pickUpDate,
+  timeScheduleByPickUpTimeId{
+    nodeId
+    id
+     timeStart,
+    timeEnd
+  }
+  pickUpPlace,
+  deliveryPlace,
+  promotionByPromotionId{
+    nodeId
+    id
+    promotionName
+    promotionCode
+    sale
+  }
+  orderDetailsByOrderId{
+    nodes{
+      nodeId
+      id
+      serviceTypeByServiceTypeId{
+        id
+        nodeId
+        serviceTypeName
+      }
+      unitByUnitId{
+        id
+        nodeId
+        unitName
+      }
+      productByProductId{
+        id
+        nodeId
+        productName
+      }
+      materialByMaterialId{
+        id
+        materialName
+        nodeId
+      }
+      labelByLabelId{
+        id
+        labelName
+        nodeId
+      }
+      colorByColorId{
+        id
+        nodeId
+        colorName
+        colorGroupByColorGroupId{
+          colorGroupName
+          nodeId
         }
       }
-    }
-    customerByCustomerId {
-      id
-      nodeId
-      fullName
-      email
-      phone
-      address
-    }
-    branchByBranchId {
-      nodeId
-      id
-      branchName
-      address
-    }
-    deliveryDate
-    timeScheduleByDeliveryTimeId {
-      nodeId
-      id
-      timeStart
-      timeEnd
-    }
-    pickUpDate
-    timeScheduleByPickUpTimeId {
-      nodeId
-      id
-      timeStart
-      timeEnd
-    }
-    pickUpPlace
-    deliveryPlace
-    promotionByPromotionId {
-      nodeId
-      id
-      promotionName
-      promotionCode
-      sale
-    }
-    orderDetailsByOrderId {
-      nodes {
-        nodeId
+      note
+      amount
+      unitPriceByUnitPrice{
         id
-        serviceTypeByServiceTypeId {
-          id
-          nodeId
-          serviceTypeName
-        }
-        unitByUnitId {
-          id
-          nodeId
-          unitName
-        }
-        productByProductId {
-          id
-          nodeId
-          productName
-        }
-        materialByMaterialId {
-          id
-          materialName
-          nodeId
-        }
-        labelByLabelId {
-          id
-          labelName
-          nodeId
-        }
-        colorByColorId {
-          id
-          nodeId
-          colorName
-          colorGroupByColorGroupId {
-            colorGroupName
-            nodeId
-          }
-        }
-        note
-        amount
-        unitPriceByUnitPrice {
-          id
-          price
-          nodeId
-        }
+        price
+        nodeId
       }
     }
   }
-}
-
-`;
+}}`;
 
 const UPDATE_ORDER_MUT = gql`mutation updateCustomerOrder( $coId: BigFloat!,  $pStatus:String!, $pUser:BigFloat! ){
   updatestatuscustomerorder(input:{
@@ -286,37 +259,6 @@ const UPDATE_ORDER_MUT = gql`mutation updateCustomerOrder( $coId: BigFloat!,  $p
   }
 }`;
 
-const  getWasherCode = (data)=>{
-  let dup = {}
-  data.forEach(element => {
-      if (element.washesByWashBagId.totalCount>0){
-        element.washesByWashBagId.nodes.forEach(element1 => {
-          if (!dup[element1.washingMachineByWashingMachineId.washerCode]){
-            dup[element1.washingMachineByWashingMachineId.washerCode] = element1.washingMachineByWashingMachineId.washerCode;
-          }
-            
-        });
-        
-      }
-    });
-  return dup;
-}
-
-const TurnOnOff = (a,b)=>{
-      if (b){
-        let res = true;
-        let washerCode= getWasherCode (b.washBagsByReceiptId.nodes);
-        a.forEach(element => {
-             if (washerCode[element.washerCode] && element.washesByWashingMachineId.totalCount >0){
-                 return false;
-             }
-        });
-      return res;
-
-    }
-     
-}
-
 
 
 
@@ -346,7 +288,7 @@ class OrderPending extends Component {
             <Query     
       query={ORDER_DETAIL}
       // fetchPolicy={"network-only"}
-      variables = {{nodeId:match.params.nodeId, brId: CURRENT_USER.branch.id }}
+      variables = {{nodeId:match.params.nodeId }}
 
     >{({ loading, error, data, refetch }) => {
       
@@ -413,8 +355,7 @@ class OrderPending extends Component {
                       >
                         Chấp nhận
                       </button>
-                      {(CURRENT_USER.staffType.staffCode ==='STAFF_02') && data.customerOrder.status ==="PENDING_SERVING" &&
-                      TurnOnOff(data.allWashingMachines.nodes, data.customerOrder.receiptsByOrderId.nodes[0]) &&
+                      {(CURRENT_USER.staffType.staffCode ==='STAFF_02') &&
                       <button
                         type="submit"
                         className="btn btn-fill btn-info"
