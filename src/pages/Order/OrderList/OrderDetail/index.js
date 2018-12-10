@@ -291,8 +291,8 @@ const  getWasherCode = (data)=>{
   data.forEach(element => {
       if (element.washesByWashBagId.totalCount>0){
         element.washesByWashBagId.nodes.forEach(element1 => {
-          if (!dup[element1.washesByWashBagId.washingMachineByWashingMachineId.washerCode]){
-            dup[element1.washesByWashBagId.washingMachineByWashingMachineId.washerCode] = element1.washesByWashBagId.washingMachineByWashingMachineId.washerCode;
+          if (!dup[element1.washingMachineByWashingMachineId.washerCode]){
+            dup[element1.washingMachineByWashingMachineId.washerCode] = element1.washingMachineByWashingMachineId.washerCode;
           }
             
         });
